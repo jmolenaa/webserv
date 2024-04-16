@@ -6,19 +6,27 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/04/16 11:17:55 by yizhang       ########   odam.nl          #
+#    Updated: 2024/04/16 12:46:37 by yizhang       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Webserv
+CLIENT = client
 CC = c++
 FLAG = -Wall -Werror -Wextra
-SRC = main.cpp
+SERVER = server.cpp
+CLIENT_SRC = client.cpp
 
 all: $(NAME)
 
-$(NAME): $(SRC)
-	$(CC) $(FLAG) $(SRC) -o $(NAME)
+client: $(CLIENT)
+
+$(NAME): $(SERVER)
+	$(CC) $(FLAG) $(SERVER) -o $(NAME)
+
+$(CLIENT): $(CLIENT_SRC)
+	$(CC) $(FLAG) $(CLIENT_SRC) -o $(CLIENT)
+
 
 clean:
 	rm -rf $(NAME)
