@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/16 11:48:53 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/04/16 13:31:35 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/04/16 13:51:41 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,18 @@ int main(int argc, char **argv)
         
             while (1) {
             //accepting connection request
-            int clientSocket = accept(serverSocket, (struct sockaddr *)&serverAddress, (socklen_t*)sizeof(serverAddress));
-            
+            // int clientSocket = accept(serverSocket, (struct sockaddr *)&serverAddress, (socklen_t*)sizeof(serverAddress));
+            int clientSocket = accept(serverSocket, nullptr, nullptr);
+            std::cout << "huh\n";
             //recieving data
             char buffer[1024] = { 0 }; 
             recv(clientSocket, buffer, sizeof(buffer), 0); 
             std::cout << "Message from client: " << buffer << std::endl;
-            // char input[100];
-            // input[99] = '\0';
+            char input[] = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+            // input[999] = '\0';
             // std::cin  >> input;
-            // send(clientSocket, input, std::strlen(input), 0); 
+            // input = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+            send(clientSocket, input, std::strlen(input), 0); 
             //close the socket
             close(clientSocket);    
         }
