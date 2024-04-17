@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/16 11:49:20 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/04/16 13:43:35 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/04/17 16:02:36 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int main()
         const char* message = "Hello, server!"; 
         send(clientSocket, message, strlen(message), 0); 
         
-         int webSocket = accept(serverSocket, nullptr, nullptr);
+         int webSocket = accept(clientSocket, nullptr, nullptr);
         char buffer[1024] = { 0 }; 
         recv(clientSocket, buffer, sizeof(buffer), 0); 
         std::cout << "Message from WEB: " << buffer << std::endl;
