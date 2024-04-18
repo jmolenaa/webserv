@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:10:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/18 17:58:08 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/18 18:01:05 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 Server::Server() : _epoll()
 {
+	// Creates socket fd
 	_serverfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_serverfd < 0)
 	{
@@ -21,6 +22,7 @@ Server::Server() : _epoll()
 		exit(EXIT_FAILURE);
 	}
 
+	// Binds to address
 	sockaddr_in	serverAddr{};
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(PORT);
@@ -32,12 +34,14 @@ Server::Server() : _epoll()
 		exit(EXIT_FAILURE);
 	}
 
+	// Listening
 	if (listen(_serverfd, SOMAXCONN) == -1)
 	{
 		std::cerr << "Failed to listen: " << std::strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);	
 	}
-	
+
+	// Adds to epoll
 	_epoll.add(_serverfd);
 };
 
@@ -49,6 +53,8 @@ Server::~Server()
 
 void Server::run()
 {
+	// Figure out if this can / should be moved to epoll class or server class?
+	// Also, when to close the events???
 	epoll_event events[CLI_LIMIT];
 	while (true)
 	{
