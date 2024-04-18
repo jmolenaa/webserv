@@ -6,7 +6,7 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/04/18 14:09:09 by dliu          ########   odam.nl          #
+#    Updated: 2024/04/18 16:24:31 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = Webserv
 CC = c++
 FLAG = -Wall -Werror -Wextra
 VPATH = src src/networking
-SERVER = main.cpp server.cpp
+SERVER = main.cpp server.cpp epoll.cpp
 # CLIENT_SRC = test_client.cpp
 INCLUDE = -I include
 

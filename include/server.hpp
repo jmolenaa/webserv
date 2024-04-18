@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/18 13:42:54 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/18 17:44:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,8 @@
 
 # include <sys/socket.h>
 # include <netinet/in.h>
-# include <iostream>
-# include <unistd.h>
-# include <cstring>
-
-# define CLI_LIMIT 5
-# define BUF_LIMIT 1024
+# include "webserv.hpp"
+# include "epoll.hpp"
 
 class Server
 {
@@ -29,21 +25,13 @@ class Server
 		Server();
 		~Server();
 
-		void				test_status(int what);
-		void				listening();
-		
-		struct sockaddr_in	get_address();
-		int					get_sock();
-		int					get_connection();
-		
+		void	run();
+		void	serveClient(int clientFd, const std::string& message);
+		void	receiveClient();
+
 	private:
-		struct sockaddr_in	_address;
-		int					_socket;
-		int					_connection;
-		int					_clients[CLI_LIMIT];
-		int					_buffers[CLI_LIMIT][BUF_LIMIT];
-		int					_cli_pos;
-		int					_cli_count;
+		int		_serverfd;
+		Epoll	_epoll;
 
 	// Hidden orthodox canonical shit
 		Server& operator=(const Server& other) = default;

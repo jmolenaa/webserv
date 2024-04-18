@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.cpp                                           :+:    :+:            */
+/*   webserv.hpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/17 13:05:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/18 16:23:45 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/18 14:41:44 by dliu          #+#    #+#                 */
+/*   Updated: 2024/04/18 15:38:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.hpp"
+#ifndef WEBSERV_HPP
+# define WEBSERV_HPP
 
-int main(void)
-{
-	Server server;
+# include <iostream>
+// # include <cerrno>
+# include <cstring>
+# include <unistd.h>
 
-	server.run();
-	return (0);
-}
+# define CLI_LIMIT 10
+# define BUF_LIMIT 1024
+# define PORT 8080
+
+#endif
