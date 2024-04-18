@@ -6,27 +6,28 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/04/16 12:46:37 by yizhang       ########   odam.nl          #
+#    Updated: 2024/04/18 14:09:09 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Webserv
-CLIENT = client
+# CLIENT = client
 CC = c++
 FLAG = -Wall -Werror -Wextra
-SERVER = server.cpp
-CLIENT_SRC = client.cpp
+VPATH = src src/networking
+SERVER = main.cpp server.cpp
+# CLIENT_SRC = test_client.cpp
+INCLUDE = -I include
 
 all: $(NAME)
 
-client: $(CLIENT)
+# client: $(CLIENT)
 
 $(NAME): $(SERVER)
-	$(CC) $(FLAG) $(SERVER) -o $(NAME)
+	$(CC) $(FLAG) $(INCLUDE) $^ -o $(NAME)
 
-$(CLIENT): $(CLIENT_SRC)
-	$(CC) $(FLAG) $(CLIENT_SRC) -o $(CLIENT)
-
+# $(CLIENT): $(CLIENT_SRC)
+# 	$(CC) $(FLAG) $(INCLUDE) $^ -o $(CLIENT)
 
 clean:
 	rm -rf $(NAME)

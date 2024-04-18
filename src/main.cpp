@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:05:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/17 20:01:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/18 13:42:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,4 +15,9 @@
 int main(void)
 {
 	Server server;
+
+	while (1)
+	{
+		server.listening();
+	}
 }
