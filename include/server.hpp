@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/18 17:44:03 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/19 17:05:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <sys/epoll.h>
+# include <set>
 # include "webserv.hpp"
-# include "epoll.hpp"
 
 class Server
 {
@@ -24,14 +25,25 @@ class Server
 		public:
 		Server();
 		~Server();
-
+		
 		void	run();
-		void	serveClient(int clientFd, const std::string& message);
-		void	receiveClient();
 
 	private:
-		int		_serverfd;
-		Epoll	_epoll;
+		int				_serverfd;
+		int				_epollfd;
+		std::set<int>	_clientfds;
+
+		void	createSocket();
+		void	bindToAddress();
+		void	setupEpoll();
+
+		void	handleEvents(epoll_event* events, int numEvents);
+
+		void	handleNewConnection();
+		int		acceptNewConnection();
+
+		void	handleClientRequest(int fd);
+		void	serveClient(int clientFd, const std::string& message);
 
 	// Hidden orthodox canonical shit
 		Server& operator=(const Server& other) = default;

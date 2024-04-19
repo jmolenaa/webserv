@@ -6,28 +6,24 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/04/18 16:24:31 by dliu          ########   odam.nl          #
+#    Updated: 2024/04/19 17:10:18 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Webserv
-# CLIENT = client
 CC = c++
 FLAG = -Wall -Werror -Wextra
-VPATH = src src/networking
-SERVER = main.cpp server.cpp epoll.cpp
-# CLIENT_SRC = test_client.cpp
+VPATH = src src/server
+SERVER = main.cpp \
+		 server.cpp _setup.cpp _server_handlers.cpp _client_handlers.cpp \
+		 
 INCLUDE = -I include
 
 all: $(NAME)
 
-# client: $(CLIENT)
-
 $(NAME): $(SERVER)
 	$(CC) $(FLAG) $(INCLUDE) $^ -o $(NAME)
 
-# $(CLIENT): $(CLIENT_SRC)
-# 	$(CC) $(FLAG) $(INCLUDE) $^ -o $(CLIENT)
 
 clean:
 	rm -rf $(NAME)
