@@ -60,7 +60,8 @@ void	Server::setupEpoll()
 	epoll_event event{};
 	event.events = EPOLLIN;
 	event.data.fd = _serverfd;
-	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1) {
+	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1)
+	{
 		std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);
 	}

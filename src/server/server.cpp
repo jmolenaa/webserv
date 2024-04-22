@@ -53,7 +53,8 @@ void Server::run()
 
 void Server::handleEvents(epoll_event* events, int numEvents)
 {
-    for (int i = 0; i < numEvents; i++) {
+    for (int i = 0; i < numEvents; i++)
+	{
         if (events[i].data.fd == _serverfd)
             handleNewConnection();
         else

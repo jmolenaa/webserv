@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/22 12:10:36 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/19 17:13:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ class Server
 		void	setupEpoll();
 
 		void	handleEvents(epoll_event* events, int numEvents);
+
 		void	handleNewConnection();
+		int		acceptNewConnection();
+
 		void	handleClientRequest(int fd);
 		void	serveClient(int clientFd, const std::string& message);
 
