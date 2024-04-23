@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "server.hpp"
+#include "request.hpp"
 
 /**
  * Retrieves message from client and serves requests
