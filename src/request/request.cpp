@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:11:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/24 14:22:43 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void Request::_extractMethod()
 		if (method_pos != std::string::npos)
 		{
 			_method = _request.substr(0, type.length());
-			// std::cout << "\nGOT METHOD:_" << _method << "_\n";
 			return;
 		}
 	}
@@ -55,7 +54,6 @@ void Request::_extractMethod()
 void Request::_extractHost()
 {
 	_hostname = Helpers::_keyValueFind(_request, "Host: ", ':');
-	// std::cout << "GOT HOSTNAME:_" << _hostname << "_\n";
 
 	std::string tmp = Helpers::_keyValueFind(_request, "Host: ", '\n');
 	tmp = Helpers::_keyValueFind(tmp, ":", '\n');
@@ -63,7 +61,6 @@ void Request::_extractHost()
 		_port = std::stoi(tmp);
 	else
 		_port = PORT;
-	// std::cout << "GOT PORT:_" << _port << "_\n";
 }
 
 void Request::_extractBody()
@@ -73,10 +70,8 @@ void Request::_extractBody()
 		_contentLength = std::stoi(tmp);
 	else
 		_contentLength = 0;
-	// std::cout << "GOT LENGTH:_" << _contentLength << "_\n";
 
 	_body = Helpers::_keyValueFind(_request, "\r\n\r\n", 0);
-	// std::cout << "GOT BODY:_" << _body << "_\n" << std::endl;
 }
 
 std::string Request::getMethod()
