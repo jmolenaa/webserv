@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:22:43 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/24 14:35:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void Request::_extractMethod()
 			return;
 		}
 	}
-	std::cerr << "Bad message from client: " << _request << std::endl;
+	std::cerr << "Cannot parse request from client." << std::endl;
 	exit(EXIT_FAILURE);
 }
 
