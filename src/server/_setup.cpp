@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			*/
-/*														::::::::			*/
-/*   _setup.cpp										 :+:	:+:			*/
-/*													 +:+					*/
-/*   By: dliu <dliu@student.codam.nl>				 +#+					 */
-/*												   +#+					  */
-/*   Created: 2024/04/19 16:54:58 by dliu		  #+#	#+#				 */
-/*   Updated: 2024/04/19 16:59:11 by dliu		  ########   odam.nl		 */
-/*																			*/
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   _setup.cpp                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
+/*   Updated: 2024/04/24 14:20:16 by dliu          ########   odam.nl         */
+/*                                                                            */
 /* ************************************************************************** */
 
 # include "server.hpp"
@@ -36,8 +36,7 @@ void	Server::bindToAddress()
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(PORT);
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	if (bind(_serverfd, reinterpret_cast<sockaddr *>(&serverAddr), 
-		sizeof(serverAddr)) == -1)
+	if (bind(_serverfd, reinterpret_cast<sockaddr *>(&serverAddr), sizeof(serverAddr)) == -1)
 	{
 		std::cerr << "Failed to bind to socket: " << std::strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);
