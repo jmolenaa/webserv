@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 17:02:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 18:04:23 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ class Response
 	
 	private:
 		std::string _path;
+		filetype	_type;
+		int			_responseFd;
 		std::string _message;
 
+		void	_findFileType();
 		void	_generateHeader();
 		void	_populateContent();
-		void	_getFile();
 
 	// Hidden orthodox canonical shit
 		Response& operator=(const Response& other) = default;

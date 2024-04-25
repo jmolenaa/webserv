@@ -11,8 +11,35 @@
 /* ************************************************************************** */
 
 #include "response.hpp"
+#include "helpers.hpp"
 
 Response::Response(std::string& requestPath) : _path(requestPath)
 {
 	//parse path, get file, compile response
+	_findFileType();
+	_generateHeader();
+	_responseFd = Helpers::_getFileFd(_path, _type);
+	_populateContent();
+}
+
+void	Response::_findFileType()
+{
+	//get filetype from _path
+	_type = HTML;
+}
+
+void	Response::_generateHeader()
+{
+	_message += "Header content\r\n";
+}
+
+void Response::_populateContent()
+{
+	_message += "\r\n";
+	_message += "html stuff";
+}
+
+std::string Response::getResponse()
+{
+	return (_message);
 }
