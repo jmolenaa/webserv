@@ -6,12 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:20:26 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 12:01:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include "request.hpp"
+#include "response.hpp"
 
 void Server::handleClientRequest(int fd)
 {
@@ -29,6 +30,7 @@ void Server::handleClientRequest(int fd)
 
 		Request request(buffer);
 		request.printData();
+		Response response(request.getPath());
 		// send back files, implement CGI.
 		serveClient(fd, "You've been served\n");
 	}

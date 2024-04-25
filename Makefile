@@ -13,10 +13,10 @@
 NAME = Webserv
 CC = c++
 FLAG = -Wall -Werror -Wextra
-VPATH = src src/server src/helpers src/request
+VPATH = src src/server src/helpers src/request src/response
 SERVER = main.cpp \
 			helpers.cpp \
-			request.cpp \
+			request.cpp response.cpp \
 			server.cpp _setup.cpp _serverHandlers.cpp _clientHandlers.cpp \
 		 
 INCLUDE = -I include

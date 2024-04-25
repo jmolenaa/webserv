@@ -46,7 +46,7 @@ class Server
 		void	handleEvents(epoll_event* events, int numEvents);
 		void	handleNewConnection();
 		void	handleClientRequest(int fd);
-		void	serveClient(int clientFd, const std::string& message);
+		static void	serveClient(int clientFd, const std::string& message);
 
 	// Hidden orthodox canonical shit
 		Server& operator=(const Server& other) = default;

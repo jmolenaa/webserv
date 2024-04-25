@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:20:16 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 11:32:51 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ void	Server::createSocket()
 */
 void	Server::bindToAddress()
 {
+	int	optvalTrue = 1;
+	setsockopt(_serverfd, SOL_SOCKET, SO_REUSEADDR, &optvalTrue, sizeof(optvalTrue));
+	setsockopt(_serverfd, SOL_SOCKET, SO_REUSEPORT, &optvalTrue, sizeof(optvalTrue));
 	sockaddr_in	serverAddr{};
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(PORT);

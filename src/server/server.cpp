@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:20:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 11:57:51 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 
-Server::Server() 
+Server::Server()
 {
 	createSocket();
 	bindToAddress();
@@ -25,7 +25,7 @@ Server::Server()
 	}
 }
 
-Server::~Server() 
+Server::~Server()
 {
     if (_serverfd > 0)
         close(_serverfd);

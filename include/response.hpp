@@ -1,22 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   helpers.hpp                                        :+:    :+:            */
+/*   response.hpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/23 18:59:58 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/23 19:02:35 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
+/*   Updated: 2024/04/25 12:00:17 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
+#ifndef RESPONSE_HPP
+# define RESPONSE_HPP
 
-class Helpers
+# include "server.hpp"
+
+/**
+ * 
+*/
+class Response
 {
 	public:
-		static std::string	_keyValueFind(std::string string, std::string key, char delim);
-
+		explicit Response(std::string& response);
+		~Response() = default;
+	
 	private:
-		Helpers() = default;
+		std::string _path;
+
+	// Hidden orthodox canonical shit
+		Response& operator=(const Response& other) = default;
+		Response() = default;
 };
+
+#endif

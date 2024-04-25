@@ -1,22 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   helpers.hpp                                        :+:    :+:            */
+/*   response.cpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/23 18:59:58 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/23 19:02:35 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
+/*   Updated: 2024/04/24 14:35:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
+#include "response.hpp"
 
-class Helpers
+Response::Response(std::string& requestPath) : _path(requestPath)
 {
-	public:
-		static std::string	_keyValueFind(std::string string, std::string key, char delim);
-
-	private:
-		Helpers() = default;
-};
+}

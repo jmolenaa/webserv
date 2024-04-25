@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:08:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 12:01:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # include "server.hpp"
 # include "helpers.hpp"
 
-# define BUFFERSIZE 1024
-
 /**
  * Parses and contains request data such as method, hostname, port, and body if any
  * Use: getMethod(), getHostname(), getPort(), getLength(), getBody()
@@ -25,37 +23,36 @@
 class Request
 {
 	public:
-		Request(char *request);
+		explicit Request(char *request);
 		~Request() = default;
 		
 
-		std::string	getMethod();
-		std::string	getHostname();
-		int			getPort();
-		int			getLength();
-		std::string	getBody();
+		std::string&    getMethod();
+		std::string&    getPath();
+		std::string&    getHostname();
+		uint&	    	getPort();
+		uint&		    getLength();
+		std::string&    getBody();
 
 		void		printData();
 
 	private:
-		int		_fd;
-		int		_start;
-		int		_pos;
-	
 		std::string	_request;
 		std::string	_method;
+		std::string _path;
 		std::string	_hostname;
 		uint		_port;
 		uint		_contentLength;
 		std::string	_body;
 
 		void 	_extractMethod();
+		void	_extractPath();
 		void	_extractHost();
 		void	_extractBody();
 
 	// Hidden orthodox canonical shit
 		Request& operator=(const Request& other) = default;
-		Request();
+		Request() = default;
 };
 
 #endif
