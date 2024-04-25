@@ -6,12 +6,15 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 11:57:51 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 17:20:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 
+/**
+ * @todo remove setupEpoll from here and put it in its own class.
+*/
 Server::Server()
 {
 	createSocket();

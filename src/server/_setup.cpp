@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 11:32:51 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 17:23:38 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	Server::bindToAddress()
 
 /**
  * Sets up epoll instance, and adds _serverfd to it
+ * @todo remove from server class and make epoll class with public methods to add fds to the epoll instance
  * exits() upon failure to do these
 */
 void	Server::setupEpoll()

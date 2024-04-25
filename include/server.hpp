@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/22 12:10:36 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 17:13:26 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,7 @@
 # include <netinet/in.h>
 # include <sys/epoll.h>
 # include <set>
-# include <iostream>
-# include <cstring>
-# include <unistd.h>
-
-# define CLI_LIMIT 10
-# define BUF_LIMIT 1024
-# define PORT 8080
+# include "webserv.hpp"
 
 class Server
 {

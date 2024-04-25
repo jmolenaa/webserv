@@ -1,18 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   response.cpp                                        :+:    :+:            */
+/*   webserv.cpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:35:52 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/25 17:09:43 by dliu          #+#    #+#                 */
+/*   Updated: 2024/04/25 17:25:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "webserv.hpp"
 
-Response::Response(std::string& requestPath) : _path(requestPath)
-{
-	//parse path, get file, compile response
-}
+//program stuff goes here, such as startup, setup and terminating etc
