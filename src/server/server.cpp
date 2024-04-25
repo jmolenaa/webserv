@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 17:20:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 17:29:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 /**
  * @todo remove setupEpoll from here and put it in its own class.
+ * make it so the server only listens on a specified port
 */
 Server::Server()
 {
@@ -54,7 +55,7 @@ void Server::run()
         handleEvents(events, numEvents);
     }    
 }
-
+//probably will need to be moved to Epoll class? Will likely need to rewrite
 void Server::handleEvents(epoll_event* events, int numEvents)
 {
     for (int i = 0; i < numEvents; i++)
