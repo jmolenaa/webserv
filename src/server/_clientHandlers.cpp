@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 12:01:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 18:35:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void Server::handleClientRequest(int fd)
 		Request request(buffer);
 		request.printData();
 		Response response(request.getPath());
+		response.getResponse();
 		// send back files, implement CGI.
 		serveClient(fd, "You've been served\n");
 	}

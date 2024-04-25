@@ -18,7 +18,6 @@ Response::Response(std::string& requestPath) : _path(requestPath)
 	//parse path, get file, compile response
 	_findFileType();
 	_generateHeader();
-	_responseFd = Helpers::_getFileFd(_path, _type);
 	_populateContent();
 }
 
@@ -36,10 +35,20 @@ void	Response::_generateHeader()
 void Response::_populateContent()
 {
 	_message += "\r\n";
-	_message += "html stuff";
+	std::ifstream file(_path);
+	std::string line;
+	if (file.is_open())
+	{
+		while (std::getline(file, line))
+			_message += line + '\n';
+		file.close();
+	}
+	else
+		_message += "Error, no file found\n";
 }
 
 std::string Response::getResponse()
 {
+	std::cout << "sending: '" << _message << "'" << std::endl;
 	return (_message);
 }

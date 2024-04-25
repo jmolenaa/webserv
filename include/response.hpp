@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 18:04:23 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/25 18:32:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ class Response
 		std::string getResponse();
 	
 	private:
-		std::string _path;
-		filetype	_type;
-		int			_responseFd;
-		std::string _message;
+		std::string 	_path;
+		filetype		_type;
+		std::string		_message;
 
 		void	_findFileType();
 		void	_generateHeader();
