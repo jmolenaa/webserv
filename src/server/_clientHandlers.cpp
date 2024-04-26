@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 18:35:19 by dliu          ########   odam.nl         */
+/*   Updated: 2024/04/26 13:07:00 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,17 @@ void Server::handleClientRequest(int fd)
 		Request request(buffer);
 		request.printData();
 		Response response(request.getPath());
-		response.getResponse();
-		// send back files, implement CGI.
-		serveClient(fd, "You've been served\n");
+
+		//implement CGI.
+		serveClient(fd, response.getResponse());
 	}
 }
 
 void Server::serveClient(int clientFd, const std::string& message)
 {
+	// write(clientFd, message.c_str(), message.size());
 	ssize_t bytesSent = send(clientFd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1)
 		std::cerr << "Failed to send message: " << std::strerror(errno) << std::endl;
+	close(clientFd);
 }

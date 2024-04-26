@@ -29,7 +29,11 @@ void	Response::_findFileType()
 
 void	Response::_generateHeader()
 {
-	_message += "Header content\r\n";
+	_message += "HTTP/1.1 200 OK\r\n";
+	_message += "Date: Fri, 26 April 2024 22:38:32 GMT\r\n";
+	_message += "Content-Type: text/html\r\n";
+	_message += "Content-Length: 1024\r\n";
+	_message += "Connection: Closed\r\n";
 }
 
 void Response::_populateContent()
@@ -44,11 +48,21 @@ void Response::_populateContent()
 		file.close();
 	}
 	else
-		_message += "Error, no file found\n";
+	{
+		std::ifstream err("src/defaults/error.html");
+		if (err.is_open())
+		{
+			while (std::getline(err, line))
+				_message += line + "\n";
+			err.close();
+		}	
+		else
+			_message += "Error, no content found\n";
+	}
 }
 
 std::string Response::getResponse()
 {
-	std::cout << "sending: '" << _message << "'" << std::endl;
+	// std::cout << "sending: '" << _message << "'" << std::endl; //Comment this out later!
 	return (_message);
 }
