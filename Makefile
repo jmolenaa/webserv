@@ -13,15 +13,17 @@
 NAME = Webserv
 CC = c++
 FLAG = -Wall -Werror -Wextra
-VPATH = src src/server src/helpers src/request src/response
+VPATH = src src/server src/helpers src/request src/response src/config
 SERVER = main.cpp \
 			helpers.cpp \
 			request.cpp response.cpp \
 			server.cpp _setup.cpp _serverHandlers.cpp _clientHandlers.cpp \
-		 
+
+CONFIG = configmain.cpp config.cpp lexer.cpp
+
 INCLUDE = -I include
 
-all: $(NAME)
+all: $(NAME) config
 
 $(NAME): $(SERVER)
 	$(CC) $(FLAG) $(INCLUDE) $^ -o $(NAME)
@@ -35,3 +37,6 @@ fclean:clean
 re: clean all
 
 .PHONY: all clean
+
+config : $(CONFIG)
+	$(CC) $(FLAG) $(INCLUDE) $^ -o $@
