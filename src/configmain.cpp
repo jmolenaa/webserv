@@ -17,5 +17,6 @@ int	main(int argc, char *argv[]) {
 	(void)argc;
 	(void)argv;
 	std::cout << "lol\n";
-	std::string	str(nullptr_t);
+	std::string	str(nullptr);
 }
+
