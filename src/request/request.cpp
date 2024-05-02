@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 12:01:46 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/02 11:45:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 */
 Request::Request(char *request) : _request(request)
 {
+	//something neds to update the return code for the header, possible throw
 	_extractMethod();
 	_extractPath();
 	_extractHost();

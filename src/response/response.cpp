@@ -33,6 +33,7 @@ void	Response::_generateHeader()
 	_message += "Date: Fri, 26 April 2024 22:38:32 GMT\r\n";
 	_message += "Content-Type: text/html\r\n";
 	_message += "Content-Length: 1024\r\n";
+	// _message += "Location: http://youtube.com";
 	_message += "Connection: Closed\r\n";
 }
 
