@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   response.cpp                                        :+:    :+:            */
+/*   _errors.cpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:35:52 by dliu          ########   odam.nl         */
+/*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
+/*   Updated: 2024/05/03 16:43:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
-#include "helpers.hpp"
 
-Response::Response(std::string& requestPath) : _path(requestPath), _filetype("none")
+/**
+ * Populates body with appropriate error file (currently just default 404)
+ * @todo use appropriate error files based on status code and locations
+*/
+void	Response::_populateError()
 {
-	_populateBody();
-	_generateHeader();
-}
-
-std::string Response::getResponse()
-{
-	return (_header + _body);
+	std::ifstream err("pages/error.html");
+	if (err.is_open())
+	{
+		std::string line;
+		while (std::getline(err, line))
+			_body += line + "\n";
+		err.close();
+	}
+	else
+		_body += "Error, no defaults found\n";
 }
