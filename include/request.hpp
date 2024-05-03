@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 12:01:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/02 12:32:25 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,12 @@ class Request
 		std::string&    getHostname();
 		uint&	    	getPort();
 		uint&		    getLength();
-		std::string&    getBody();
+		std::string&    getBody(); //check maxBodySize in dafault location unless overwritten
 
 		void		printData();
 
 	private:
+		// uint		_status; //maybe should be in response?
 		std::string	_request;
 		std::string	_method;
 		std::string _path;
