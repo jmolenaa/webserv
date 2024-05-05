@@ -6,34 +6,49 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 18:32:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/03 16:11:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
-# include "server.hpp"
+# include "webserv.hpp"
+# include "status.hpp"
+# include "location.hpp"
 
-/**
- * 
-*/
 class Response
 {
+	typedef enum
+	{
+		NONE,
+		HTML,
+		PHP,
+		FOLDER
+	}	type;
+
 	public:
 		explicit Response(std::string& response);
 		~Response() = default;
 
-		std::string getResponse();
+		std::string		getResponse();
 	
 	private:
+		Status			_status;
+		// Location		*locations;
 		std::string 	_path;
-		filetype		_type;
-		std::string		_message;
+		std::string		_filetype;
+		std::string		_header;
+		std::string		_body;
+
+		void	_populateBody();
+		void	_generateHeader();
 
 		void	_findFileType();
-		void	_generateHeader();
-		void	_populateContent();
+		void	_populateError();
+		
+		std::string _getDateTime();
+		std::string	_getType();
 
 	// Hidden orthodox canonical shit
 		Response& operator=(const Response& other) = default;

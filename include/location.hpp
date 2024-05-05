@@ -6,20 +6,18 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/02 11:51:42 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/02 13:38:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/03 16:13:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "string"
-#include "vector"
+#include <string>
+#include <vector>
+#include "status.hpp"
 
- //maybe make this pairs later
-typedef enum	e_errorcode
-{
-	NOTFOUND,
-	BODYTOOBIG,
-	ETC
-} 	errorcode;
+#ifndef LOCATION_HPP
+# define LOCATION_HPP
+
+//moved status code enum to status.hpp
 
 class Location
 {
@@ -42,3 +40,5 @@ class Location
 
 		//getters
 };
+
+#endif
