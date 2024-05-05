@@ -21,7 +21,7 @@ END=\033[0m
 # Makefile
 # If you created a new file, you don't have to add it anywhere
 # If you created a new directory in the src folder
-# Add it to the $(DIR) variable on line 44 with changing the src prefix to the obj prefix
+# Add it to the $(DIR) variable on line 46 with changing the src prefix to the obj prefix
 
 # Compilation variables
 NAME = Webserv
