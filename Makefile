@@ -10,29 +10,69 @@
 #                                                                              #
 # **************************************************************************** #
 
+RED=\033[1;31m
+GREEN=\033[1;32m
+YELLOW=\033[1;33m
+BLUE=\033[1;34m
+MAGENTA=\033[1;35m
+CYAN=\033[1;36m
+END=\033[0m
+
+# Makefile
+# If you created a new file, you don't have to add it anywhere
+# If you created a new directory in the src folder
+# Add it to the $(DIR) variable on line 44 with changing the src prefix to the obj prefix
+
+# Compilation variables
 NAME = Webserv
-CC = c++
-FLAG = -Wall -Werror -Wextra
-VPATH = src src/server src/helpers src/request src/response src/status
-SERVER = main.cpp \
-			helpers.cpp \
-			request.cpp \
-			response.cpp _body.cpp _header.cpp _errors.cpp \
-			server.cpp _setup.cpp _serverHandlers.cpp _clientHandlers.cpp \
-		 	status.cpp 
 INCLUDE = -I include
+CXX = c++
+ifdef DEBUG
+	CXXFLAGS := -Wall -Werror -Wextra -g -fsanitize=address
+else
+	CXXFLAGS := -Wall -Werror -Wextra
+endif
+
+
+HEADERS  = $(shell find include -type f -name "*.hpp")
+SRC_FILES = $(shell find src -type f -name "*.cpp")
+
+
+OBJ_DIR = obj
+OBJS := $(SRC_FILES:src/%.cpp=$(OBJ_DIR)/%.o)
+
+# if condition to create obj directories when compiling for the first time
+ifndef $(shell find $(OBJ_DIR) -maxdepth 1 -name $(OBJ_DIR))
+	DIR = obj obj/cgi obj/config obj/epoll obj/helpers obj/request obj/response obj/server obj/status
+endif
+
 
 all: $(NAME)
 
-$(NAME): $(SERVER)
-	$(CC) $(FLAG) $(INCLUDE) $^ -o $(NAME)
+$(NAME): $(DIR) $(OBJS)
+	@echo "${MAGENTA}Creating $@${END}"
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) $(OBJS) -o $(NAME)
+	@echo "${GREEN}Done!${END}"
 
+$(DIR):
+	@mkdir -p $@
+
+obj/%.o: src/%.cpp
+	@echo "${BLUE}Compiling $<${END}"
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c -o $@ $^
 
 clean:
-	rm -rf $(NAME)
+	@echo "${RED}Removing objs${END}"
+	@rm -rf $(OBJS) $(OBJ_DIR)
 
-fclean:clean
+fclean: clean
+	@echo "${RED}Removing ${NAME}${END}"
+	@rm -rf $(NAME)
 
 re: clean all
+
+# should probably fclean first before compiling with debug symbols
+debug:
+	$(MAKE) DEBUG=1 all
 
 .PHONY: all clean
