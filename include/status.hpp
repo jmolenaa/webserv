@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 14:50:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 12:37:36 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,15 @@ class Status
 		Status();
 		~Status() = default;
 		
-		key				_state;
-
 		std::string&	getStatMessage();
 		short&			getStatNum();
-
+		
+		key				getState();
+		void			updateState(key status);
+	
 	private:
-		std::pair<std::string, short> _status[COUNT];
+		std::pair<std::string, short>	_status[COUNT];
+		key								_state;
 };
 
 #endif

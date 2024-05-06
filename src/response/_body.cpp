@@ -6,76 +6,43 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 16:49:33 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 13:25:35 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
-//get filetype from _path
-void	Response::_findFileType()
-{
-	size_t	dir = _path.find_last_of('/');
-	if (dir == std::string::npos)
-	{
-		_status._state = Status::BAD;
-		return;
-	}
-	size_t pos = _path.find_last_of('.', dir);
-	if (pos != std::string::npos)
-	{
-		_filetype = _path.substr(pos + 1);
-		if (_filetype != "html" && _filetype != "php")
-			_status._state = Status::UNSUPPORTED;
-		return;
-	}
-	// if show location is on, change filetype to folder?
-}
-
 //populates response body
 void Response::_populateBody()
 {
-	_findFileType();
+	_extractFileType();
 	_body += "\r\n";
-	if (_filetype == "PHP")
-	{
-		//Do CGI stuff
-		_body += "CGI STUFF NOT YET SUPPORTED";
-		return;
-	}
-	if (_filetype == "html")
-	{
-		//change this to use locations
-		std::string root = "/home/daoyi/codam/webserv/pages";
-		root += _path;
-		std::ifstream file(root);
-		std::string line;
-		if (file.is_open())
-		{
-			std::cout << "FOUND IT!!!!!!!!!!!!!!!!" << std::endl;
-			while (std::getline(file, line))
-				_body += line + "\n";
-			file.close();
-		}
-	}
-	if (_filetype == "none")
-	{
-		//update to use locations
-		std::string root = "/home/daoyi/codam/webserv/pages";
-		std::ifstream file(root.append("index.html"));
-		std::string line;
-		if (file.is_open())
-		{
-			while (std::getline(file, line))
-				_body += line + "\n";
-			file.close();
-		}
-		else
-		{
-			//if show folder is on, show the folder, else 404
-			_status._state = Status::NOTFOUND;
-		}
-	}
-	if (_status._state != Status::OK)
+	if (_filetype == INDEX || _filetype == HTML)
+		_populateHtml();
+	else if (_filetype == PHP)
+		_executeCGI();
+	if (_status.getState() != Status::OK)
 		return (_populateError());
+}
+
+//get filetype from _path
+void	Response::_extractFileType()
+{
+	size_t	dir = _path.find_last_of('/');
+	if (dir == std::string::npos)
+		return (_status.updateState(Status::BAD));
+	size_t pos = _path.find_last_of('.');
+	if (pos != std::string::npos)
+	{
+		std::string type = _path.substr(pos + 1);
+		if (type == "html")
+			_filetype = HTML;
+		else if (type == "php")
+			_filetype = PHP;
+		else
+			return (_status.updateState(Status::UNSUPPORTED));
+	}
+	else
+		_filetype = INDEX;
+	// if show location is on, change filetype to folder
 }

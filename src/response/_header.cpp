@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 16:44:19 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 13:00:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,17 @@ std::string	Response::_getDateTime()
 
 std::string	Response::_getType()
 {
-	if (_filetype == "html")
-		return ("text/html");
-	if (_filetype == "NONE")
-		return (_filetype);
-	else
-		return("CGI stuff I guess");
+	switch (_filetype)
+	{
+		case HTML:
+			return ("text/html");
+		case PHP:
+			return ("text/php?");
+		case NONE:
+			return ("text/unsupported");
+		default:
+			return ("text");
+	}
 }
 
 void	Response::_generateHeader()

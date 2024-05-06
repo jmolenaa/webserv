@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 16:43:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 13:01:31 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 void	Response::_populateError()
 {
-	std::ifstream err("pages/error.html");
+	std::ifstream err("/home/daoyi/codam/webserv/pages/error.html");
 	if (err.is_open())
 	{
 		std::string line;
