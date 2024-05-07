@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:14:08 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:14:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ Request::Request(char *request) : _request(request)
 
 void Request::_extractHeader()
 {
-	std::stringstream str;
 }
 
 void Request::_extractMethod()

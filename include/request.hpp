@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 14:44:25 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:11:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class Request
 	private:
 		std::string	_request;
 		std::string _header;
-		t_method	_method;
+		t_methods	_method;
 		std::string _path;
 		std::string	_hostname;
 		uint		_port;
