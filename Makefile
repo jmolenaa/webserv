@@ -41,6 +41,10 @@ SRC_FILES = $(shell find src -type f -name "*.cpp")
 OBJ_DIR = obj
 OBJS := $(SRC_FILES:src/%.cpp=$(OBJ_DIR)/%.o)
 
+
+# Variable for dependency files
+DEPS := $(OBJS:%.o=%.d)
+
 # if condition to create obj directories when compiling for the first time
 ifndef $(shell find $(OBJ_DIR) -maxdepth 1 -name $(OBJ_DIR))
 	DIR = obj obj/cgi obj/config obj/epoll obj/helpers obj/request obj/response obj/server obj/status
@@ -57,13 +61,18 @@ $(NAME): $(DIR) $(OBJS)
 $(DIR):
 	@mkdir -p $@
 
+
+# This tells makefile to use dependency files to check if files need to update
+# no idea how this works exactly, but it seems to do the trick
+-include $(DEPS)
+
 obj/%.o: src/%.cpp
 	@echo "${BLUE}Compiling $<${END}"
-	@$(CXX) $(CXXFLAGS) $(INCLUDE) -c -o $@ $^
+	@$(CXX) $(CXXFLAGS) $(INCLUDE) -MMD -c $< -o $@
 
 clean:
-	@echo "${RED}Removing objs${END}"
-	@rm -rf $(OBJS) $(OBJ_DIR)
+	@echo "${RED}Removing objs and dependency files${END}"
+	@rm -rf $(OBJS) $(DEPS) $(OBJ_DIR)
 
 fclean: clean
 	@echo "${RED}Removing ${NAME}${END}"
