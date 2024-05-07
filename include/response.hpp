@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:12:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:22:05 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include "request.hpp"
 # include "status.hpp"
 # include "location.hpp"
-
 
 class Response
 {
@@ -38,17 +37,11 @@ class Response
 	private:
 		Status			_status;
 		// Location		*locations;
-		Status			_status;
-		// Location		*locations;
 		std::string 	_path;
-		filetype		_filetype;
 		std::ifstream	_file;
 		std::string		_header;
 		std::string		_body;
 		filetype		_filetype;
-		std::ifstream	_file;
-		std::string		_header;
-		std::string		_body;
 
 		void	_get();
 		void	_getError();

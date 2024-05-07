@@ -6,11 +6,12 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:14:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:27:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "request.hpp"
+#include <iostream>
 
 /** 
  * @todo
@@ -61,7 +62,7 @@ void Request::_extractMethod()
 		_method = DELETE;
 		return;
 	}
-	_method = ERROR;
+	_method = OTHER;
 	std::cerr << "Cannot parse request from client." << std::endl;
 }
 
@@ -99,7 +100,7 @@ void Request::_extractBody()
 	_body = Helpers::_keyValueFind(_request, "\r\n\r\n", 0);
 }
 
-std::string& Request::getMethod()
+t_methods& Request::getMethod()
 {
 	return _method;
 }
@@ -131,7 +132,6 @@ std::string& Request::getBody()
 
 void Request::printData()
 {
-	std::cout << "-------Got Request Data---------\n"
 	std::cout << "-------Got Request Data---------\n"
 		<< "\nMethod: '" << _method << "'"
 		<< "\nPath: '" << _path << "'"
