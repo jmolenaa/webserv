@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 12:57:54 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 12:57:00 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ class Response
 		std::string	_getType();
 
 	// Hidden orthodox canonical shit
-		Response& operator=(const Response& other) = default;
+		// Response& operator=(const Response& other) = default;
 		Response() = default;
 };
 

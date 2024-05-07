@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/06 12:45:44 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:27:10 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 12:57:25 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	Response::_populateHtml()
 void Response::_openFile()
 {
 	//replace with location stuff
-	std::string root = "/home/daoyi/codam/webserv/pages";
+	std::string root = "pages/";
 	switch (_filetype)
 	{
 		case HTML:
@@ -39,7 +39,7 @@ void Response::_openFile()
 		}
 		case INDEX:
 		{
-			root += "/index.html"; //replace with locations stuff
+			root += "index.html"; //replace with locations stuff
 			_filetype = HTML;
 			break;
 		}
