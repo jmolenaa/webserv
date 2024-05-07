@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 12:57:00 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 13:02:36 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ class Response
 {
 	typedef enum
 	{
-		NONE,
 		INDEX,
 		HTML,
 		PHP,

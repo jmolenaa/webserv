@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:25:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 13:02:13 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ void	Response::_extractFileType()
 			return (_status.updateState(Status::UNSUPPORTED));
 	}
 	else
+	{
 		_filetype = INDEX;
+		if (_path != "/")
+		{
+			_path += "/index.html";
+			_filetype = HTML;
+		}
+	}
 	// if show location is on, change filetype to folder
 }

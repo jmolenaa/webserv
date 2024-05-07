@@ -13,7 +13,7 @@
 #include "response.hpp"
 #include "helpers.hpp"
 
-Response::Response(std::string& requestPath) : _path(requestPath), _filetype(NONE)
+Response::Response(std::string& requestPath) : _path(requestPath), _filetype(INDEX)
 {
 	_populateBody();
 	_generateHeader();
