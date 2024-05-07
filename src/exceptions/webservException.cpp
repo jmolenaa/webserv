@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   webserv.hpp                                        :+:    :+:            */
+/*   webservException.cpp                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/25 17:06:39 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:15:29 by dliu          ########   odam.nl         */
+/*   Created: 2024/05/07 10:52:43 by jmolenaa      #+#    #+#                 */
+/*   Updated: 2024/05/07 10:52:43 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+//
+// Created by jmolenaa on 7-5-24.
+//
 
-#include <vector>
-#include "server.hpp"
+#include "webservException.hpp"
 
-
-class	Webserv {
-
-public:
-	Webserv() = default;
-	void	run();
-
-private:
-
-	std::vector<Server>	_servers;
-
-};
-
-#endif
+WebservException::WebservException(std::string errorStr) : _errorStr(std::move(errorStr)){
+}

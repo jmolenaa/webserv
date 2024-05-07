@@ -1,32 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   webserv.hpp                                        :+:    :+:            */
+/*   lexer.cpp                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: janmolenaar <janmolenaar@student.codam.nl>   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/25 17:06:39 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:15:29 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/29 13:34:15 by janmolenaar   #+#    #+#                 */
+/*   Updated: 2024/04/29 13:34:15 by janmolenaar   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+//
+// Created by Jan Molenaar on 29/04/2024.
+//
 
-#include <vector>
-#include "server.hpp"
-
-
-class	Webserv {
-
-public:
-	Webserv() = default;
-	void	run();
-
-private:
-
-	std::vector<Server>	_servers;
-
-};
-
-#endif
+#include "lexer.hpp"

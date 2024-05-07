@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 14:42:19 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:14:08 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,12 +133,14 @@ std::string& Request::getBody()
 void Request::printData()
 {
 	std::cout << "-------Got Request Data---------\n"
+	std::cout << "-------Got Request Data---------\n"
 		<< "\nMethod: '" << _method << "'"
 		<< "\nPath: '" << _path << "'"
 		<< "\nHost: '" << _hostname << "'"
 		<< "\nPort: '" << _port << "'"
 		<< "\nLength: '" << _contentLength << "'"
 		<< "\nBody: '" << _body << "'"
+		<< "\n------------\n"
 		<< "\n------------\n"
 	<< std::endl;
 }

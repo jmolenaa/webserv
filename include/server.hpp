@@ -6,34 +6,40 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 13:26:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:14:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+# include "defines.hpp"
+# include "epoll.hpp"
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <sys/epoll.h>
-# include "webserv.hpp"
+# include <set>
 # include "location.hpp"
-# include "epoll.hpp"
+# include <iostream>
+# include <unistd.h>
+# include <cstring>
 
 class Server
 {
 	public:
 		Server();
 		~Server();
-		
+
 		void	run();
 
 	private:
-		int						_serverfd;
 		int						_epollfd;
+		int						_serverfd;
 		Epoll					_epoll;
 		std::set<int>			_clientfds;
 
+		uint16_t				_port;
+		uint32_t				_address;
 		std::string				_name;
 		std::vector<Location>	_locations; //default location first, followed by others
 
