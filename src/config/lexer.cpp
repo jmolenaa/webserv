@@ -14,4 +14,17 @@
 // Created by Jan Molenaar on 29/04/2024.
 //
 
+#include "webservException.hpp"
 #include "lexer.hpp"
+
+Lexer::Lexer(std::string const& filename) : _file(filename) {
+
+	if (_file.fail()) {
+		throw WebservException("Failed to open configuration file: " + filename + "\n");
+	}
+}
+
+Lexer::~Lexer() {
+	this->_file.close();
+}
+
