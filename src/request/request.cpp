@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/02 11:45:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 14:42:19 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,41 @@
 */
 Request::Request(char *request) : _request(request)
 {
-	//something neds to update the return code for the header, possible throw
+	_extractHeader();
 	_extractMethod();
 	_extractPath();
 	_extractHost();
 	_extractBody();
 }
 
+void Request::_extractHeader()
+{
+	std::stringstream str;
+}
+
 void Request::_extractMethod()
 {
 	size_t	method_pos;
-	std::string methods[] = {"GET", "POST", "DELETE"};
 	
-	for (std::string& type : methods)
+	method_pos = _request.find("GET");
+	if (method_pos != std::string::npos)
 	{
-		method_pos = _request.find(type);
-		if (method_pos != std::string::npos)
-		{
-			_method = _request.substr(0, type.length());
-			return;
-		}
+		_method = GET;
+		return;
 	}
-	_method = "";
+	method_pos = _request.find("POST");
+	if (method_pos != std::string::npos)
+	{
+		_method = POST;
+		return;
+	}
+	method_pos = _header.find("DELETE");
+	if (method_pos != std::string::npos)
+	{
+		_method = DELETE;
+		return;
+	}
+	_method = ERROR;
 	std::cerr << "Cannot parse request from client." << std::endl;
 }
 
@@ -119,12 +132,13 @@ std::string& Request::getBody()
 
 void Request::printData()
 {
-	std::cout
+	std::cout << "-------Got Request Data---------\n"
 		<< "\nMethod: '" << _method << "'"
 		<< "\nPath: '" << _path << "'"
 		<< "\nHost: '" << _hostname << "'"
 		<< "\nPort: '" << _port << "'"
 		<< "\nLength: '" << _contentLength << "'"
 		<< "\nBody: '" << _body << "'"
+		<< "\n------------\n"
 	<< std::endl;
 }

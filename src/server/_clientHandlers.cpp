@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/02 12:35:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 13:14:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,19 @@ void Server::handleClientRequest(int fd)
 	else
 	{
 		buffer[numBytes] = '\0';
-		std::cout << "----Received request----\n" << buffer << std::endl;
+		std::cout << "----Received request----\n" << buffer << "\n--------\n" << std::endl;
 
 		Request request(buffer);
-		request.printData();
-		Response response(request.getPath());
+		request.printData(); //REMOVE this if you don't want to print the request
 
-		//implement CGI.
-		serveClient(fd, response.getResponse());
+		Response response(request); //will need to update to handle PUT and DELETE
+		serveClient(fd, response.getResponseMessage());
 	}
 }
 
 void Server::serveClient(int clientFd, const std::string& message)
 {
-	// write(clientFd, message.c_str(), message.size());
+	std::cout << "\n------------SENDING MESSAGE----------\n" << message << "\n------------\n" << std::endl;
 	ssize_t bytesSent = send(clientFd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1)
 		std::cerr << "Failed to send message: " << std::strerror(errno) << std::endl;

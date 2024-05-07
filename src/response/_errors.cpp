@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   response.cpp                                        :+:    :+:            */
+/*   _errors.cpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/24 14:35:52 by dliu          ########   odam.nl         */
+/*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
+/*   Updated: 2024/05/07 13:15:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
-#include "helpers.hpp"
 
-Response::Response(Request& request) : _path(request.getPath()), _filetype(INDEX)
+/**
+ * gets body with appropriate error file (currently just default 404)
+ * @todo use appropriate error files based on status code and locations
+*/
+void	Response::_getError()
 {
-	if (request.getMethod() == GET)
-		_get();
-	else if (request.getMethod() == POST)
-		_post();
-	else if (request.getMethod() == DELETE)
-		_delete();
-	_generateHeader();
-}
-
-std::string Response::getResponseMessage()
-{
-	return (_header + _body);
+	std::ifstream err("/home/daoyi/codam/webserv/pages/error.html");
+	if (err.is_open())
+	{
+		std::string line;
+		while (std::getline(err, line))
+			_body += line + "\n";
+		err.close();
+	}
+	else
+		_body += "Error, no defaults found\n";
 }
