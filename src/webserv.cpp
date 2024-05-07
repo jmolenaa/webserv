@@ -13,3 +13,22 @@
 #include "webserv.hpp"
 
 //program stuff goes here, such as startup, setup and terminating etc
+
+//Webserv::Webserv() {
+//
+//}
+
+void Webserv::run() {
+
+	Server	serve;
+//	std::vector<Server>	servers({serve});
+//	servers.push_back(*serve);
+//	std::cout << &serve << "\n";
+//	std::cout << &servers[0] << "\n";
+
+	serve.run();
+//	for (size_t i = 0; i < servers.size(); ++i) {
+//		this->_servers[i].run();
+//	}
+//	std::cerr << "hey\n";
+}

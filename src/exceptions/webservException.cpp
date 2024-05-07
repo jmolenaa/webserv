@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   configmain.cpp                                     :+:    :+:            */
+/*   webservException.cpp                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: janmolenaar <janmolenaar@student.codam.nl>   +#+                     */
+/*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/29 10:32:35 by janmolenaar   #+#    #+#                 */
-/*   Updated: 2024/04/29 10:32:35 by janmolenaar   ########   odam.nl         */
+/*   Created: 2024/05/07 10:52:43 by jmolenaa      #+#    #+#                 */
+/*   Updated: 2024/05/07 10:52:43 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include "config.hpp"
+//
+// Created by jmolenaa on 7-5-24.
+//
 
-int	main(int argc, char *argv[]) {
-	(void)argc;
-	(void)argv;
-	std::cout << "lol\n";
-	std::string	str(nullptr);
+#include "webservException.hpp"
+
+WebservException::WebservException(std::string errorStr) : _errorStr(std::move(errorStr)){
 }
-

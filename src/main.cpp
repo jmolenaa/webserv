@@ -10,12 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.hpp"
+#include "webserv.hpp"
+#include "configParser.hpp"
+#include "defines.hpp"
+#include "webservException.hpp"
+#include <iostream>
 
-int main(void)
+
+// todo
+// make headers understandable, where we actually need them
+
+void	parseConfigFile(std::string const& filename) {
+
+	ConfigParser		configParser;
+
+	configParser.lex(filename);
+	configParser.parse();
+}
+
+int main(int argc, char *argv[])
 {
-	Server server;
+	if (argc != 2) {
+		std::cerr << RED << "Invalid number of arguments\nUsage: ./webserv [path to configuration file, ending with .conf]\n";
+		return 1;
+	}
 
-	server.run();
-	return (0);
+
+	try {
+		parseConfigFile(std::string(argv[1]));
+		Webserv	webserver;
+		webserver.run();
+	}
+	catch (WebservException& e) {
+		std::cerr << e.what();
+		return 1;
+	}
+
+//	Server server;
+//
+//	server.run();
+//	return (0);
 }

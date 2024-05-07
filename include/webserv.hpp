@@ -13,16 +13,20 @@
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
-# include <sys/epoll.h>
-# include <fstream>
-# include <iostream>
-# include <cstring>
-# include <vector>
-# include <set>
-# include <unistd.h>
+#include <vector>
+#include "server.hpp"
 
-# define CLI_LIMIT 10
-# define BUF_LIMIT 1024
-# define PORT 8080
+
+class	Webserv {
+
+public:
+	Webserv() = default;
+	void	run();
+
+private:
+
+	std::vector<Server>	_servers;
+
+};
 
 #endif

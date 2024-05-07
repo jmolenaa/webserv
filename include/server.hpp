@@ -13,27 +13,33 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+# include "defines.hpp"
+# include "epoll.hpp"
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <sys/epoll.h>
-# include "webserv.hpp"
+# include <set>
 # include "location.hpp"
-# include "epoll.hpp"
+# include <iostream>
+# include <unistd.h>
+# include <cstring>
 
 class Server
 {
 	public:
 		Server();
 		~Server();
-		
+
 		void	run();
 
 	private:
-		int						_serverfd;
 		int						_epollfd;
+		int						_serverfd;
 		Epoll					_epoll;
 		std::set<int>			_clientfds;
 
+		uint16_t				_port;
+		uint32_t				_address;
 		std::string				_name;
 		std::vector<Location>	_locations; //default location first, followed by others
 

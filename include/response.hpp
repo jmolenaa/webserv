@@ -16,6 +16,7 @@
 # include "webserv.hpp"
 # include "status.hpp"
 # include "location.hpp"
+# include <fstream>
 
 class Response
 {
