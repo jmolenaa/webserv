@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:27:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 14:50:30 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 12:37:27 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,14 @@ std::string& Status::getStatMessage()
 short& Status::getStatNum()
 {
 	return (_status[_state].second);
+}
+
+void Status::updateState(key state)
+{
+	_state = state;
+}
+
+Status::key Status::getState()
+{
+	return _state;
 }

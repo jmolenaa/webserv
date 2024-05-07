@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 16:11:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/06 12:57:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ class Response
 	typedef enum
 	{
 		NONE,
+		INDEX,
 		HTML,
 		PHP,
 		FOLDER
-	}	type;
+	}	filetype;
 
 	public:
 		explicit Response(std::string& response);
@@ -37,15 +38,20 @@ class Response
 		Status			_status;
 		// Location		*locations;
 		std::string 	_path;
-		std::string		_filetype;
+		filetype		_filetype;
+		std::ifstream	_file;
 		std::string		_header;
 		std::string		_body;
 
 		void	_populateBody();
 		void	_generateHeader();
 
-		void	_findFileType();
+		void	_extractFileType();
+		void	_openFile();
+
 		void	_populateError();
+		void	_populateHtml();
+		void	_executeCGI(); //move this to CGI?
 		
 		std::string _getDateTime();
 		std::string	_getType();
