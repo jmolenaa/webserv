@@ -6,17 +6,17 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:01:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:16:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
 /**
- * Populates body with appropriate error file (currently just default 404)
+ * gets body with appropriate error file (currently just default 404)
  * @todo use appropriate error files based on status code and locations
 */
-void	Response::_populateError()
+void	Response::_getError()
 {
 	std::ifstream err("/home/daoyi/codam/webserv/pages/error.html");
 	if (err.is_open())

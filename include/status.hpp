@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 12:37:36 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:20:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Status
 			BAD, //400
 			FORBIDDEN, //403
 			NOTFOUND, //404
-			NOTALLOWED, //405
+			METHODNOTALLOWED, //405
 			LENGTHREQUIRED, //411
 			TOOLARGE, //413
 			UNSUPPORTED, //415
