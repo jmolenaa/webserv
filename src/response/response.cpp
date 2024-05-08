@@ -21,6 +21,8 @@ Response::Response(Request& request) : _path(request.getPath()), _filetype(INDEX
 		_post();
 	else if (request.getMethod() == DELETE)
 		_delete();
+	else
+		_status.updateState(Status::METHODNOTALLOWED);
 	_generateHeader();
 }
 

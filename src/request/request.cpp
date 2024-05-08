@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:27:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:35:18 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,26 @@ Request::Request(char *request) : _request(request)
 
 void Request::_extractHeader()
 {
+	uint pos = _request.find("\r\n\r\n");
+	if (pos == std::string::npos)
+		_header = "";
+	else
+		_header = _request.substr(0, pos);
+
+	std::cout << "EXTRACTED HEADER: " << _header << std::endl;
 }
 
 void Request::_extractMethod()
 {
 	size_t	method_pos;
 	
-	method_pos = _request.find("GET");
+	method_pos = _header.find("GET");
 	if (method_pos != std::string::npos)
 	{
 		_method = GET;
 		return;
 	}
-	method_pos = _request.find("POST");
+	method_pos = _header.find("POST");
 	if (method_pos != std::string::npos)
 	{
 		_method = POST;
@@ -68,11 +75,11 @@ void Request::_extractMethod()
 
 void Request::_extractPath()
 {
-	size_t	path_start = _request.find_first_of('/');
+	size_t	path_start = _header.find_first_of('/');
 	if (path_start != std::string::npos)
 	{
-		size_t path_end = _request.find_first_of(' ', path_start);
-		_path = _request.substr(path_start, path_end - path_start);
+		size_t path_end = _header.find_first_of(' ', path_start);
+		_path = _header.substr(path_start, path_end - path_start);
 		return;
 	}
 	_path = "";
@@ -81,10 +88,10 @@ void Request::_extractPath()
 
 void Request::_extractHost()
 {
-	_hostname = Helpers::_keyValueFind(_request, "Host: ", ':');
+	_hostname = Helpers::_keyValueFind(_header, "Host: ", ':');
 
     _port = PORT;
-	std::string tmp = Helpers::_keyValueFind(_request, "Host: ", '\n');
+	std::string tmp = Helpers::_keyValueFind(_header, "Host: ", '\n');
 	tmp = Helpers::_keyValueFind(tmp, ":", '\n');
 	if (!tmp.empty())
 		_port = std::stoi(tmp);
@@ -96,8 +103,15 @@ void Request::_extractBody()
 	std::string tmp = Helpers::_keyValueFind(_request, "Content-Length: ", '\n');
 	if (!tmp.empty())
 		_contentLength = std::stoi(tmp);
-
-	_body = Helpers::_keyValueFind(_request, "\r\n\r\n", 0);
+	
+	if (_contentLength)
+	{
+		uint pos = _request.find("\r\n\r\n");
+		if (pos == std::string::npos)
+			_body = "";
+		else
+			_body = _request.substr(pos + 4,_contentLength);
+	}
 }
 
 t_methods& Request::getMethod()

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:22:05 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:15:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ class Response
 		Status			_status;
 		// Location		*locations;
 		std::string 	_path;
-		std::ifstream	_file;
 		std::string		_header;
 		std::string		_body;
 		filetype		_filetype;
@@ -56,14 +55,13 @@ class Response
 		void	_generateHeader();
 	
 		void	_extractFileType();
-		void	_openFile();
 
 		
 		std::string _getDateTime();
 		std::string	_getType();
 
 	// Hidden orthodox canonical shit
-		// Response& operator=(const Response& other) = default;
+		Response& operator=(const Response& other) = default;
 		Response() = default;
 };
 

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:16:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:33:43 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ void Server::handleClientRequest(int fd)
 	{
 		buffer[numBytes] = '\0';
 		std::cout << "----Received request----\n" << buffer << "\n--------\n" << std::endl;
-		std::cout << "----Received request----\n" << buffer << "\n--------\n" << std::endl;
 
 		Request request(buffer);
-		request.printData(); //REMOVE this if you don't want to print the request
 		request.printData(); //REMOVE this if you don't want to print the request
 
 		Response response(request); //will need to update to handle PUT and DELETE
@@ -40,8 +38,7 @@ void Server::handleClientRequest(int fd)
 
 void Server::serveClient(int clientFd, const std::string& message)
 {
-	std::cout << "\n------------SENDING MESSAGE----------\n" << message << "\n------------\n" << std::endl;
-	std::cout << "\n------------SENDING MESSAGE----------\n" << message << "\n------------\n" << std::endl;
+	// std::cout << "\n------------SENDING MESSAGE----------\n" << message << "\n------------\n" << std::endl;
 	ssize_t bytesSent = send(clientFd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1)
 		std::cerr << "Failed to send message: " << std::strerror(errno) << std::endl;

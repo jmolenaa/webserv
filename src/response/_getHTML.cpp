@@ -6,27 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/06 12:45:44 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 13:12:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:15:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
 void	Response::_getHtml()
-{
-	_openFile();
-	std::string line;
-	if (_file.is_open())
-	{
-		while (std::getline(_file, line))
-			_body += line + "\n";
-		_file.close();
-	}
-	else
-		return (_status.updateState(Status::NOTFOUND));
-}
-
-void Response::_openFile()
 {
 	//replace with location stuff
 	std::string root = "pages/";
@@ -46,5 +32,14 @@ void Response::_openFile()
 		default:
 			break;
 	}
-	_file.open(root);
+	std::ifstream _file(root);
+	std::string line;
+	if (_file.is_open())
+	{
+		while (std::getline(_file, line))
+			_body += line + "\n";
+		_file.close();
+	}
+	else
+		return (_status.updateState(Status::NOTFOUND));
 }

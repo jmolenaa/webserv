@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:27:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 12:37:27 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 10:20:33 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ Status::Status() : _state(OK)
 	_status[NOTFOUND].first = "Not Found";
 	_status[NOTFOUND].second = 404;
 
-	_status[NOTALLOWED].first = "Method Not Allowed";
-	_status[NOTALLOWED].second = 405;
+	_status[METHODNOTALLOWED].first = "Method Not Allowed";
+	_status[METHODNOTALLOWED].second = 405;
 
 	_status[LENGTHREQUIRED].first = "Length Required";
 	_status[LENGTHREQUIRED].second = 411;
