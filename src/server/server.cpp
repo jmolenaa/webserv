@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 17:50:27 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/08 18:13:44 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void Server::run()
 	{
         //*use Epoll.wait_events();
         
-        /* int numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, -1);
+        int numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, -1);
         if (numEvents == -1) {
             std::cerr << "Epoll failed to wait: " << std::strerror(errno) << std::endl;
             exit(EXIT_FAILURE);
-        } */
+        }
         handleEvents(events, numEvents);
     }    
 }
