@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 17:20:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 17:37:06 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ void Server::handleNewConnection()
 		return ;
 	}
 	_clientfds.insert(clientFd);
+
+	// should use Epoll.addFd();
+	
 	epoll_event event{};
 	event.events = EPOLLIN;
 	event.data.fd = clientFd;

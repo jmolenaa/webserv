@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 17:23:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/08 17:54:00 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	Server::bindToAddress()
 */
 void	Server::setupEpoll()
 {
+	// Epoll();
 	_epollfd = epoll_create(CLI_LIMIT);
 	if (_epollfd < 0)
 	{
@@ -60,6 +61,7 @@ void	Server::setupEpoll()
 		exit(EXIT_FAILURE);
 	}
 
+	//Epoll.addFd();
 	epoll_event event{};
 	event.events = EPOLLIN;
 	event.data.fd = _serverfd;

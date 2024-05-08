@@ -19,7 +19,9 @@ class Epoll
 		void addFd(int fd, uint32_t events); 			//addition of sockets
 		void modifyFd(int fd, uint32_t events);			//modification of sockets
 		void removeFd(int fd);							//removal of sockets
-		std::vector<epoll_event> wait_events(int max_events = CLI_LIMIT, int timeout = -1);
+		//need epoll function for newconnection 
+		//need epoll funciton for request
+		std::vector<epoll_event> wait_events(int timeout);
 	private:
 		int _epollfd;
 };
@@ -32,4 +34,12 @@ class Epoll
  3. Use epoll_wait() to wait for events on the epoll instance. This function will return
  a list of epoll_event structure for file descriptors that have their specified events pending
 */
+
+/* 
+Todo yixin:
+1. add Epoll class in _severHandlers.cpp
+2. add Epoll class in sever.cpp
+3. add Epoll class in _setup.cpp
+ */
+
 #endif

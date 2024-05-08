@@ -1,8 +1,3 @@
-/**
- * Epoll stuff goes here.
- * @todo remove setup epoll from server class and create new Epoll class with public methods to add fds to the instance etc.
-*/
-
 /* 
 epoll_events is a data type used in Linux programming.
 It's used to describe which events the application is interested in 
@@ -12,6 +7,17 @@ struct epoll_event {
     uint32_t events;      Epoll events
     epoll_data_t data;    User data variable 
 };
+data:
+a union that can be used to store user-defined data associated with the fd.
+
+events type include:
+EPOLLIN: The associated file descriptor is available for read operations.
+EPOLLOUT: The associated file descriptor is available for write operations.
+EPOLLRDHUP: Stream socket peer closed the connection, or shut down writing half of the connection.
+EPOLLHUP: There is a hang up happened on the associated file descriptor.
+EPOLLERR: Error condition happened on the associated file descriptor.
+EPOLLET: Sets the Edge Triggered behavior for the associated file descriptor. The default behavior for epoll is Level Triggered.
+EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs.
 */
 
 #include "../include/epoll.hpp"
@@ -29,6 +35,12 @@ Epoll::~Epoll()
 {
     close(_epollfd);
 }
+
+/* 
+example:
+epoll.addFd(newSocket, EPOLLIN | EPOLLET);
+// add new socket with edge-triggered bahavior
+ */
 
 void Epoll::addFd(int fd, uint32_t events)
 {
@@ -60,8 +72,17 @@ void Epoll::removeFd(int fd)
     }
 }
 
-std::vector<epoll_event> Epoll::wait_events(int max_events = CLI_LIMIT, int timeout = -1)
+std::vector<epoll_event> Epoll::wait_events(int timeout = -1)
 {
-
+    std::vector<epoll_event> events(CLI_LIMIT);
+    int num_events = epoll_wait(_epollfd, events.data(), CLI_LIMIT, timeout );
+    if (num_events == -1)
+    {
+        throw (WebservException("Epoll wait_event error"));
+    }
+    events.resize(num_events);
+    return events;
 }
 
+//need epoll function for newconnection 
+//need epoll funciton for request
