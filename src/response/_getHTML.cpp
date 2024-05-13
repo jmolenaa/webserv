@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/06 12:45:44 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 10:38:35 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/13 13:00:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,8 @@
 
 void	Response::_getHtml()
 {
-	//replace with location stuff
-	std::string root = "pages/";
-	switch (_filetype)
-	{
-		case HTML:
-		{
-			root += _path;
-			break;
-		}
-		case INDEX:
-		{
-			root += "index.html"; //replace with locations stuff
-			_filetype = HTML;
-			break;
-		}
-		default:
-			break;
-	}
-	std::ifstream _file(root);
+	std::string	filePath = _location.getRoot() + _path;
+	std::ifstream _file(filePath);
 	std::string line;
 	if (_file.is_open())
 	{

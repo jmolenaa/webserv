@@ -13,7 +13,8 @@
 #include "response.hpp"
 #include "helpers.hpp"
 
-Response::Response(Request& request) : _path(request.getPath()), _filetype(INDEX)
+Response::Response(Request& request, Location& location) :
+ 	 _location(location), _path(request.getPath()), _filetype(NONE)
 {
 	if (request.getMethod() == GET)
 		_get();
