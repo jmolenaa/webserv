@@ -40,11 +40,10 @@ void Request::_extractHeader()
 {
 	uint pos = _request.find("\r\n\r\n");
 	if (pos == std::string::npos)
-		_header = "";
+		_header = _request;
 	else
 		_header = _request.substr(0, pos);
-
-	std::cout << "EXTRACTED HEADER: " << _header << std::endl;
+	//std::cout << "EXTRACTED HEADER: " << _header << std::endl;
 }
 
 void Request::_extractMethod()
@@ -70,7 +69,7 @@ void Request::_extractMethod()
 		return;
 	}
 	_method = OTHER;
-	std::cerr << "Cannot parse request from client." << std::endl;
+	//std::cerr << "Cannot parse request from client." << std::endl;
 }
 
 void Request::_extractPath()
@@ -83,13 +82,12 @@ void Request::_extractPath()
 		return;
 	}
 	_path = "";
-	std::cerr << "Cannot parse request from client" << std::endl;
+	//std::cerr << "Cannot parse request from client" << std::endl;
 }
 
 void Request::_extractHost()
 {
 	_hostname = Helpers::_keyValueFind(_header, "Host: ", ':');
-
     _port = PORT;
 	std::string tmp = Helpers::_keyValueFind(_header, "Host: ", '\n');
 	tmp = Helpers::_keyValueFind(tmp, ":", '\n');

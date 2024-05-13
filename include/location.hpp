@@ -39,6 +39,10 @@ class Location
 		~Location() = default;
 
 		//getters
+		std::string getPath();
+		std::string getRoot();
+		std::string getIndex();
+		bool		autoIndex();
 };
 
 #endif
