@@ -6,12 +6,15 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/06 12:45:44 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/13 13:00:39 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/14 15:08:30 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
+/**
+ * @todo Needs to go through epoll
+*/
 void	Response::_getHtml()
 {
 	std::string	filePath = _location.getRoot() + _path;
