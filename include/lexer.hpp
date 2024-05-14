@@ -17,25 +17,27 @@
 #ifndef WEBSERV_LEXER_HPP
 #define WEBSERV_LEXER_HPP
 
-//#include <vector>
+#include <vector>
 #include <fstream>
 
 class Lexer {
 
 public:
 
+	Lexer() = default;
 	explicit Lexer(std::string const& filename);
 	~Lexer();
 
+	void	lex();
+	std::vector<std::string>	getTokens() const;
+
 private:
 
-	std::ifstream	_file;
-
-//	class Node {
-//	public:
-//	};
+	std::ifstream				_file;
+	std::vector<std::string>	_tokens;
 
 };
 
+std::ostream&	operator<<(std::ostream& out, Lexer const& rhs);
 
 #endif //WEBSERV_LEXER_HPP

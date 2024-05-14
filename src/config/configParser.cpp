@@ -20,15 +20,17 @@
 //figure out a way to handle the server vector
 
 #include "configParser.hpp"
+#include "webservException.hpp"
 
-//ConfigParser::ConfigParser() {
-//
+ConfigParser::ConfigParser(std::string const& filename) : _lexer(filename) {
+}
+
+//ConfigParser::~ConfigParser() {
 //}
 
-void ConfigParser::lex(const std::string &filename) {
+void ConfigParser::lex() {
 
-	Lexer	lexer(filename);
-
+	this->_lexer.lex();
 
 }
 

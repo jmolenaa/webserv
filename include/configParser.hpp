@@ -24,13 +24,17 @@ class ConfigParser {
 
 public:
 
-	ConfigParser() = default;
 
-	void				lex(std::string const& filename);
-	void				parse();
+	ConfigParser() = default;
+	explicit ConfigParser(std::string const& filename);
+	~ConfigParser() = default;
+
+	void	lex();
+	void	parse();
 
 private:
 
+	Lexer			_lexer;
 
 };
 
