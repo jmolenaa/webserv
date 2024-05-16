@@ -6,14 +6,14 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/02 12:32:25 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/07 15:22:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
 
-# include "server.hpp"
+# include "defines.hpp"
 # include "helpers.hpp"
 
 /**
@@ -25,9 +25,8 @@ class Request
 	public:
 		explicit Request(char *request);
 		~Request() = default;
-		
 
-		std::string&    getMethod();
+		t_methods&	    getMethod();
 		std::string&    getPath();
 		std::string&    getHostname();
 		uint&	    	getPort();
@@ -37,15 +36,16 @@ class Request
 		void		printData();
 
 	private:
-		// uint		_status; //maybe should be in response?
 		std::string	_request;
-		std::string	_method;
+		std::string _header;
+		t_methods	_method;
 		std::string _path;
 		std::string	_hostname;
 		uint		_port;
 		uint		_contentLength;
 		std::string	_body;
 
+		void	_extractHeader();
 		void 	_extractMethod();
 		void	_extractPath();
 		void	_extractHost();

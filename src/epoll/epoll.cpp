@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 13:50:39 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 14:40:10 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ EPOLLET: Sets the Edge Triggered behavior for the associated file descriptor. Th
 EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs.
 */
 
-#include "../include/epoll.hpp"
+#include "../../include/epoll.hpp"
 
 Epoll::Epoll()
 {

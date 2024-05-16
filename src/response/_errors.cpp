@@ -6,19 +6,20 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:01:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/14 15:13:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
 /**
- * Populates body with appropriate error file (currently just default 404)
- * @todo use appropriate error files based on status code and locations
+ * gets body with appropriate error file (currently just default 404)
+ * @todo use appropriate error files based on status code and locations. 
+ * If error not read and set up at start of program, go through epoll.
 */
-void	Response::_populateError()
+void	Response::_getError()
 {
-	std::ifstream err("/home/daoyi/codam/webserv/pages/error.html");
+	std::ifstream err("root/error.html");
 	if (err.is_open())
 	{
 		std::string line;
@@ -27,5 +28,5 @@ void	Response::_populateError()
 		err.close();
 	}
 	else
-		_body += "Error, no defaults found\n";
+		_body += "No defaults found for this error\n";
 }

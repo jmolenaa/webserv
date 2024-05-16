@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/03 16:37:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/13 13:01:05 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void Server::handleClientRequest(int fd)
 		Request request(buffer);
 		request.printData(); //REMOVE this if you don't want to print the request
 
-		Response response(request.getPath()); //will need to update to handle PUT and DELETE
-		serveClient(fd, response.getResponse());
+		Response response(request, _locations[0]); //will need to update to handle PUT and DELETE
+		serveClient(fd, response.getResponseMessage());
 	}
 }
 

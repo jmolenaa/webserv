@@ -6,19 +6,20 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:18 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 13:21:51 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 14:44:03 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EPOLL_HPP
 #define EPOLL_HPP
 
+# include "defines.hpp"					//CLI_LIMIT
+# include "webservException.hpp" 		//exception
+
 # include <sys/epoll.h> 				//epoll
 # include <unistd.h> 					//close
 # include <vector>
 
-# include "webserv.hpp"					//CLI_LIMIT
-# include "webservException.hpp" 		//exception
 //# include "server.hpp"
 
 class Epoll
@@ -33,7 +34,7 @@ class Epoll
 		// void newconnection();
 		// void request(epoll_event event,int fd);
 		void wait_events(int timeout, epoll_event *events);
-		int getNumEvents();
+		int getNumEvents(); 
 		int getEpollFd();
 		epoll_event *getEvents();
 		

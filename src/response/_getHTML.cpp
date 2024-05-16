@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   _bodyHTML.cpp                                      :+:    :+:            */
+/*   _getHTML.cpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/06 12:45:44 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 12:57:25 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/14 15:08:30 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
-void	Response::_populateHtml()
+/**
+ * @todo Needs to go through epoll
+*/
+void	Response::_getHtml()
 {
-	_openFile();
+	std::string	filePath = _location.getRoot() + _path;
+	std::ifstream _file(filePath);
 	std::string line;
 	if (_file.is_open())
 	{
@@ -24,27 +28,4 @@ void	Response::_populateHtml()
 	}
 	else
 		return (_status.updateState(Status::NOTFOUND));
-}
-
-void Response::_openFile()
-{
-	//replace with location stuff
-	std::string root = "pages/";
-	switch (_filetype)
-	{
-		case HTML:
-		{
-			root += _path;
-			break;
-		}
-		case INDEX:
-		{
-			root += "index.html"; //replace with locations stuff
-			_filetype = HTML;
-			break;
-		}
-		default:
-			break;
-	}
-	_file.open(root);
 }

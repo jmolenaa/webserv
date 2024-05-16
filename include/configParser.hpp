@@ -1,30 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   webserv.hpp                                        :+:    :+:            */
+/*   config.hpp                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*   By: janmolenaar <janmolenaar@student.codam.nl>   +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/25 17:06:39 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/16 14:22:53 by yizhang       ########   odam.nl         */
+/*   Created: 2024/04/29 10:35:05 by janmolenaar   #+#    #+#                 */
+/*   Updated: 2024/04/29 10:35:05 by janmolenaar   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+//config stuff goes here
 
+#ifndef CONFIGPARSER_HPP
+#define CONFIGPARSER_HPP
+
+#include <string>
 #include <vector>
 #include "server.hpp"
+#include "lexer.hpp"
 
-class	Webserv {
+class ConfigParser {
 
 public:
-	Webserv() = default;
-	void	run();
+
+	ConfigParser() = default;
+
+	void				lex(std::string const& filename);
+	void				parse();
 
 private:
 
-	std::vector<Server>	_servers;
 
 };
 

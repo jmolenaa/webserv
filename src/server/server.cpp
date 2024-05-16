@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/16 13:53:54 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 14:44:53 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 /**
  * @todo remove setupEpoll from here and put it in its own class.
  * make it so the server only listens on a specified port
+ * move the binding, epoll and listening to a different function, initialisation?, why did we not specify port and address?
 */
-Server::Server()
+Server::Server() : _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost"), _locations({Location()})
 {
 	createSocket();
 	bindToAddress();
@@ -25,7 +26,7 @@ Server::Server()
 	if (listen(_serverfd, SOMAXCONN) == -1)
 	{
 		std::cerr << "Failed to listen: " << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);	
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -36,7 +37,7 @@ Server::~Server()
     _epoll.~Epoll();
     // if (_epollfd > 0)
     //     close(_epollfd);
-    for (int fd : _clientfds) 
+    for (int fd : _clientfds)
 	{
         if (fd > 0)
             close(fd);

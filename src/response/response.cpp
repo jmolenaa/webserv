@@ -13,13 +13,22 @@
 #include "response.hpp"
 #include "helpers.hpp"
 
-Response::Response(std::string& requestPath) : _path(requestPath), _filetype(INDEX)
+Response::Response(Request& request, Location& location) :
+ 	 _location(location), _path(request.getPath()), _filetype(NONE)
 {
-	_populateBody();
+	if (request.getMethod() == GET)
+		_get();
+	else if (request.getMethod() == POST)
+		_post();
+	else if (request.getMethod() == DELETE)
+		_delete();
+	else
+		_status.updateState(Status::METHODNOTALLOWED);
 	_generateHeader();
 }
 
-std::string Response::getResponse()
+std::string Response::getResponseMessage()
 {
 	return (_header + _body);
 }
+
