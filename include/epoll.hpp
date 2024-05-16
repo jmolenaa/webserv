@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:18 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/08 18:13:21 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 09:27:01 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # include "webserv.hpp"					//CLI_LIMIT
 # include "webservException.hpp" 		//exception
+//# include "server.hpp"
 
 class Epoll
 {
@@ -29,11 +30,14 @@ class Epoll
 		void addFd(int fd, uint32_t events); 			//addition of sockets
 		void modifyFd(int fd, uint32_t events);			//modification of sockets
 		void removeFd(int fd);							//removal of sockets
-		//need epoll function for newconnection 
-		//need epoll funciton for request
+		// void newconnection();
+		// void request(epoll_event event,int fd);
 		std::vector<epoll_event> wait_events(int timeout);
+		int getNumEvents();
+		int getEpollFd();
 	private:
 		int _epollfd;
+		int _numEvents;
 };
 
 /* 

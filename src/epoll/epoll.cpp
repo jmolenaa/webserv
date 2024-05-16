@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/08 18:13:12 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 09:31:58 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs
 
 Epoll::Epoll()
 {
-    _epollfd = epoll_create1(0);
+    _epollfd = epoll_create(CLI_LIMIT);
     if (_epollfd == -1)
     {
         throw (WebservException("Failed to create epoll file descriptor"));
@@ -46,7 +46,8 @@ Epoll::Epoll()
 
 Epoll::~Epoll()
 {
-    close(_epollfd);
+    if (_epollfd > 0)
+        close(_epollfd);
 }
 
 /* 
@@ -57,10 +58,10 @@ epoll.addFd(newSocket, EPOLLIN | EPOLLET);
 
 void Epoll::addFd(int fd, uint32_t events)
 {
-    struct epoll_event event{};
+    epoll_event event{};
     event.events = events;
     event.data.fd = fd;
-    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event))
+    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1)
     {
         throw (WebservException("Failed to add file descriptor in epoll"));
     }
@@ -85,17 +86,34 @@ void Epoll::removeFd(int fd)
     }
 }
 
-std::vector<epoll_event> Epoll::wait_events(int timeout = -1)
+std::vector<epoll_event> Epoll::wait_events(int timeout)
 {
     std::vector<epoll_event> events(CLI_LIMIT);
-    int num_events = epoll_wait(_epollfd, events.data(), CLI_LIMIT, timeout );
-    if (num_events == -1)
+    _numEvents = epoll_wait(_epollfd, events.data(), CLI_LIMIT, timeout);
+    if (_numEvents == -1)
     {
         throw (WebservException("Epoll wait_event error"));
     }
-    events.resize(num_events);
+    events.resize(_numEvents);
     return events;
 }
 
+int Epoll::getNumEvents()
+{
+    if (_numEvents == -1)
+    {
+        throw (WebservException("Epoll wait_event error"));
+    }
+    return _numEvents;
+}
+
+int Epoll::getEpollFd()
+{
+    if (_epollfd == -1)
+    {
+        throw (WebservException("Epoll wait_event error"));
+    }
+    return _epollfd;
+}
 //need epoll function for newconnection 
 //need epoll funciton for request

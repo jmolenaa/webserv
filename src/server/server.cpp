@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 18:13:44 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 09:45:33 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ Server::~Server()
 {
     if (_serverfd > 0)
         close(_serverfd);
-    if (_epollfd > 0)
-        close(_epollfd);
+    _epoll.~Epoll();
+    // if (_epollfd > 0)
+    //     close(_epollfd);
     for (int fd : _clientfds) 
 	{
         if (fd > 0)
@@ -44,24 +45,24 @@ Server::~Server()
 
 void Server::run()
 {
-    epoll_event events[CLI_LIMIT];//change it to vector
+    std::vector<epoll_event> events;//change it to vector
     
     while (true)
 	{
-        //*use Epoll.wait_events();
+        _epoll.wait_events(-1);
         
-        int numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, -1);
-        if (numEvents == -1) {
-            std::cerr << "Epoll failed to wait: " << std::strerror(errno) << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        handleEvents(events, numEvents);
+        // int numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, -1);
+        // if (numEvents == -1) {
+        //     std::cerr << "Epoll failed to wait: " << std::strerror(errno) << std::endl;
+        //     exit(EXIT_FAILURE);
+        // }
+        handleEvents(events);
     }    
 }
 //probably will need to be moved to Epoll class? Will likely need to rewrite
-void Server::handleEvents(epoll_event* events, int numEvents)
+void Server::handleEvents(std::vector<epoll_event> &events)
 {
-    for (int i = 0; i < numEvents; i++)
+    for (unsigned long i = 0; i < events.size(); i++)
 	{
         if (events[i].data.fd == _serverfd)
             handleNewConnection();

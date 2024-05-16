@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 17:37:06 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 09:18:01 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,10 @@ void Server::handleNewConnection()
 	}
 	_clientfds.insert(clientFd);
 
-	// should use Epoll.addFd();
-	
-	epoll_event event{};
-	event.events = EPOLLIN;
-	event.data.fd = clientFd;
-	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, clientFd, &event) == -1)
-		std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
+	_epoll.addFd(clientFd, EPOLLIN);
+	// epoll_event event{};
+	// event.events = EPOLLIN;
+	// event.data.fd = clientFd;
+	// if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, clientFd, &event) == -1)
+	// 	std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
 }

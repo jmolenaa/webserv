@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 17:54:00 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 09:32:49 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,21 +53,21 @@ void	Server::bindToAddress()
 */
 void	Server::setupEpoll()
 {
-	// Epoll();
-	_epollfd = epoll_create(CLI_LIMIT);
-	if (_epollfd < 0)
-	{
-		std::cerr << "Failed to create epoll instance:" << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	Epoll _epoll = Epoll();
+	// _epollfd = epoll_create(CLI_LIMIT);
+	// if (_epollfd < 0)
+	// {
+	// 	std::cerr << "Failed to create epoll instance:" << std::strerror(errno) << std::endl;
+	// 	exit(EXIT_FAILURE);
+	// }
 
-	//Epoll.addFd();
-	epoll_event event{};
-	event.events = EPOLLIN;
-	event.data.fd = _serverfd;
-	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1)
-	{
-		std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	_epoll.addFd(_serverfd, EPOLLIN);
+	// epoll_event event{};
+	// event.events = EPOLLIN;
+	// event.data.fd = _serverfd;
+	// if (epoll_ctl(_epoll.getEpollFd(), EPOLL_CTL_ADD, _serverfd, &event) == -1)
+	// {
+	// 	std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
+	// 	exit(EXIT_FAILURE);
+	// }
 }
