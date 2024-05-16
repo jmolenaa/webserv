@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 09:31:58 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 10:03:13 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int Epoll::getNumEvents()
 {
     if (_numEvents == -1)
     {
-        throw (WebservException("Epoll wait_event error"));
+        throw (WebservException("Can not get numEvents"));
     }
     return _numEvents;
 }
@@ -111,7 +111,7 @@ int Epoll::getEpollFd()
 {
     if (_epollfd == -1)
     {
-        throw (WebservException("Epoll wait_event error"));
+        throw (WebservException("Can not get epollFd"));
     }
     return _epollfd;
 }

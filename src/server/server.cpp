@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/16 09:45:33 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 10:05:27 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,25 @@ Server::~Server()
 
 void Server::run()
 {
-    std::vector<epoll_event> events;//change it to vector
+    //std::vector<epoll_event> events;//change it to vector
     
     while (true)
 	{
-        _epoll.wait_events(-1);
+        std::vector<epoll_event> events = _epoll.wait_events(-1);//error happened
         
         // int numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, -1);
         // if (numEvents == -1) {
         //     std::cerr << "Epoll failed to wait: " << std::strerror(errno) << std::endl;
         //     exit(EXIT_FAILURE);
         // }
-        handleEvents(events);
+        std::cout<<"test"<<std::endl;
+        handleEvents(events, _epoll.getNumEvents());
     }    
 }
 //probably will need to be moved to Epoll class? Will likely need to rewrite
-void Server::handleEvents(std::vector<epoll_event> &events)
+void Server::handleEvents(std::vector<epoll_event> &events, int numEvents)
 {
-    for (unsigned long i = 0; i < events.size(); i++)
+    for (unsigned long i = 0; i < (unsigned long)numEvents; i++)
 	{
         if (events[i].data.fd == _serverfd)
             handleNewConnection();
