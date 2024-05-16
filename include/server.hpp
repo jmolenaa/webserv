@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/16 09:52:09 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 13:05:12 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Server
 
 	private:
 		int						_serverfd;
-		//int					_epollfd;
 		Epoll					_epoll;
 		std::set<int>			_clientfds;
 
@@ -43,7 +42,7 @@ class Server
 		void	bindToAddress();
 		void	setupEpoll();
 
-		void	handleEvents(std::vector<epoll_event> &events, int numEvents);
+		void	handleEvents(epoll_event *events, int numEvents);
 		void	handleNewConnection();
 		void	handleClientRequest(int fd);
 		static void	serveClient(int clientFd, const std::string& message);
@@ -53,3 +52,4 @@ class Server
 };
 
 #endif
+

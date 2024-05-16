@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:18 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 09:27:01 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 13:21:51 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,15 @@ class Epoll
 		void removeFd(int fd);							//removal of sockets
 		// void newconnection();
 		// void request(epoll_event event,int fd);
-		std::vector<epoll_event> wait_events(int timeout);
+		void wait_events(int timeout, epoll_event *events);
 		int getNumEvents();
 		int getEpollFd();
+		epoll_event *getEvents();
+		
 	private:
-		int _epollfd;
-		int _numEvents;
+		int 		_epollfd;
+		int 		_numEvents;
+		epoll_event *_events;
 };
 
 /* 

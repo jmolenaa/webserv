@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 10:03:13 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/16 13:50:39 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,14 @@ void Epoll::removeFd(int fd)
     }
 }
 
-std::vector<epoll_event> Epoll::wait_events(int timeout)
+void Epoll::wait_events(int timeout, epoll_event *events)
 {
-    std::vector<epoll_event> events(CLI_LIMIT);
-    _numEvents = epoll_wait(_epollfd, events.data(), CLI_LIMIT, timeout);
+    _numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, timeout);
+    //std::cout<<"test"<<std::endl;
     if (_numEvents == -1)
     {
         throw (WebservException("Epoll wait_event error"));
     }
-    events.resize(_numEvents);
-    return events;
 }
 
 int Epoll::getNumEvents()
@@ -115,5 +113,11 @@ int Epoll::getEpollFd()
     }
     return _epollfd;
 }
+
+epoll_event *Epoll::getEvents()
+{
+    return _events;
+}
+
 //need epoll function for newconnection 
 //need epoll funciton for request
