@@ -17,24 +17,43 @@
 
 #include <string>
 #include <vector>
-#include "server.hpp"
+#include <unordered_map>
+#include <deque>
+#include <functional>
+#include "serverSettings.hpp"
 #include "lexer.hpp"
+
+//typedef void	(*directiveFunc)();
 
 class ConfigParser {
 
 public:
 
+	enum state {
+		NO_STATE,
+		SERVER_STATE,
+		LOCATION_STATE
+	};
 
-	ConfigParser() = default;
-	explicit ConfigParser(std::string const& filename);
+	ConfigParser();
 	~ConfigParser() = default;
 
-	void	lex();
-	void	parse();
+	void						lex(std::string const& filename);
+	void						parse();
+	state						getState() const;
+	std::deque<std::string>&	getTokens();
+	void						setTokens(std::deque<std::string> tokens);
+
+	// functions handling directives
+//	void	setupMap(std::unordered_map<std::string, std::function<void(ConfigParser&)>>&);
+	void	serverDirective();
 
 private:
 
-	Lexer			_lexer;
+
+	std::vector<ServerSettings>	_serverSettings;
+	std::deque<std::string>		_tokens;
+	state						_currentState;
 
 };
 

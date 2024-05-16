@@ -28,9 +28,10 @@ Lexer::~Lexer() {
 	this->_file.close();
 }
 
-void Lexer::lex() {
+std::deque<std::string> Lexer::lex() {
 
-	std::string	buffer;
+	std::deque<std::string>	tokens;
+	std::string					buffer;
 
 	while (std::getline(this->_file, buffer)) {
 
@@ -53,19 +54,19 @@ void Lexer::lex() {
 				++endPosition;
 			}
 
-			this->_tokens.push_back(buffer.substr(startPosition, endPosition - startPosition));
-
+			tokens.push_back(buffer.substr(startPosition, endPosition - startPosition));
 		}
 	}
+	return tokens;
 }
 
-std::vector<std::string> Lexer::getTokens() const {
-	return this->_tokens;
-}
+//std::vector<std::string> Lexer::getTokens() const {
+//	return this->_tokens;
+//}
 
-std::ostream&	operator<<(std::ostream& out, Lexer const& rhs) {
-	for (const auto & _token : rhs.getTokens()) {
-		out << _token << std::endl;
-	}
-	return out;
-}
+//std::ostream&	operator<<(std::ostream& out, Lexer const& rhs) {
+//	for (const auto & _token : rhs.getTokens()) {
+//		out << _token << std::endl;
+//	}
+//	return out;
+//}
