@@ -49,6 +49,10 @@ void ConfigParser::setTokens(std::deque<std::string> tokens) {
 	this->_tokens = std::move(tokens);
 }
 
+void ConfigParser::setState(ConfigParser::state newState) {
+	this->_currentState = newState;
+}
+
 void ConfigParser::lex(std::string const& filename) {
 
 	Lexer	lexer(filename);
@@ -59,43 +63,52 @@ void ConfigParser::lex(std::string const& filename) {
 //	}
 }
 
-void ConfigParser::serverDirective() {
-	std::cout << "Server directive\n";
-	this->_currentState = SERVER_STATE;
-}
-
 void	setupMap(std::unordered_map<std::string, std::function<void(ConfigParser&)>>& runDirective) {
 	runDirective["server"] = &ConfigParser::serverDirective;
+	runDirective["server_name"] = &ConfigParser::serverNameDirective;
+	runDirective["listen"] = &ConfigParser::listenDirective;
+	runDirective["location"] = &ConfigParser::locationDirective;
+	runDirective["index"] = &ConfigParser::indexDirective;
+	runDirective["error_page"] = &ConfigParser::errorPageDirective;
+	runDirective["autoindex"] = &ConfigParser::autoindexDirective;
+	runDirective["client_max_body_size"] = &ConfigParser::clientMaxBodySizeDirective;
+	runDirective["return"] = &ConfigParser::returnDirective;
+	runDirective["root"] = &ConfigParser::rootDirective;
+	runDirective["allowed_methods"] = &ConfigParser::allowedMethodsDirective;
+	runDirective["}"] = &ConfigParser::closeBracketDirective;
+}
+
+bool ConfigParser::isDirectiveInRightContext(std::string const& directive) const{
+	if (this->getState() == NO_STATE && directive != "server") {
+		return false;
+	}
+	else if (this->getState() == SERVER_STATE && directive == "server") {
+		return false;
+	}
+	else if (this->getState() == LOCATION_STATE &&
+			(directive == "server" || directive == "location" || directive == "listen" || directive == "server_name")) {
+		return false;
+	}
+	return true;
 }
 
 
 void ConfigParser::parse() {
 
-	std::unordered_map<std::string, std::function<void(ConfigParser&)>>	runDirective;
+	std::unordered_map<std::string, std::function<void(ConfigParser&)>>	directiveFunctions;
 
-	setupMap(runDirective);
+	setupMap(directiveFunctions);
 
 	while (!this->getTokens().empty()) {
-		std::string token = this->getTokens().front();
-		std::cout << this->getState() << std::endl;
-		if (runDirective.count(token)) {
-			runDirective[token](*this);
-		}
+		std::string directive = this->getTokens().front();
 		this->getTokens().pop_front();
-//		std::cout << this->getTokens().size() << std::endl;
-//		std::cout << "infinite\n" << std::endl;
-
+		if (directiveFunctions.count(directive) == 0) {
+			throw WebservException("Webserv: configuration file: unrecognized directive: '" + directive + "'\n");
+		}
+		else if (!isDirectiveInRightContext(directive)) {
+			throw WebservException("Webserv: configuration file: directive '" + directive + "' is in wrong context\n");
+		}
+		directiveFunctions[directive](*this);
 	}
 
-	//	for (std::string const& token : this->getTokens()) {
-//
-//		std::cout << token << "\n";
-//	}
-//	std::cout << this->_serverSettings.size() << std::endl;
-//	for (const auto & _token : this->_tokens) {
-//		std::cout << _token << std::endl;
-//	}
-//	Server	newServer;
-//	std::vector<Server>	servers({Server()});
-//	return servers;
 }

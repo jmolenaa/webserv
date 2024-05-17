@@ -43,10 +43,22 @@ public:
 	state						getState() const;
 	std::deque<std::string>&	getTokens();
 	void						setTokens(std::deque<std::string> tokens);
+	void						setState(state newState);
+	bool						isDirectiveInRightContext(std::string const& directive) const;
 
 	// functions handling directives
-//	void	setupMap(std::unordered_map<std::string, std::function<void(ConfigParser&)>>&);
 	void	serverDirective();
+	void	serverNameDirective();
+	void	listenDirective();
+	void	locationDirective();
+	void	indexDirective();
+	void	errorPageDirective();
+	void	autoindexDirective();
+	void	clientMaxBodySizeDirective();
+	void	returnDirective();
+	void	rootDirective();
+	void	allowedMethodsDirective();
+	void	closeBracketDirective();
 
 private:
 
