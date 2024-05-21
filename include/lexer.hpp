@@ -17,7 +17,7 @@
 #ifndef WEBSERV_LEXER_HPP
 #define WEBSERV_LEXER_HPP
 
-//#include <vector>
+#include <deque>
 #include <fstream>
 
 class Lexer {
@@ -27,15 +27,13 @@ public:
 	explicit Lexer(std::string const& filename);
 	~Lexer();
 
+	std::deque<std::string>	lex();
+//	std::vector<std::string>	getTokens() const;
+
 private:
 
-	std::ifstream	_file;
-
-//	class Node {
-//	public:
-//	};
+	std::ifstream				_file;
 
 };
-
 
 #endif //WEBSERV_LEXER_HPP
