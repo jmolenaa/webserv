@@ -3,12 +3,16 @@
 /*                                                        ::::::::            */
 /*   webservException.hpp                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
+/*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/05/08 15:41:49 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 14:03:17 by yizhang       ########   odam.nl         */
+/*   Created: 2024/05/07 10:52:47 by jmolenaa      #+#    #+#                 */
+/*   Updated: 2024/05/07 10:52:47 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+//
+// Created by jmolenaa on 7-5-24.
+//
 
 #ifndef WEBSERV_WEBSERVEXCEPTION_HPP
 #define WEBSERV_WEBSERVEXCEPTION_HPP
@@ -23,7 +27,7 @@ public:
 	char const*	what() const noexcept override { return _errorStr.c_str(); };
 
 private:
-    WebservException();
+
 	std::string	_errorStr;
 };
 

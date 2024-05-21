@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/16 09:32:49 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/21 13:54:00 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,11 @@ void	Server::bindToAddress()
 */
 void	Server::setupEpoll()
 {
-	Epoll _epoll = Epoll();
+	//Epoll _epoll = _epoll();
+	_epoll.addFd(_serverfd, EPOLLIN);
+	
+	//_epollfd = _epoll.getEpollFd();
+	
 	// _epollfd = epoll_create(CLI_LIMIT);
 	// if (_epollfd < 0)
 	// {
@@ -61,11 +65,10 @@ void	Server::setupEpoll()
 	// 	exit(EXIT_FAILURE);
 	// }
 
-	_epoll.addFd(_serverfd, EPOLLIN);
 	// epoll_event event{};
 	// event.events = EPOLLIN;
 	// event.data.fd = _serverfd;
-	// if (epoll_ctl(_epoll.getEpollFd(), EPOLL_CTL_ADD, _serverfd, &event) == -1)
+	// if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1)
 	// {
 	// 	std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
 	// 	exit(EXIT_FAILURE);

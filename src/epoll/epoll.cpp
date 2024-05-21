@@ -1,15 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        ::::::::            */
-/*   epoll.cpp                                          :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/21 13:03:38 by yizhang       ########   odam.nl         */
-/*                                                                            */
-/* ************************************************************************** */
-
+/**
+ * Epoll stuff goes here.
+ * @todo remove setup epoll from server class and create new Epoll class with public methods to add fds to the instance etc.
+*/
 
 /* 
 epoll_events is a data type used in Linux programming.
@@ -60,7 +52,7 @@ epoll.addFd(newSocket, EPOLLIN | EPOLLET);
 void Epoll::addFd(int fd, uint32_t events)
 {
     std::cout<<"epoll add fd"<<std::endl;
-    epoll_event event;
+    epoll_event event{};
     event.events = events;
     event.data.fd = fd;
     if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1)
