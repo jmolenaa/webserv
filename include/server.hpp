@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:14:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/21 14:14:00 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 class Server
 {
 	public:
-		Server();
+		Server(Epoll& epoll);
 		~Server();
 
 		void	run();
@@ -35,7 +35,7 @@ class Server
 	private:
 		int						_epollfd;
 		int						_serverfd;
-		Epoll					_epoll;
+		Epoll&					_epoll;
 		std::set<int>			_clientfds;
 
 		uint16_t				_port;

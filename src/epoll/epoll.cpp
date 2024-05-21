@@ -111,10 +111,5 @@ int Epoll::getEpollFd()
     return _epollfd;
 }
 
-epoll_event *Epoll::getEvents()
-{
-    return _events;
-}
-
 //need epoll function for newconnection 
 //need epoll funciton for request

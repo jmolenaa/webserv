@@ -23,8 +23,6 @@ class Epoll
 		void addFd(int fd, uint32_t events); 			//addition of sockets
 		void modifyFd(int fd, uint32_t events);			//modification of sockets
 		void removeFd(int fd);							//removal of sockets
-		// void newconnection();
-		// void request(epoll_event event,int fd);
 		void wait_events(int timeout, epoll_event *events);
 		int getNumEvents(); 
 		int getEpollFd();
@@ -33,7 +31,6 @@ class Epoll
 	private:
 		int 		_epollfd;
 		int 		_numEvents;
-		epoll_event *_events;
 };
 
 /* 
@@ -44,12 +41,5 @@ class Epoll
  3. Use epoll_wait() to wait for events on the epoll instance. This function will return
  a list of epoll_event structure for file descriptors that have their specified events pending
 */
-
-/* 
-Todo yixin:
-1. add Epoll class in _severHandlers.cpp
-2. add Epoll class in sever.cpp
-3. add Epoll class in _setup.cpp
- */
 
 #endif

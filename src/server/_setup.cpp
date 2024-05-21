@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:02:18 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/21 14:15:14 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,32 +45,3 @@ void	Server::bindToAddress()
 		exit(EXIT_FAILURE);
 	}
 }
-
-/**
- * Sets up epoll instance, and adds _serverfd to it
- * @todo remove from server class and make epoll class with public methods to add fds to the epoll instance
- * exits() upon failure to do these
-*/
-// void	Server::setupEpoll()
-// {
-// 	//Epoll _epoll = _epoll();
-// 	_epoll.addFd(_serverfd, EPOLLIN);
-	
-// 	//_epollfd = _epoll.getEpollFd();
-	
-// 	// _epollfd = epoll_create(CLI_LIMIT);
-// 	// if (_epollfd < 0)
-// 	// {
-// 	// 	std::cerr << "Failed to create epoll instance:" << std::strerror(errno) << std::endl;
-// 	// 	exit(EXIT_FAILURE);
-// 	// }
-
-// 	// epoll_event event{};
-// 	// event.events = EPOLLIN;
-// 	// event.data.fd = _serverfd;
-// 	// if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1)
-// 	// {
-// 	// 	std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
-// 	// 	exit(EXIT_FAILURE);
-// 	// }
-// }
