@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 13:54:28 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/21 14:02:29 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ Server::Server() : _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("local
 {
 	createSocket();
 	bindToAddress();
-	setupEpoll();
-
+	//setupEpoll();
+    _epoll.addFd(_serverfd, EPOLLIN);
 	if (listen(_serverfd, SOMAXCONN) == -1)
 	{
 		std::cerr << "Failed to listen: " << std::strerror(errno) << std::endl;
@@ -56,7 +56,6 @@ void Server::run()
         //     exit(EXIT_FAILURE);
         // }
         //handleEvents(events, numEvents);
-
     }    
 }
 //probably will need to be moved to Epoll class? Will likely need to rewrite
