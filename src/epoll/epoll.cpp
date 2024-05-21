@@ -6,7 +6,7 @@
 /*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 18:13:11 by yizhang       #+#    #+#                 */
-/*   Updated: 2024/05/16 14:40:10 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/21 13:03:38 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs
 Epoll::Epoll()
 {
     _epollfd = epoll_create(CLI_LIMIT);
+    _numEvents = 0;
     if (_epollfd == -1)
     {
         throw (WebservException("Failed to create epoll file descriptor"));
@@ -58,7 +59,8 @@ epoll.addFd(newSocket, EPOLLIN | EPOLLET);
 
 void Epoll::addFd(int fd, uint32_t events)
 {
-    epoll_event event{};
+    std::cout<<"epoll add fd"<<std::endl;
+    epoll_event event;
     event.events = events;
     event.data.fd = fd;
     if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1)
@@ -69,6 +71,7 @@ void Epoll::addFd(int fd, uint32_t events)
 
 void Epoll::modifyFd(int fd, uint32_t events)
 {
+    std::cout<<"epoll modity fd"<<std::endl;
     struct epoll_event event{};
     event.events = events;
     event.data.fd = fd;
@@ -80,6 +83,7 @@ void Epoll::modifyFd(int fd, uint32_t events)
 
 void Epoll::removeFd(int fd)
 {
+    std::cout<<"epoll remove fd"<<std::endl;
     if (epoll_ctl(_epollfd, EPOLL_CTL_DEL, fd, nullptr) == -1)
     {
         throw (WebservException("Failed to remove file descriptor in epoll"));
@@ -88,9 +92,10 @@ void Epoll::removeFd(int fd)
 
 void Epoll::wait_events(int timeout, epoll_event *events)
 {
+    std::cout<<"wait for new conncetion"<<std::endl;
     _numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, timeout);
-    //std::cout<<"test"<<std::endl;
-    if (_numEvents == -1)
+    std::cout<< _numEvents<<std::endl;
+    if (_numEvents < 0)
     {
         throw (WebservException("Epoll wait_event error"));
     }
