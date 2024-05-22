@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 13:04:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:11:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void Request::_extractHeader()
 		_header = _request;
 	else
 		_header = _request.substr(0, pos);
-	//std::cout << "EXTRACTED HEADER: " << _header << std::endl;
 }
 
 void Request::_extractMethod()
@@ -69,7 +68,6 @@ void Request::_extractMethod()
 		return;
 	}
 	_method = OTHER;
-	//std::cerr << "Cannot parse request from client." << std::endl;
 }
 
 void Request::_extractPath()
@@ -82,7 +80,6 @@ void Request::_extractPath()
 		return;
 	}
 	_path = "";
-	//std::cerr << "Cannot parse request from client" << std::endl;
 }
 
 void Request::_extractHost()
@@ -144,14 +141,13 @@ std::string& Request::getBody()
 
 void Request::printData()
 {
-	std::cout << "-------Got Request Data---------\n"
+	std::cout << "---------GOT REQUEST---------\n"
 		<< "\nMethod: '" << _method << "'"
 		<< "\nPath: '" << _path << "'"
 		<< "\nHost: '" << _hostname << "'"
 		<< "\nPort: '" << _port << "'"
 		<< "\nLength: '" << _contentLength << "'"
 		<< "\nBody: '" << _body << "'"
-		<< "\n------------\n"
-		<< "\n------------\n"
+		<< "\n---------END OF REQUEST---------\n"
 	<< std::endl;
 }
