@@ -6,42 +6,37 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:14:00 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/22 11:33:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "defines.hpp"
-# include "epoll.hpp"
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <sys/epoll.h>
 # include <set>
-# include "location.hpp"
 # include <iostream>
 # include <unistd.h>
 # include <cstring>
 
+# include "defines.hpp"
+# include "epoll.hpp"
+# include "serverConfig.hpp"
+
 class Server
 {
 	public:
-		Server(Epoll& epoll);
+		Server(Epoll& epoll, ServerConfig& config);
 		~Server();
 
 		void	run();
 
 	private:
-		int						_epollfd;
-		int						_serverfd;
 		Epoll&					_epoll;
-		std::set<int>			_clientfds;
-
-		uint16_t				_port;
-		uint32_t				_address;
-		std::string				_name;
-		std::vector<Location>	_locations; //default location first, followed by others
+		ServerConfig			_config;
+		int						_serverfd;
 
 		void	createSocket();
 		void	bindToAddress();
@@ -53,7 +48,7 @@ class Server
 		static void	serveClient(int clientFd, const std::string& message);
 
 	// Hidden orthodox canonical shit
-		Server& operator=(const Server& other) = default;
+	// Server& operator=(const Server& other) = default;
 };
 
 #endif

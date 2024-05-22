@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:15:21 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/22 11:33:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,5 @@ void Server::handleNewConnection()
 		std::cerr << "Failed to accept connection:" << std::strerror(errno) << std::endl;
 		return ;
 	}
-	_clientfds.insert(clientFd);
 	_epoll.addFd(clientFd, EPOLLIN);
 }

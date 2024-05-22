@@ -6,18 +6,18 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:14:56 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/22 11:40:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 
-Server::Server(Epoll& epoll) : _epoll(epoll), _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost"), _locations({Location()})
+Server::Server(Epoll& epoll, ServerConfig& config) : _epoll(epoll), _config(config)
 {
 	createSocket();
 	bindToAddress();
     _epoll.addFd(_serverfd, EPOLLIN);
-    
+
 	if (listen(_serverfd, SOMAXCONN) == -1)
 	{
 		std::cerr << "Failed to listen: " << std::strerror(errno) << std::endl;
@@ -29,13 +29,6 @@ Server::~Server()
 {
     if (_serverfd > 0)
         close(_serverfd);
-    if (_epollfd > 0)
-        close(_epollfd);
-    for (int fd : _clientfds)
-	{
-        if (fd > 0)
-            close(fd);
-    }
 }
 
 void Server::run()

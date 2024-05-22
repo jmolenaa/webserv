@@ -13,8 +13,11 @@
 #include "response.hpp"
 #include "helpers.hpp"
 
-Response::Response(Request& request, Location& location) :
- 	 _location(location), _path(request.getPath()), _filetype(NONE)
+/**
+ * @todo double check locatoins
+*/
+Response::Response(Request& request, ServerConfig config) :
+ 	 _config(config), _path(request.getPath()), _filetype(NONE)
 {
 	if (request.getMethod() == GET)
 		_get();
@@ -23,7 +26,7 @@ Response::Response(Request& request, Location& location) :
 	else if (request.getMethod() == DELETE)
 		_delete();
 	else
-		_status.updateState(Status::METHODNOTALLOWED);
+		_status.updateState(METHODNOTALLOWED);
 	_generateHeader();
 }
 

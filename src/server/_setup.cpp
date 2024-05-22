@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:15:14 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/22 10:33:31 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	Server::createSocket()
 /**
  * Binds socketfd to sockaddr_in
  * exits() on failure to do so
+ * @todo make it use its _config
 */
 void	Server::bindToAddress()
 {

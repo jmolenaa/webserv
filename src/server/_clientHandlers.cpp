@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/13 13:01:05 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 11:36:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ void Server::handleClientRequest(int fd)
 	char buffer[1024];
 	ssize_t numBytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
 	if (numBytes <= 0)
-	{
-		_clientfds.erase(fd);
 		close(fd);
-	} 
 	else
 	{
 		buffer[numBytes] = '\0';
@@ -31,7 +28,7 @@ void Server::handleClientRequest(int fd)
 		Request request(buffer);
 		request.printData(); //REMOVE this if you don't want to print the request
 
-		Response response(request, _locations[0]); //will need to update to handle PUT and DELETE
+		Response response(request, this->_config); //will need to update to handle PUT and DELETE
 		serveClient(fd, response.getResponseMessage());
 	}
 }

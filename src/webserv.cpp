@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/25 17:09:43 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:13:00 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/22 11:34:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 void Webserv::run() {
 
 	Epoll epoll;
-	Server	serve(epoll);
+	ServerConfig config;
+
+	Server	serve(epoll, config);
 //	std::vector<Server>	servers({serve});
 //	servers.push_back(*serve);
 //	std::cout << &serve << "\n";
