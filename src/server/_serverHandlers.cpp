@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:33:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:08:16 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 /**
  * Accepts new connection on socket and adds to epoll instance
- * @todo use epoll class
 */
 void Server::handleNewConnection() 
 {
