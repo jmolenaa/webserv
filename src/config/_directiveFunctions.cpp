@@ -18,20 +18,23 @@ void ConfigParser::serverDirective() {
 	if (this->getTokens().empty() || this->getTokens().front() != "{") {
 		throw WebservException("Webserv: configuration file: 'server' directive must be followed by opening '{'\n");
 	}
-	this->getTokens().pop_front();
 	std::cout << "server" << std::endl;
 	this->setState(SERVER_STATE);
+	this->getSettings().emplace_back();
 }
 
 void ConfigParser::serverNameDirective() {
+	std::string	token;
+
+	if (this->getTokens().empty()) {
+		throw WebservException("Webserv: configuration file: encountered");
+	}
 	std::cout << "servername" << std::endl;
-	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 }
 
 void ConfigParser::listenDirective() {
 	std::cout << "listen" << std::endl;
-	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
 }
@@ -39,18 +42,15 @@ void ConfigParser::listenDirective() {
 void ConfigParser::locationDirective() {
 	std::cout << "location" << std::endl;
 	this->getTokens().pop_front();
-	this->getTokens().pop_front();
 }
 
 void ConfigParser::indexDirective() {
 	std::cout << "index" << std::endl;
 	this->getTokens().pop_front();
-	this->getTokens().pop_front();
 }
 
 void ConfigParser::errorPageDirective() {
 	std::cout << "errorpage" << std::endl;
-	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
@@ -59,13 +59,11 @@ void ConfigParser::errorPageDirective() {
 void ConfigParser::autoindexDirective() {
 	std::cout << "autoindex" << std::endl;
 	this->getTokens().pop_front();
-	this->getTokens().pop_front();
 
 }
 
 void ConfigParser::clientMaxBodySizeDirective() {
 	std::cout << "clinetmaxbody" << std::endl;
-	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
 }
@@ -74,19 +72,16 @@ void ConfigParser::returnDirective() {
 	std::cout << "return" << std::endl;
 	this->getTokens().pop_front();
 	this->getTokens().pop_front();
-	this->getTokens().pop_front();
 
 }
 
 void ConfigParser::rootDirective() {
 	std::cout << "root" << std::endl;
 	this->getTokens().pop_front();
-	this->getTokens().pop_front();
 
 }
 
 void ConfigParser::allowedMethodsDirective() {
-	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
 }

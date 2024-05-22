@@ -16,17 +16,17 @@
 #include "webservException.hpp"
 #include <iostream>
 
-
 // todo
 // make headers understandable, where we actually need them
+// change localhost to default
 
-// void	parseConfigFile(std::string const& filename) {
+void	parseConfigFile(std::string const& filename) {
+	ConfigParser	configParser("no");
+	ConfigParser	test(configParser);
 
-// 	ConfigParser		configParser;
-
-// 	configParser.lex(filename);
-// 	configParser.parse();
-// }
+	configParser.lex(filename);
+	configParser.parse();
+}
 
 int main(int argc, char *argv[])
 {
@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 
 
 	try {
-		// parseConfigFile(std::string(argv[1]));
+		parseConfigFile(std::string(argv[1]));
+		exit(0);
 		Webserv	webserver;
 		webserver.run();
 	}

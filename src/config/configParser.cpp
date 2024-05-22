@@ -31,7 +31,8 @@
 #include <iostream>
 #include <unordered_map>
 
-ConfigParser::ConfigParser() : _currentState(NO_STATE) {
+ConfigParser::ConfigParser(std::string lol) : _currentState(NO_STATE) {
+	(void)lol;
 }
 
 //ConfigParser::~ConfigParser() {
@@ -43,6 +44,10 @@ ConfigParser::state ConfigParser::getState() const {
 
 std::deque<std::string>& ConfigParser::getTokens() {
 	return this->_tokens;
+}
+
+std::vector<ServerSettings> &ConfigParser::getSettings() {
+	return this->_serverSettings;
 }
 
 void ConfigParser::setTokens(std::deque<std::string> tokens) {
@@ -92,7 +97,6 @@ bool ConfigParser::isDirectiveInRightContext(std::string const& directive) const
 	return true;
 }
 
-
 void ConfigParser::parse() {
 
 	std::unordered_map<std::string, std::function<void(ConfigParser&)>>	directiveFunctions;
@@ -109,6 +113,11 @@ void ConfigParser::parse() {
 			throw WebservException("Webserv: configuration file: directive '" + directive + "' is in wrong context\n");
 		}
 		directiveFunctions[directive](*this);
+
+		// this pops the ";" or "{" token from the directives, except from "}" which only changes the state of the parser
+		if (directive != "}") {
+			this->getTokens().pop_front();
+		}
 	}
 
 }

@@ -23,8 +23,6 @@
 #include "serverConfig.hpp"
 #include "lexer.hpp"
 
-//typedef void	(*directiveFunc)();
-
 class ConfigParser {
 
 public:
@@ -35,16 +33,23 @@ public:
 		LOCATION_STATE
 	};
 
-	ConfigParser();
+	ConfigParser(std::string);
 	~ConfigParser() = default;
 
-	void						lex(std::string const& filename);
-	void						parse();
-	state						getState() const;
-	std::deque<std::string>&	getTokens();
-	void						setTokens(std::deque<std::string> tokens);
-	void						setState(state newState);
-	bool						isDirectiveInRightContext(std::string const& directive) const;
+	void							lex(std::string const& filename);
+	void							parse();
+	state							getState() const;
+	std::deque<std::string>&		getTokens();
+	std::vector<ServerSettings>&	getSettings();
+	void							setTokens(std::deque<std::string> tokens);
+	void							setState(state newState);
+	bool							isDirectiveInRightContext(std::string const& directive) const;
+
+
+	// syntax checking functions
+	void	validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	void	validateArgumentNumber(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	void	validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
 
 	// functions handling directives
 	void	serverDirective();
