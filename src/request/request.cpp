@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:21:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:04:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void Request::_extractBody()
 	}
 }
 
-methods& Request::getMethod()
+method& Request::getMethod()
 {
 	return _method;
 }

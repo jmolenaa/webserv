@@ -16,8 +16,8 @@
 /**
  * @todo double check locatoins
 */
-Response::Response(Request& request, ServerConfig config) :
- 	 _config(config), _path(request.getPath()), _filetype(NONE)
+Response::Response(Request& request, Location location) :
+ 	 _location(location), _path(request.getPath()), _filetype(NONE)
 {
 	if (request.getMethod() == GET)
 		_get();

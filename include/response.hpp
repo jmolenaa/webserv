@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:29:09 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:01:56 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ class Response
 	}	filetype;
 
 	public:
-		explicit Response(Request& request, ServerConfig config);
+		explicit Response(Request& request, Location location);
 		~Response() = default;
 
 		std::string		getResponseMessage();
 	
 	private:
-		ServerConfig	_config;
+		Location		_location;
 		Status			_status;
 		std::string 	_path;
 		std::string		_header;

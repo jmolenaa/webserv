@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:36:15 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:11:21 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,21 @@ void Server::handleClientRequest(int fd)
 		Request request(buffer);
 		request.printData(); //REMOVE this if you don't want to print the request
 
-		Response response(request, this->_config); //will need to update to handle PUT and DELETE
+		Location loc;
+		std::string path = request.getPath();
+		while (!path.empty() && path != loc.path)
+		{
+			loc = _config.matchLocation(path);
+			size_t end = path.find_last_of('/');
+			if (end == std::string::npos)
+				path = "";
+			else
+				path = path.substr(0, end);
+		}
+		
+		
+		
+		Response response(request, _config.matchLocation(request.getPath())); //will need to update to handle PUT and DELETE
 		serveClient(fd, response.getResponseMessage());
 	}
 }

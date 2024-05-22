@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:20:48 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:04:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Request
 		explicit Request(char *request);
 		~Request() = default;
 
-		methods&	    getMethod();
+		method&	   		getMethod();
 		std::string&    getPath();
 		std::string&    getHostname();
 		uint&	    	getPort();
@@ -38,7 +38,7 @@ class Request
 	private:
 		std::string	_request;
 		std::string _header;
-		methods		_method;
+		method		_method;
 		std::string _path;
 		std::string	_hostname;
 		uint		_port;

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:31:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:13:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ Response::filetype	Response::_extractFileType()
 	}
 	else
 	{
-		if (_config.matchLocation(_path)._autoindex)
+		if (_location.autoindex)
 			return (FOLDER);
-		_path += _config.matchLocation(_path)._autoindex;
+		_path += _location.root;
 		return (HTML);
 	}
 }
