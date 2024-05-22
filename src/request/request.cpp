@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/08 10:35:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 11:21:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ Request::Request(char *request) : _request(request)
 void Request::_extractHeader()
 {
 	uint pos = _request.find("\r\n\r\n");
-	if (pos == std::string::npos)
+	if (pos == (unsigned int)std::string::npos)
 		_header = _request;
 	else
 		_header = _request.substr(0, pos);
@@ -105,14 +105,14 @@ void Request::_extractBody()
 	if (_contentLength)
 	{
 		uint pos = _request.find("\r\n\r\n");
-		if (pos == std::string::npos)
+		if (pos == (unsigned int)std::string::npos)
 			_body = "";
 		else
 			_body = _request.substr(pos + 4,_contentLength);
 	}
 }
 
-t_methods& Request::getMethod()
+methods& Request::getMethod()
 {
 	return _method;
 }

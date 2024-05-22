@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/13 13:06:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/14 15:13:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 /**
  * gets body with appropriate error file (currently just default 404)
- * @todo use appropriate error files based on status code and locations
+ * @todo use appropriate error files based on status code and locations. 
+ * If error not read and set up at start of program, go through epoll.
 */
 void	Response::_getError()
 {
@@ -27,5 +28,5 @@ void	Response::_getError()
 		err.close();
 	}
 	else
-		_body += "Error, no defaults found\n";
+		_body += "No defaults found for this error\n";
 }

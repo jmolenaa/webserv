@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/13 12:51:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 11:29:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "defines.hpp"
 # include "request.hpp"
 # include "status.hpp"
-# include "location.hpp"
+#include "serverConfig.hpp"
 
 class Response
 {
@@ -29,14 +29,14 @@ class Response
 	}	filetype;
 
 	public:
-		explicit Response(Request& request, Location& location);
+		explicit Response(Request& request, ServerConfig config);
 		~Response() = default;
 
 		std::string		getResponseMessage();
 	
 	private:
+		ServerConfig	_config;
 		Status			_status;
-		Location&		_location;
 		std::string 	_path;
 		std::string		_header;
 		std::string		_body;

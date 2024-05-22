@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/04/25 17:23:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 10:33:31 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	Server::createSocket()
 /**
  * Binds socketfd to sockaddr_in
  * exits() on failure to do so
+ * @todo make it use its _config
 */
 void	Server::bindToAddress()
 {
@@ -42,30 +43,6 @@ void	Server::bindToAddress()
 	if (bind(_serverfd, reinterpret_cast<sockaddr *>(&serverAddr), sizeof(serverAddr)) == -1)
 	{
 		std::cerr << "Failed to bind to socket: " << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
-}
-
-/**
- * Sets up epoll instance, and adds _serverfd to it
- * @todo remove from server class and make epoll class with public methods to add fds to the epoll instance
- * exits() upon failure to do these
-*/
-void	Server::setupEpoll()
-{
-	_epollfd = epoll_create(CLI_LIMIT);
-	if (_epollfd < 0)
-	{
-		std::cerr << "Failed to create epoll instance:" << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	epoll_event event{};
-	event.events = EPOLLIN;
-	event.data.fd = _serverfd;
-	if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _serverfd, &event) == -1)
-	{
-		std::cerr << "Failed to add to epoll: " << std::strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);
 	}
 }

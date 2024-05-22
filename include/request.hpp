@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/07 15:22:09 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 11:20:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Request
 		explicit Request(char *request);
 		~Request() = default;
 
-		t_methods&	    getMethod();
+		methods&	    getMethod();
 		std::string&    getPath();
 		std::string&    getHostname();
 		uint&	    	getPort();
@@ -38,7 +38,7 @@ class Request
 	private:
 		std::string	_request;
 		std::string _header;
-		t_methods	_method;
+		methods		_method;
 		std::string _path;
 		std::string	_hostname;
 		uint		_port;
@@ -52,8 +52,8 @@ class Request
 		void	_extractBody();
 
 	// Hidden orthodox canonical shit
-		Request& operator=(const Request& other) = default;
-		Request() = default;
+		// Request& operator=(const Request& other) = default;
+		// Request() = default;
 };
 
 #endif

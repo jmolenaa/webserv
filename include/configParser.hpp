@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   config.hpp                                         :+:    :+:            */
+/*   configParser.hpp                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: janmolenaar <janmolenaar@student.codam.nl>   +#+                     */
+/*   By: janmolenaar <janmolenaar@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/29 10:35:05 by janmolenaar   #+#    #+#                 */
-/*   Updated: 2024/04/29 10:35:05 by janmolenaar   ########   odam.nl         */
+/*   Updated: 2024/05/21 17:47:46 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <unordered_map>
 #include <deque>
 #include <functional>
-#include "serverSettings.hpp"
+#include "serverConfig.hpp"
 #include "lexer.hpp"
 
 //typedef void	(*directiveFunc)();
@@ -63,7 +63,7 @@ public:
 private:
 
 
-	std::vector<ServerSettings>	_serverSettings;
+	std::vector<ServerConfig>	_serverSettings;
 	std::deque<std::string>		_tokens;
 	state						_currentState;
 
