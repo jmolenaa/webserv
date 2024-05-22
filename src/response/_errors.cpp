@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/14 15:13:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:55:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,14 @@
 /**
  * gets body with appropriate error file (currently just default 404)
  * @todo use appropriate error files based on status code and locations. 
- * If error not read and set up at start of program, go through epoll.
+ * Use epoll
 */
 void	Response::_getError()
 {
-	std::ifstream err("root/error.html");
+	std::string errfile = _location.errorPaths[_status.getState()];
+	std::cout << "ERRFILE: " << errfile << std::endl;
+	
+	std::ifstream err(errfile);
 	if (err.is_open())
 	{
 		std::string line;

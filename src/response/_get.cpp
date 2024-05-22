@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 13:13:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:46:57 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,12 @@
 void Response::_get()
 {
 	_filetype = _extractFileType();
-	_body += "\r\n";
 	if (_filetype == HTML)
 		_getHtml();
 	else if (_filetype == PHP)
 		_executeCGI();
-	if (_status.getState() != OK)
-		return (_getError());
 }
 
-//get filetype from _path
 /**
  * @todo rewrite
 */
@@ -49,7 +45,7 @@ Response::filetype	Response::_extractFileType()
 	{
 		if (_location.autoindex)
 			return (FOLDER);
-		_path += _location.root;
+		_path += _location.index;
 		return (HTML);
 	}
 }

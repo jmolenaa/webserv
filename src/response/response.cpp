@@ -16,17 +16,28 @@
 /**
  * @todo double check locatoins
 */
-Response::Response(Request& request, Location location) :
- 	 _location(location), _path(request.getPath()), _filetype(NONE)
+Response::Response(Epoll& epoll, Request& request, Location location) :
+	_epoll(epoll), _location(location), _path(request.getPath()), _body("\r\n"), _filetype(NONE)
 {
-	if (request.getMethod() == GET)
-		_get();
-	else if (request.getMethod() == POST)
-		_post();
-	else if (request.getMethod() == DELETE)
-		_delete();
+	if (_path.empty())
+		_status.updateState(BAD);
 	else
-		_status.updateState(METHODNOTALLOWED);
+	{
+		method m = request.getMethod();
+
+		if ((m & location.allowedMethods) == 0)
+			_status.updateState(METHODNOTALLOWED);
+		else if (m == GET)
+			_get();
+		else if (m == POST)
+			_post(request);
+		else if (m == DELETE)
+			_delete(request);
+		else
+			_status.updateState(METHODNOTALLOWED);
+	}
+	if (_status.getState() != OK)
+		_getError();
 	_generateHeader();
 }
 

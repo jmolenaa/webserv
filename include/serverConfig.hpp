@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 11:06:38 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/22 11:42:41 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:58:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <string>
 # include <unordered_map>
-# include "defines.hpp"
+# include "location.hpp"
 
 class ServerConfig {
 	public:

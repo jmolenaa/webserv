@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 13:04:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 15:01:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class Request
 {
 	public:
 		explicit Request(char *request);
+		Request() = delete;
 		~Request() = default;
 
 		method&	   		getMethod();
@@ -50,10 +51,6 @@ class Request
 		void	_extractPath();
 		void	_extractHost();
 		void	_extractBody();
-
-	// Hidden orthodox canonical shit
-		// Request& operator=(const Request& other) = default;
-		// Request() = default;
 };
 
 #endif
