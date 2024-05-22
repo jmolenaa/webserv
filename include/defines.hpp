@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/22 11:22:40 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 13:10:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef enum {
 	POST = 2,
 	DELETE = 4,
 	OTHER = 8
-} 	methods;
+} 	method;
 
 /**
  * NB!!! If adding to this enum:
@@ -56,20 +56,20 @@ typedef enum
 
 struct Location
 {
-	std::string	_path;
-	std::string _root;
-	std::string	_index;
-	short		_allowedMethods;
-	size_t		_maxBodySize;
-	bool		_autoindex;
+	std::string	path;
+	std::string root;
+	std::string	index;
+	short		allowedMethods;
+	size_t		maxBodySize;
+	bool		autoindex;
 	
-	std::pair<bool, std::string>	_redir;
-	std::array<std::string, COUNT>	_errorPaths;
+	std::pair<bool, std::string>	redir;
+	std::array<std::string, COUNT>	errorPaths;
 
-	Location() :_path("root"), _root("root"), _index("index.html"),
-		_allowedMethods(GET | POST | DELETE), _maxBodySize(MAX_BODY_SIZE),
-		_autoindex(false), _redir(false, ""), 
-		_errorPaths({
+	Location() :path("root"), root("root"), index("index.html"),
+		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
+		autoindex(false), redir(false, ""), 
+		errorPaths({
 		"root/index.html"
 		"root/400.html",
 		"root/404.html",
