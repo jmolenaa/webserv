@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 14:39:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 15:23:16 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,11 @@ void Server::handleClientRequest(int fd)
 		request.printData(); //REMOVE this if you don't want to print the request
 
 		std::string path = request.getPath();
+		
+		std::cout << path << std::endl; //DEEBUGGING
+
 		Location loc = _config.matchLocation("root");
-		while (!path.empty() && path != loc.path)
+		while (!path.empty() && path != loc.path) //double check this shit
 		{
 			loc = _config.matchLocation(path);
 			size_t end = path.find_last_of('/');
