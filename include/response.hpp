@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 15:02:18 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/23 14:51:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Response
 	{
 		NONE,
 		HTML,
-		PHP,
+		PY,
 		FOLDER
 	}	filetype;
 
@@ -45,6 +45,8 @@ class Response
 		filetype		_filetype;
 
 		filetype	_extractFileType();
+
+		void	_doMethod(method meth, Request& request);
 
 		void	_get();
 		void	_getError();

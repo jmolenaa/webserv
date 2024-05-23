@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 14:46:57 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/23 14:51:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void Response::_get()
 	_filetype = _extractFileType();
 	if (_filetype == HTML)
 		_getHtml();
-	else if (_filetype == PHP)
+	else if (_filetype == PY)
 		_executeCGI();
 }
 
@@ -36,8 +36,8 @@ Response::filetype	Response::_extractFileType()
 		std::string type = _path.substr(pos + 1);
 		if (type == "html")
 			return (HTML);
-		else if (type == "php")
-			return (PHP);
+		else if (type == "py")
+			return (PY);
 		else
 			return (_status.updateState(UNSUPPORTED), NONE);
 	}
@@ -48,4 +48,23 @@ Response::filetype	Response::_extractFileType()
 		_path += _location.index;
 		return (HTML);
 	}
+}
+
+/**
+ * @todo Needs to go through epoll, figure out root stuff for locations
+*/
+void	Response::_getHtml()
+{
+	std::string	filePath = _location.root + _path;
+	
+	std::ifstream _file(filePath);
+	std::string line;
+	if (_file.is_open())
+	{
+		while (std::getline(_file, line))
+			_body += line + "\n";
+		_file.close();
+	}
+	else
+		return (_status.updateState(NOTFOUND));
 }

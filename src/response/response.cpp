@@ -13,9 +13,6 @@
 #include "response.hpp"
 #include "helpers.hpp"
 
-/**
- * @todo double check locatoins
-*/
 Response::Response(Epoll& epoll, Request& request, Location location) :
 	_epoll(epoll), _location(location), _path(request.getPath()), _body("\r\n"), _filetype(NONE)
 {
@@ -27,14 +24,8 @@ Response::Response(Epoll& epoll, Request& request, Location location) :
 
 		if ((m & location.allowedMethods) == 0)
 			_status.updateState(METHODNOTALLOWED);
-		else if (m == GET)
-			_get();
-		else if (m == POST)
-			_post(request);
-		else if (m == DELETE)
-			_delete(request);
-		else
-			_status.updateState(METHODNOTALLOWED);
+
+		_doMethod(m, request);
 	}
 	if (_status.getState() != OK)
 		_getError();
