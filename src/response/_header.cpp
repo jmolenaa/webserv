@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:35:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/23 14:53:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ std::string	Response::_getType()
 	{
 		case HTML:
 			return ("text/html");
-		case PHP:
+		case PY:
 			return ("text/php?");
 		default:
 			return ("text/html");
