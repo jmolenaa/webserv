@@ -6,17 +6,20 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/23 14:51:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 12:27:08 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSE_HPP
 # define RESPONSE_HPP
 
+# include <fcntl.h>
+
 # include "epoll.hpp"
 # include "request.hpp"
 # include "status.hpp"
 # include "location.hpp"
+# include "defines.hpp"
 
 class Response
 {
@@ -51,6 +54,8 @@ class Response
 		void	_get();
 		void	_getError();
 		void	_getHtml();
+		
+		void	_listFolder();
 
 		void	_post(Request& request);
 		void	_delete(Request& request);

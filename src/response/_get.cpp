@@ -6,25 +6,32 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/23 14:51:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 12:27:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
-//gets response body
 void Response::_get()
 {
 	_filetype = _extractFileType();
-	if (_filetype == HTML)
+	switch (_filetype)
+	{
+	case (HTML):
 		_getHtml();
-	else if (_filetype == PY)
-		_executeCGI();
+		break;
+	case (PY):
+		_executeCGI(); //might get removed and only support it in POST
+		break;
+	case (FOLDER):
+		_listFolder();
+		break;
+	default:
+		_status.updateState(UNSUPPORTED);
+		break;
+	}
 }
 
-/**
- * @todo rewrite
-*/
 Response::filetype	Response::_extractFileType()
 {
 	size_t	dir = _path.find_last_of('/');
@@ -39,7 +46,7 @@ Response::filetype	Response::_extractFileType()
 		else if (type == "py")
 			return (PY);
 		else
-			return (_status.updateState(UNSUPPORTED), NONE);
+			return (NONE);
 	}
 	else
 	{
@@ -57,14 +64,31 @@ void	Response::_getHtml()
 {
 	std::string	filePath = _location.root + _path;
 	
-	std::ifstream _file(filePath);
-	std::string line;
-	if (_file.is_open())
-	{
-		while (std::getline(_file, line))
-			_body += line + "\n";
-		_file.close();
-	}
-	else
+	int fd = open(filePath.c_str(), O_RDONLY);
+	if (fd == -1)
 		return (_status.updateState(NOTFOUND));
+
+	//DO EPOLL STUFF HERE
+
+	char 	buffer[BUF_LIMIT];
+	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	while (count)
+	{
+		if (count < 0)
+		{
+			_status.updateState(INTERNALERR);
+			break;
+		}
+		_body += buffer;
+		count = read(fd, buffer, BUF_LIMIT);
+	}
+	close(fd);
+}
+
+/**
+ * @todo this.
+*/
+void Response::_listFolder()
+{
+	_body += "Totally listing the directory here:\nroot/\ntoask/\nsike just kidding\n";
 }

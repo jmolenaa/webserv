@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   _do.cpp                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: dliu <dliu@student.codam.nl>                 +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
+/*   Updated: 2024/05/24 12:25:56 by dliu          ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "response.hpp"
-#include <iostream>
 
 void Response::_doMethod(method meth, Request& request)
 {
@@ -12,7 +23,7 @@ void Response::_doMethod(method meth, Request& request)
 			_post(request);
 			break;
 		case (DELETE):
-			_post(request);
+			_delete(request);
 			break;
 		default:
 			_status.updateState(METHODNOTALLOWED);
@@ -23,17 +34,16 @@ void Response::_doMethod(method meth, Request& request)
 void Response::_post(Request& request)
 {
 	std::string body = request.getBody();
-	std::cout << "POSTING:" << body << std::endl;
+	_body += "You tried to post: '" + body + "'\nWell, nice try I guess.";
 }
 
 void Response::_delete(Request& request)
 {
 	std::string path = request.getPath();
-	std::cout << "DELETING" << path << std::endl;
+	_body += "You tried to delete: '" + path + "'\nNice try but deleting is not yet implemented.";
 }
 
 void Response::_executeCGI()
 {
-	//To be done
-	_body += "CGI STUFF NOT YET SUPPORTED";
+	_body += "CGI STUFF NOT YET IMPLEMENTED";
 }

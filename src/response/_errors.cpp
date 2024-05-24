@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 17:54:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 12:27:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,29 @@
 */
 void	Response::_getError()
 {
+	_body = "\r\n";
 	std::string errfile = _location.errorPaths[_status.getState()];
-	std::ifstream err(errfile);
-	if (err.is_open())
-	{
-		std::string line;
-		while (std::getline(err, line))
-			_body += line + "\n";
-		err.close();
-	}
-	else
+
+	int fd = open(errfile.c_str(), O_RDONLY);
+	if (fd == -1)
 	{
 		_body += "INTERNAL ERROR: No default page found for error " + _status.getStatMessage() + "!\n";
 		_status.updateState(INTERNALERR);
 	}
+	
+		//DO EPOLL STUFF HERE
+
+	char 	buffer[BUF_LIMIT];
+	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	while (count)
+	{
+		if (count < 0)
+		{
+			_status.updateState(INTERNALERR);
+			break;
+		}
+		_body += buffer;
+		count = read(fd, buffer, BUF_LIMIT);
+	}
+	close(fd);
 }
