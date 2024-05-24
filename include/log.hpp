@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 13:04:50 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 13:52:43 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 14:22:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,32 @@ class Log
 		Log() : _logEnabled(false) {};
 
 	public:
+		Log(const Log&) = delete;
+		Log& operator=(const Log&) = delete;
+
+		//gets the static Log instance (singleton)
 		static Log& getInstance()
 		{
 			static Log log;
 			return log;
 		}
-		Log(const Log&) = delete;
-		Log& operator=(const Log&) = delete;
 
+		/**
+		 * Enables or disables Logging. Default is false.
+		 * Only needs to be enabled once at start of program, or can be left out entirely.
+		*/
 		void	enableLog(bool enabled)
 		{
 			_logEnabled = enabled;
 		}
 
+		//check whether logging is enabled or disabled
 		bool	isEnabled() const
 		{
 			return (_logEnabled);
 		}
 
+		//prints the message if logging is enabled.
 		void	print(const std::string& message)
 		{
 			if (_logEnabled)
