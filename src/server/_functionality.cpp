@@ -1,20 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   _clientHandlers.cpp                                :+:    :+:            */
+/*   _functionality.cpp                                 :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/17 14:16:12 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/23 14:18:26 by dliu          ########   odam.nl         */
+/*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
+/*   Updated: 2024/05/24 13:33:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include "request.hpp"
 #include "response.hpp"
+#include "log.hpp"
 
-void Server::handleClientRequest(int fd)
+/**
+ * Accepts new connection on socket and adds to epoll instance
+*/
+void Server::_handleNewConnection() 
+{
+	sockaddr_in clientAddr{};
+	socklen_t clientAddrLen = sizeof(clientAddr);
+	int clientFd = accept(_serverfd, reinterpret_cast<sockaddr *>(&clientAddr), &clientAddrLen);
+	if (clientFd == -1)
+		throw WebservException("Failed to handle a new connection because: " + std::string(std::strerror(errno)) + "\n");
+	_epoll.addFd(clientFd, EPOLLIN);
+}
+
+void Server::_handleClientRequest(int fd)
 {
 	char buffer[1024];
 	ssize_t numBytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
@@ -24,7 +38,6 @@ void Server::handleClientRequest(int fd)
 	{
 		buffer[numBytes] = '\0';
 		Request request(buffer);
-		request.printData(); //REMOVE this if you don't want to print the request
 
 		std::string path = request.getPath();
 		Location loc = _config.matchLocation(path);
@@ -39,23 +52,16 @@ void Server::handleClientRequest(int fd)
 			loc = _config.matchLocation(path);
 		}
 		Response response(_epoll, request, loc);
-		serveClient(fd, response.getResponseMessage());
+		_serveClient(fd, response.getResponseMessage());
 	}
 }
 
-/**
- * @todo make this a try catch that throws
-*/
-void Server::serveClient(int clientFd, const std::string& message)
+void Server::_serveClient(int clientFd, const std::string& message)
 {
-	//REMOVE this if you don't want to print the response
-	std::cout << "\n---------SENDING MESSAGE---------\n"
-		<< message
-		<< "\n---------END---------"
-		<< std::endl;
-
+	Log::getInstance().print("\n=====SEND=====\n" + message + "\n=====END=====\n");
+	
 	ssize_t bytesSent = send(clientFd, message.c_str(), message.size(), 0);
-	if (bytesSent == -1)
-		std::cerr << "Failed to send message: " << std::strerror(errno) << std::endl;
 	close(clientFd);
+	if (bytesSent == -1)
+		throw (WebservException("Failed to send response: " + message + "\n"));
 }

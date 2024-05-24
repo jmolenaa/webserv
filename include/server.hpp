@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 15:01:51 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 13:03:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,13 @@ class Server
 		ServerConfig			_config;
 		int						_serverfd;
 
-		void	createSocket();
-		void	bindToAddress();
-		void	setupEpoll();
+		void	_createSocket();
+		void	_bindToAddress();
 
-		void	handleEvents(epoll_event* events, int numEvents);
-		void	handleNewConnection();
-		void	handleClientRequest(int fd);
-		static void	serveClient(int clientFd, const std::string& message);
+		void	_handleEvents(epoll_event* events, int numEvents);
+		void	_handleNewConnection();
+		void	_handleClientRequest(int fd);
+		static void	_serveClient(int clientFd, const std::string& message);
 
 };
 

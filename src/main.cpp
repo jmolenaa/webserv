@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:05:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/21 14:12:19 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/05/24 14:02:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "configParser.hpp"
 #include "defines.hpp"
 #include "webservException.hpp"
-#include <iostream>
-
+#include "log.hpp"
 
 // todo
 // make headers understandable, where we actually need them
@@ -33,22 +32,24 @@ int main(int argc, char *argv[])
 	(void)argv;
 	if (argc != 2) {
 		std::cerr << RED << "Invalid number of arguments\nUsage: ./webserv [path to configuration file, ending with .conf]\n";
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 
 	try {
+		Log::getInstance().enableLog(true); //comment out to disable logging.
+		
 		// parseConfigFile(std::string(argv[1]));
 		Webserv	webserver;
 		webserver.run();
 	}
 	catch (WebservException& e) {
 		std::cerr << e.what();
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 //	Server server;
 //
 //	server.run();
-//	return (0);
+	return EXIT_SUCCESS;
 }
