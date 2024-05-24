@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 15:01:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 14:07:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define REQUEST_HPP
 
 # include "defines.hpp"
-# include "helpers.hpp"
+# include <string>
 
 /**
  * Parses and contains request data such as method, hostname, port, and body if any
@@ -34,8 +34,6 @@ class Request
 		uint&		    getLength();
 		std::string&    getBody(); //check maxBodySize in dafault location unless overwritten
 
-		void		printData();
-
 	private:
 		std::string	_request;
 		std::string _header;
@@ -45,12 +43,15 @@ class Request
 		uint		_port;
 		uint		_contentLength;
 		std::string	_body;
-
+		
 		void	_extractHeader();
 		void 	_extractMethod();
 		void	_extractPath();
 		void	_extractHost();
 		void	_extractBody();
+		void	_printData();
+		
+		std::string		_keyValueFind(std::string string, std::string key, char delim);
 };
 
 #endif

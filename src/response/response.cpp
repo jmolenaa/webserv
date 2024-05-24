@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "response.hpp"
-#include "helpers.hpp"
 
 Response::Response(Epoll& epoll, Request& request, Location location) :
 	_epoll(epoll), _location(location), _path(request.getPath()), _body("\r\n"), _filetype(NONE)
