@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/06 13:35:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/23 14:55:47 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ std::string	Response::_getDateTime()
 
 std::string	Response::_getType()
 {
-	switch (_filetype)
-	{
-		case HTML:
+	// switch (_filetype)
+	// {
+	// 	case HTML:
+	// 		return ("text/html");
+	// 	case PY:
+	// 		return ("text/html");
+	// 	default:
 			return ("text/html");
-		case PHP:
-			return ("text/php?");
-		default:
-			return ("text/html");
-	}
+	// }
 }

@@ -6,12 +6,12 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/23 17:11:53 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:21:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 14:06:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "request.hpp"
-#include <iostream>
+#include "log.hpp"
 
 /** 
  * @todo
@@ -34,6 +34,7 @@ Request::Request(char *request) : _request(request)
 	_extractPath();
 	_extractHost();
 	_extractBody();
+	_printData();
 }
 
 void Request::_extractHeader()
@@ -43,7 +44,6 @@ void Request::_extractHeader()
 		_header = _request;
 	else
 		_header = _request.substr(0, pos);
-	//std::cout << "EXTRACTED HEADER: " << _header << std::endl;
 }
 
 void Request::_extractMethod()
@@ -69,7 +69,6 @@ void Request::_extractMethod()
 		return;
 	}
 	_method = OTHER;
-	//std::cerr << "Cannot parse request from client." << std::endl;
 }
 
 void Request::_extractPath()
@@ -82,15 +81,23 @@ void Request::_extractPath()
 		return;
 	}
 	_path = "";
-	//std::cerr << "Cannot parse request from client" << std::endl;
+}
+std::string Request::_keyValueFind(std::string string, std::string key, char delim)
+{
+	size_t start = string.find(key);
+	if (start == std::string::npos)
+		return ("");
+	start += key.length();
+	size_t end = string.find_first_of(delim, start);
+	return(string.substr(start, end - start));
 }
 
 void Request::_extractHost()
 {
-	_hostname = Helpers::_keyValueFind(_header, "Host: ", ':');
+	_hostname = _keyValueFind(_header, "Host: ", ':');
     _port = PORT;
-	std::string tmp = Helpers::_keyValueFind(_header, "Host: ", '\n');
-	tmp = Helpers::_keyValueFind(tmp, ":", '\n');
+	std::string tmp = _keyValueFind(_header, "Host: ", '\n');
+	tmp = _keyValueFind(tmp, ":", '\n');
 	if (!tmp.empty())
 		_port = std::stoi(tmp);
 }
@@ -98,7 +105,7 @@ void Request::_extractHost()
 void Request::_extractBody()
 {
     _contentLength = 0;
-	std::string tmp = Helpers::_keyValueFind(_request, "Content-Length: ", '\n');
+	std::string tmp = _keyValueFind(_request, "Content-Length: ", '\n');
 	if (!tmp.empty())
 		_contentLength = std::stoi(tmp);
 	
@@ -112,7 +119,38 @@ void Request::_extractBody()
 	}
 }
 
-methods& Request::getMethod()
+void Request::_printData()
+{
+	if (Log::getInstance().isEnabled())
+	{
+		std::string data =  "=====GOT REQUEST=====\n";
+		data += "\nMethod: ";
+		switch (_method)
+		{
+			case GET:
+				data += "'GET'";
+				break;
+			case POST:
+				data += "'POST'";
+				break;
+			case DELETE:
+				data += "'DELETE'";
+				break;
+			default:
+				data += "'NONE'";
+		}
+		data += "\nPath: '" + _path + "'"
+			+ "\nHost: '" + _hostname + "'";
+			+ "\nPort: '" + std::to_string(_port) + "'"
+			+ "\nLength: '" + std::to_string(_contentLength) + "'"
+			+ "\nBody: '" + _body + "'"
+			+ "\n=====END OF REQUEST=====\n";
+		
+		Log::getInstance().print(data);
+	}
+}
+
+method& Request::getMethod()
 {
 	return _method;
 }
@@ -140,18 +178,4 @@ uint& Request::getLength()
 std::string& Request::getBody()
 {
 	return _body;
-}
-
-void Request::printData()
-{
-	std::cout << "-------Got Request Data---------\n"
-		<< "\nMethod: '" << _method << "'"
-		<< "\nPath: '" << _path << "'"
-		<< "\nHost: '" << _hostname << "'"
-		<< "\nPort: '" << _port << "'"
-		<< "\nLength: '" << _contentLength << "'"
-		<< "\nBody: '" << _body << "'"
-		<< "\n------------\n"
-		<< "\n------------\n"
-	<< std::endl;
 }

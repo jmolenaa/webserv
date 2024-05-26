@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/22 11:22:40 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/22 14:57:23 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,12 @@
 # define BUF_LIMIT 1024
 # define MAX_BODY_SIZE 100000000
 
-# include <array>
-# include <string>
-
 typedef enum {
 	GET = 1,
 	POST = 2,
 	DELETE = 4,
 	OTHER = 8
-} 	methods;
+} 	method;
 
 /**
  * NB!!! If adding to this enum:
@@ -53,50 +50,5 @@ typedef enum
 	INTERNALERR, //500
 	COUNT
 } 	status;
-
-struct Location
-{
-	std::string	_path;
-	std::string _root;
-	std::string	_index;
-	short		_allowedMethods;
-	size_t		_maxBodySize;
-	bool		_autoindex;
-	
-	std::pair<bool, std::string>	_redir;
-	std::array<std::string, COUNT>	_errorPaths;
-
-	Location() :_path("root"), _root("root"), _index("index.html"),
-		_allowedMethods(GET | POST | DELETE), _maxBodySize(MAX_BODY_SIZE),
-		_autoindex(false), _redir(false, ""), 
-		_errorPaths({
-		"root/index.html"
-		"root/400.html",
-		"root/404.html",
-		"root/405.html",
-		"root/411.html",
-		"root/415.html",
-		"root/500.html"
-	}) {}
-
-	Location(const Location& other) = default;
-	
-	// Location operator=(const Location& other)
-	// {
-	// 	if (this == &other)
-	// 		return (*this);
-	// 	this->_path = other._path;
-	// 	this->_root = other._root;
-	// 	this->_index = other._index;
-	// 	this->_allowedMethods = other._allowedMethods;
-	// 	this->_maxBodySize = other._maxBodySize;
-	// 	this->_autoindex = other._autoindex;
-	// 	this->_redir.first = other._redir.first;
-	// 	this->_redir.second = other._redir.second;
-	// 	for (int i = 0; i < COUNT; i++)
-	// 		this->_errorPaths[i] = other._errorPaths[i];
-	// 	return (*this);
-	// }
-};
 
 #endif

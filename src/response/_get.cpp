@@ -6,29 +6,32 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:31:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 12:27:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
-//gets response body
 void Response::_get()
 {
 	_filetype = _extractFileType();
-	_body += "\r\n";
-	if (_filetype == HTML)
+	switch (_filetype)
+	{
+	case (HTML):
 		_getHtml();
-	else if (_filetype == PHP)
-		_executeCGI();
-	if (_status.getState() != OK)
-		return (_getError());
+		break;
+	case (PY):
+		_executeCGI(); //might get removed and only support it in POST
+		break;
+	case (FOLDER):
+		_listFolder();
+		break;
+	default:
+		_status.updateState(UNSUPPORTED);
+		break;
+	}
 }
 
-//get filetype from _path
-/**
- * @todo rewrite
-*/
 Response::filetype	Response::_extractFileType()
 {
 	size_t	dir = _path.find_last_of('/');
@@ -40,16 +43,52 @@ Response::filetype	Response::_extractFileType()
 		std::string type = _path.substr(pos + 1);
 		if (type == "html")
 			return (HTML);
-		else if (type == "php")
-			return (PHP);
+		else if (type == "py")
+			return (PY);
 		else
-			return (_status.updateState(UNSUPPORTED), NONE);
+			return (NONE);
 	}
 	else
 	{
-		if (_config.matchLocation(_path)._autoindex)
+		if (_location.autoindex)
 			return (FOLDER);
-		_path += _config.matchLocation(_path)._autoindex;
+		_path += _location.index;
 		return (HTML);
 	}
+}
+
+/**
+ * @todo Needs to go through epoll, figure out root stuff for locations
+*/
+void	Response::_getHtml()
+{
+	std::string	filePath = _location.root + _path;
+	
+	int fd = open(filePath.c_str(), O_RDONLY);
+	if (fd == -1)
+		return (_status.updateState(NOTFOUND));
+
+	//DO EPOLL STUFF HERE
+
+	char 	buffer[BUF_LIMIT];
+	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	while (count)
+	{
+		if (count < 0)
+		{
+			_status.updateState(INTERNALERR);
+			break;
+		}
+		_body += buffer;
+		count = read(fd, buffer, BUF_LIMIT);
+	}
+	close(fd);
+}
+
+/**
+ * @todo this.
+*/
+void Response::_listFolder()
+{
+	_body += "Totally listing the directory here:\nroot/\ntoask/\nsike just kidding\n";
 }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 10:33:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 13:03:39 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,19 @@
 
 /**
  * Creates servers socket fd using socket()
- * exits() on failure to do so
 */ 
-void	Server::createSocket()
+void	Server::_createSocket()
 {
 	_serverfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_serverfd < 0)
-	{
-		std::cerr << "Failed to create socket: " << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
+		throw WebservException("Failed to create socket because: " + std::string(std::strerror(errno)) + "\n");
 }
 
 /**
  * Binds socketfd to sockaddr_in
- * exits() on failure to do so
  * @todo make it use its _config
 */
-void	Server::bindToAddress()
+void	Server::_bindToAddress()
 {
 	int	optvalTrue = 1;
 	setsockopt(_serverfd, SOL_SOCKET, SO_REUSEADDR, &optvalTrue, sizeof(optvalTrue));
@@ -41,8 +36,5 @@ void	Server::bindToAddress()
 	serverAddr.sin_port = htons(PORT);
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(_serverfd, reinterpret_cast<sockaddr *>(&serverAddr), sizeof(serverAddr)) == -1)
-	{
-		std::cerr << "Failed to bind to socket: " << std::strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
+		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
 }

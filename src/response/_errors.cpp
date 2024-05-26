@@ -6,27 +6,41 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/14 15:13:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/24 12:27:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "response.hpp"
 
 /**
- * gets body with appropriate error file (currently just default 404)
- * @todo use appropriate error files based on status code and locations. 
- * If error not read and set up at start of program, go through epoll.
+ * gets body with appropriate error file
+ * @todo use epoll
 */
 void	Response::_getError()
 {
-	std::ifstream err("root/error.html");
-	if (err.is_open())
+	_body = "\r\n";
+	std::string errfile = _location.errorPaths[_status.getState()];
+
+	int fd = open(errfile.c_str(), O_RDONLY);
+	if (fd == -1)
 	{
-		std::string line;
-		while (std::getline(err, line))
-			_body += line + "\n";
-		err.close();
+		_body += "INTERNAL ERROR: No default page found for error " + _status.getStatMessage() + "!\n";
+		_status.updateState(INTERNALERR);
 	}
-	else
-		_body += "No defaults found for this error\n";
+	
+		//DO EPOLL STUFF HERE
+
+	char 	buffer[BUF_LIMIT];
+	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	while (count)
+	{
+		if (count < 0)
+		{
+			_status.updateState(INTERNALERR);
+			break;
+		}
+		_body += buffer;
+		count = read(fd, buffer, BUF_LIMIT);
+	}
+	close(fd);
 }
