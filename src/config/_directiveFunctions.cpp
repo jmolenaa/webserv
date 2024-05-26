@@ -15,9 +15,7 @@
 #include "webservException.hpp"
 
 void ConfigParser::serverDirective() {
-	if (this->getTokens().empty() || this->getTokens().front() != "{") {
-		throw WebservException("Webserv: configuration file: 'server' directive must be followed by opening '{'\n");
-	}
+	validateDirectiveSyntax("server", 1, "{");
 	std::cout << "server" << std::endl;
 	this->setState(SERVER_STATE);
 	this->getSettings().emplace_back();

@@ -46,7 +46,7 @@ std::deque<std::string>& ConfigParser::getTokens() {
 	return this->_tokens;
 }
 
-std::vector<ServerSettings> &ConfigParser::getSettings() {
+std::vector<ServerConfig> &ConfigParser::getSettings() {
 	return this->_serverSettings;
 }
 
@@ -63,9 +63,6 @@ void ConfigParser::lex(std::string const& filename) {
 	Lexer	lexer(filename);
 
 	this->setTokens(lexer.lex());
-//	for (const auto & _token : this->_tokens) {
-//		std::cout << _token << std::endl;
-//	}
 }
 
 void	setupMap(std::unordered_map<std::string, std::function<void(ConfigParser&)>>& runDirective) {

@@ -33,14 +33,14 @@ public:
 		LOCATION_STATE
 	};
 
-	ConfigParser(std::string);
+	explicit ConfigParser(std::string);
 	~ConfigParser() = default;
 
 	void							lex(std::string const& filename);
 	void							parse();
 	state							getState() const;
 	std::deque<std::string>&		getTokens();
-	std::vector<ServerSettings>&	getSettings();
+	std::vector<ServerConfig>&		getSettings();
 	void							setTokens(std::deque<std::string> tokens);
 	void							setState(state newState);
 	bool							isDirectiveInRightContext(std::string const& directive) const;
