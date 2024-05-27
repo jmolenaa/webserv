@@ -23,7 +23,7 @@ Restaurant::Restaurant(std::string filename)
 	//Move this into parsing. Could be a local class / private struct. This could all be garbage. Change as needed
 		//in some nested while loop based on Port number / address
 			Kitchen kitchen;
-			std::string cookName = "localhost"; //AKA "waiter_name"
+			std::string cookName = "localhost"; //AKA "server_name"
 			Cookbook cookbook;
 
 			//int another loop
