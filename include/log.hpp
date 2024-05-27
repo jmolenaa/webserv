@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 13:04:50 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 14:22:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 12:32:38 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class Log
 		void	enableLog(bool enabled)
 		{
 			_logEnabled = enabled;
+			print("Logging is enabled");
 		}
 
 		//check whether logging is enabled or disabled
