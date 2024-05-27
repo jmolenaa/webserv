@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/22 14:57:32 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 14:59:43 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 13:12:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 
 # include <array>
 # include <string>
+# include <unordered_map>
 # include "defines.hpp"
+# include "log.hpp"
 
 struct Location
 {
@@ -40,26 +42,43 @@ struct Location
 		"root/411.html",
 		"root/415.html",
 		"root/500.html"
-	}) {}
+	}) {Log::getInstance().print("Location constructed with path: " + path);}
 
-	// Location(const Location& other) = default;
+	Location(const Location& other)
+	{
+		if (this == &other)
+			return;
+		this->path = other.path;
+		this->root = other.root;
+		this->index = other.index;
+		this->allowedMethods = other.allowedMethods;
+		this->maxBodySize = other.maxBodySize;
+		this->autoindex = other.autoindex;
+		this->redir.first = other.redir.first;
+		this->redir.second = other.redir.second;
+		for (int i = 0; i < COUNT; i++)
+			this->errorPaths[i] = other.errorPaths[i];
+		return;
+	}
 	
-	// Location operator=(const Location& other)
-	// {
-	// 	if (this == &other)
-	// 		return (*this);
-	// 	this->_path = other._path;
-	// 	this->_root = other._root;
-	// 	this->_index = other._index;
-	// 	this->_allowedMethods = other._allowedMethods;
-	// 	this->_maxBodySize = other._maxBodySize;
-	// 	this->_autoindex = other._autoindex;
-	// 	this->_redir.first = other._redir.first;
-	// 	this->_redir.second = other._redir.second;
-	// 	for (int i = 0; i < COUNT; i++)
-	// 		this->_errorPaths[i] = other._errorPaths[i];
-	// 	return (*this);
-	// }
+	Location& operator=(const Location& other)
+	{
+		if (this == &other)
+			return (*this);
+		this->path = other.path;
+		this->root = other.root;
+		this->index = other.index;
+		this->allowedMethods = other.allowedMethods;
+		this->maxBodySize = other.maxBodySize;
+		this->autoindex = other.autoindex;
+		this->redir.first = other.redir.first;
+		this->redir.second = other.redir.second;
+		for (int i = 0; i < COUNT; i++)
+			this->errorPaths[i] = other.errorPaths[i];
+		return (*this);
+	}
 };
+
+typedef	std::unordered_map<std::string, Location> Locations;
 
 #endif
