@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   response.hpp                                       :+:    :+:            */
+/*   dish.hpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
@@ -16,12 +16,12 @@
 # include <fcntl.h>
 
 # include "epoll.hpp"
-# include "request.hpp"
+# include "order.hpp"
 # include "status.hpp"
-# include "location.hpp"
+# include "recipe.hpp"
 # include "defines.hpp"
 
-class Response
+class Dish
 {
 	typedef enum
 	{
@@ -32,16 +32,16 @@ class Response
 	}	filetype;
 
 	public:
-		explicit Response(Epoll& epoll, Request& request, Location& location);
-		Response() = delete;
-		~Response() = default;
+		explicit Dish(Epoll& epoll, Order& order, Recipe& recipe);
+		Dish() = delete;
+		~Dish() = default;
 
-		std::string		getResponseMessage();
+		std::string		getMeal();
 	
 	private:
 		Epoll&			_epoll;
 		Status			_status;
-		Location		_location;
+		Recipe			_location;
 		std::string 	_path;
 		std::string		_header;
 		std::string		_body;
@@ -49,7 +49,7 @@ class Response
 
 		filetype	_extractFileType();
 
-		void	_doMethod(method meth, Request& request);
+		void	_doMethod(method meth, Order& order);
 
 		void	_get();
 		void	_getError();
@@ -57,8 +57,8 @@ class Response
 		
 		void	_listFolder();
 
-		void	_post(Request& request);
-		void	_delete(Request& request);
+		void	_post(Order& order);
+		void	_delete(Order& order);
 		void	_executeCGI(); //move this to CGI?
 		
 		void		_generateHeader();

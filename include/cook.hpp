@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   serverConfig.hpp                                   :+:    :+:            */
+/*   cook.hpp                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
@@ -10,34 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVERCONFIG_HPP
-#define SERVERCONFIG_HPP
+#ifndef COOK_HPP
+#define COOK_HPP
 
 # include <string>
 # include <unordered_map>
-# include "location.hpp"
+# include "recipe.hpp"
 
-class ServerConfig {
+class Cook {
 	public:
-		explicit	ServerConfig();
-		explicit	ServerConfig(uint16_t port, uint32_t address, std::string& name, Locations& locations);
-		explicit	ServerConfig(const ServerConfig& other);
-		ServerConfig& operator=(const ServerConfig& other);
+		explicit	Cook();
+		explicit	Cook(uint16_t port, uint32_t address, std::string& name, Cookbook& cookbook);
+		explicit	Cook(const Cook& other);
+		Cook& 		operator=(const Cook& other);
 
 		std::string		getName() const;
 		uint16_t		getPort() const;
 		uint32_t		getAddress() const;
-		Locations		getLocations() const;
+		Cookbook		getCookbook() const;
 
-		Location		matchLocation(std::string path) const;
+		Recipe			getRecipe(std::string path) const;
 	
 	private:
 		uint16_t	_port;
 		uint32_t	_address;
 		std::string	_name;
-		Locations	_locations;
+		Cookbook	_cookbook;
 };
 
-typedef std::unordered_map<std::string, ServerConfig> ServerConfigs;
+typedef std::unordered_map<std::string, Cook> Kitchen;
 
 #endif

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   location.hpp                                       :+:    :+:            */
+/*   recipe.hpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
@@ -10,16 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOCATION_HPP
-# define LOCATION_HPP
+#ifndef RECIPE_HPP
+# define RECIPE_HPP
 
 # include <array>
 # include <string>
 # include <unordered_map>
+
 # include "defines.hpp"
 # include "log.hpp"
 
-struct Location
+struct Recipe
 {
 	std::string	path;
 	std::string root;
@@ -31,7 +32,7 @@ struct Location
 	std::pair<bool, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Location() :path("root"), root("root"), index("index.html"),
+	Recipe() :path("root"), root("root"), index("index.html"),
 		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(false, ""), 
 		errorPaths({
@@ -42,9 +43,9 @@ struct Location
 		"root/411.html",
 		"root/415.html",
 		"root/500.html"
-	}) {Log::getInstance().print("Location constructed with path: " + path);}
+	}) {Log::getInstance().print("Recipe constructed on path: " + path);}
 
-	Location(const Location& other)
+	Recipe(const Recipe& other)
 	{
 		if (this == &other)
 			return;
@@ -61,7 +62,7 @@ struct Location
 		return;
 	}
 	
-	Location& operator=(const Location& other)
+	Recipe& operator=(const Recipe& other)
 	{
 		if (this == &other)
 			return (*this);
@@ -79,6 +80,6 @@ struct Location
 	}
 };
 
-typedef	std::unordered_map<std::string, Location> Locations;
+typedef	std::unordered_map<std::string, Recipe> Cookbook;
 
 #endif

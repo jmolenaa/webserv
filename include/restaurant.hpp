@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   webserv.hpp                                        :+:    :+:            */
+/*   restaurant.hpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
@@ -10,26 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#ifndef RESTAURANT_HPP
+# define RESTAURANT_HPP
 
 #include <vector>
-#include "server.hpp"
+#include "waiter.hpp"
 
 
-class	Webserv {
+class	Restaurant {
 
 public:
-	explicit Webserv(std::string configFileName);
-	explicit Webserv() = delete;
-	Webserv(Webserv& other) = delete;
-	~Webserv() = default;
+	explicit Restaurant(std::string filename);
+	explicit Restaurant() = delete;
+	Restaurant(Restaurant& other) = delete;
+	~Restaurant() = default;
 	
 	void	run();
 
 private:
 	Epoll 					_epoll;
-	std::vector<Server*>	_servers;
+	std::vector<Waiter*>	_waiters;
 };
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 13:17:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 15:41:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "dish.hpp"
 
-void Response::_get()
+void Dish::_get()
 {
 	_filetype = _extractFileType();
 	switch (_filetype)
@@ -32,7 +32,7 @@ void Response::_get()
 	}
 }
 
-Response::filetype	Response::_extractFileType()
+Dish::filetype	Dish::_extractFileType()
 {
 	size_t	dir = _path.find_last_of('/');
 	if (dir == std::string::npos)
@@ -58,9 +58,9 @@ Response::filetype	Response::_extractFileType()
 }
 
 /**
- * @todo Needs to go through epoll, figure out root stuff for locations
+ * @todo Needs to go through epoll, figure out root stuff for cookbook
 */
-void	Response::_getHtml()
+void	Dish::_getHtml()
 {
 	std::string	filePath = _location.root + _path;
 	
@@ -89,7 +89,7 @@ void	Response::_getHtml()
 /**
  * @todo this.
 */
-void Response::_listFolder()
+void Dish::_listFolder()
 {
 	_body += "Totally listing the directory here:\nroot/\ntoask/\nsike just kidding\n";
 }

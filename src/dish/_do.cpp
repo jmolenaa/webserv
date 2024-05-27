@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 12:25:56 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 15:30:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "dish.hpp"
 
-void Response::_doMethod(method meth, Request& request)
+void Dish::_doMethod(method meth, Order& order)
 {
 	switch (meth)
 	{
@@ -20,10 +20,10 @@ void Response::_doMethod(method meth, Request& request)
 			_get();
 			break;
 		case (POST):
-			_post(request);
+			_post(order);
 			break;
 		case (DELETE):
-			_delete(request);
+			_delete(order);
 			break;
 		default:
 			_status.updateState(METHODNOTALLOWED);
@@ -31,19 +31,19 @@ void Response::_doMethod(method meth, Request& request)
 	}
 }
 
-void Response::_post(Request& request)
+void Dish::_post(Order& order)
 {
-	std::string body = request.getBody();
+	std::string body = order.getBody();
 	_body += "You tried to post: '" + body + "'\nWell, nice try I guess.";
 }
 
-void Response::_delete(Request& request)
+void Dish::_delete(Order& order)
 {
-	std::string path = request.getPath();
+	std::string path = order.getPath();
 	_body += "You tried to delete: '" + path + "'\nNice try but deleting is not yet implemented.";
 }
 
-void Response::_executeCGI()
+void Dish::_executeCGI()
 {
 	_body += "CGI STUFF NOT YET IMPLEMENTED";
 }

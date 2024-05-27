@@ -6,12 +6,12 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/22 14:57:23 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 15:53:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEFINES_H
-# define DEFINES_H
+#ifndef DEFINES_HPP
+# define DEFINES_HPP
 
 # define RED "\x1b[31m"
 # define GREEN "\x1b[32m"

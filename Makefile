@@ -6,7 +6,7 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/05/24 14:06:43 by dliu          ########   odam.nl          #
+#    Updated: 2024/05/27 16:42:02 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ DEPS := $(OBJS:%.o=%.d)
 
 # if condition to create obj directories when compiling for the first time
 ifndef $(shell find $(OBJ_DIR) -maxdepth 1 -name $(OBJ_DIR))
-	DIR = obj obj/cgi obj/config obj/epoll obj/request obj/response obj/server obj/status obj/exceptions
+	DIR = obj obj/cgi obj/cook obj/epoll obj/order obj/dish obj/waiter obj/status obj/exceptions
 endif
 
 

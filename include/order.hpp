@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   request.hpp                                        :+:    :+:            */
+/*   order.hpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
@@ -10,32 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_HPP
-# define REQUEST_HPP
+#ifndef ORDER_HPP
+# define ORDER_HPP
 
 # include "defines.hpp"
 # include <string>
 
 /**
- * Parses and contains request data such as method, hostname, port, and body if any
+ * Parses and contains order data such as method, hostname, port, and body if any
  * Use: getMethod(), getHostname(), getPort(), getLength(), getBody()
 */
-class Request
+class Order
 {
 	public:
-		explicit Request(char *request);
-		Request() = delete;
-		~Request() = default;
+		explicit Order(char *order);
+		Order() = delete;
+		Order(Order& other) = delete;
+		~Order() = default;
 
 		method&	   		getMethod();
 		std::string&    getPath();
-		std::string&    getHostname();
+		std::string&    getCookName();
 		uint&	    	getPort();
 		uint&		    getLength();
-		std::string&    getBody(); //check maxBodySize in dafault location unless overwritten
+		std::string&    getBody(); //check maxBodySize in dafault recipe unless overwritten
 
 	private:
-		std::string	_request;
+		std::string	_order;
 		std::string _header;
 		method		_method;
 		std::string _path;
