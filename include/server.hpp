@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 13:03:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 12:57:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@
 class Server
 {
 	public:
-		explicit Server(Epoll& epoll, ServerConfig& config);
+		explicit Server(Epoll& epoll, ServerConfigs configs);
 		Server() = delete;
 		~Server();
 
 		void	run();
 
 	private:
-		Epoll&					_epoll;
-		ServerConfig			_config;
-		int						_serverfd;
+		Epoll&			_epoll;
+		int				_serverfd;
+		ServerConfigs	_configs;
 
 		void	_createSocket();
 		void	_bindToAddress();

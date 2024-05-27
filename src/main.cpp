@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:05:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 14:02:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 10:47:13 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ int main(int argc, char *argv[])
 		return EXIT_FAILURE;
 	}
 
-
 	try {
 		Log::getInstance().enableLog(true); //comment out to disable logging.
 		
-		// parseConfigFile(std::string(argv[1]));
-		Webserv	webserver;
-		webserver.run();
+		Webserv	webserv(argv[1]);
+		webserv.run();
 	}
 	catch (WebservException& e) {
 		std::cerr << e.what();

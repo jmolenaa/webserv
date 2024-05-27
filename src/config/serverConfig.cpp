@@ -6,17 +6,47 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/08 11:06:40 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/22 11:42:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 13:13:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <arpa/inet.h>
+
 #include "serverConfig.hpp"
 #include "defines.hpp"
-#include "arpa/inet.h"
+#include "log.hpp"
 
-ServerConfig::ServerConfig() : _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("default")
+ServerConfig::ServerConfig()
+	: _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost")
 {
-	_locations["root"] = Location();
+	Log::getInstance().print("default ServerConfig constructed with name: " + _name);
+}
+
+ServerConfig::ServerConfig(uint16_t port, uint32_t address, std::string& name, Locations& locations)
+	: _port(port), _address(address), _name(name), _locations(locations)
+{
+	Log::getInstance().print("custom ServerConfig constructed with name: " + _name);
+}
+
+ServerConfig::ServerConfig(const ServerConfig& other)
+{
+	if (this == &other)
+		return;
+	this->_port = other.getPort();
+	this->_address = other.getAddress();
+	this->_name = other.getName();
+	this->_locations = other.getLocations();
+}
+
+ServerConfig& ServerConfig::operator=(const ServerConfig& other)
+{
+	if (this == &other)
+		return (*this);
+	this->_port = other.getPort();
+	this->_address = other.getAddress();
+	this->_name = other.getName();
+	this->_locations = other.getLocations();
+	return (*this);
 }
 
 uint16_t ServerConfig::getPort() const
@@ -24,14 +54,19 @@ uint16_t ServerConfig::getPort() const
 	return this->_port;
 }
 
+uint32_t ServerConfig::getAddress() const
+{
+	return this->_address;
+}
+
 std::string ServerConfig::getName() const
 {
 	return this->_name;
 }
 
-uint32_t ServerConfig::getAddress() const
+Locations ServerConfig::getLocations() const
 {
-	return this->_address;
+	return this->_locations;
 }
 
 Location ServerConfig::matchLocation(std::string path) const

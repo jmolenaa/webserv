@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 13:33:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 13:07:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,13 @@ void Server::_handleClientRequest(int fd)
 		buffer[numBytes] = '\0';
 		Request request(buffer);
 
+		ServerConfig& config = _configs.begin()->second;
+		auto it = _configs.find(request.getHostname());
+		if (it != _configs.end())
+			config = it->second;
+
 		std::string path = request.getPath();
-		Location loc = _config.matchLocation(path);
+		Location loc = config.matchLocation(path);
 		while (!path.empty() && path != loc.path) //double check this shit
 		{
 			// std::cout << path << std::endl; //DEEBUGGING
@@ -49,7 +54,7 @@ void Server::_handleClientRequest(int fd)
 				break;
 			else
 				path = path.substr(0, end);
-			loc = _config.matchLocation(path);
+			loc = config.matchLocation(path);
 		}
 		Response response(_epoll, request, loc);
 		_serveClient(fd, response.getResponseMessage());
@@ -58,7 +63,7 @@ void Server::_handleClientRequest(int fd)
 
 void Server::_serveClient(int clientFd, const std::string& message)
 {
-	Log::getInstance().print("\n=====SEND=====\n" + message + "\n=====END=====\n");
+	Log::getInstance().print("=====SEND=====\n" + message + "\n=====END=====\n");
 	
 	ssize_t bytesSent = send(clientFd, message.c_str(), message.size(), 0);
 	close(clientFd);

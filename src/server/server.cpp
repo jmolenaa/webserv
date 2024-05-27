@@ -6,14 +6,18 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 13:03:30 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 13:12:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
+#include "log.hpp"
 
-Server::Server(Epoll& epoll, ServerConfig& config) : _epoll(epoll), _config(config)
+Server::Server(Epoll& epoll, ServerConfigs configs)
+	: _epoll(epoll), _configs(configs)
 {
+	Log::getInstance().print("Server constrycted with " + std::to_string(configs.size()) + " configurations.");
+
 	_createSocket();
 	_bindToAddress();
     _epoll.addFd(_serverfd, EPOLLIN);
@@ -30,6 +34,7 @@ Server::~Server()
 
 void Server::run()
 {
+	Log::getInstance().print("Server with " + std::to_string(_configs.size()) + " configurations is running");
     epoll_event events[CLI_LIMIT];
     while (true)
 	{
