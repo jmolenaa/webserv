@@ -12,7 +12,7 @@
 
 #include "response.hpp"
 
-Response::Response(Epoll& epoll, Request& request, Location location) :
+Response::Response(Epoll& epoll, Request& request, Location& location) :
 	_epoll(epoll), _location(location), _path(request.getPath()), _body("\r\n"), _filetype(NONE)
 {
 	if (_path.empty())

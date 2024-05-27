@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 12:27:08 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 11:51:55 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class Response
 	}	filetype;
 
 	public:
-		explicit Response(Epoll& epoll, Request& request, Location location);
+		explicit Response(Epoll& epoll, Request& request, Location& location);
 		Response() = delete;
 		~Response() = default;
 
