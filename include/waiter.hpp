@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 16:12:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 17:04:17 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Waiter
 		void	_handleEvents(epoll_event* events, int numEvents);
 		void	_welcomeCustomer();
 		void	_takeOrder(int fd);
-		static void	_serveCustomer(int customerFd, const std::string& message);
+		void	_serveCustomer(int customerFd, const std::string& message);
 
 };
 
