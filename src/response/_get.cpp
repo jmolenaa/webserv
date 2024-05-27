@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 12:27:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 13:17:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ void	Response::_getHtml()
 			_status.updateState(INTERNALERR);
 			break;
 		}
-		_body += buffer;
+		std::string append = std::string(buffer);
+		_body += append.substr(0, count);
 		count = read(fd, buffer, BUF_LIMIT);
 	}
 	close(fd);
