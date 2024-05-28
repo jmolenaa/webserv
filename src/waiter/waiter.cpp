@@ -1,35 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   server.cpp                                         :+:    :+:            */
+/*   waiter.cpp                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 13:03:30 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:24:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.hpp"
+#include "waiter.hpp"
+#include "log.hpp"
 
-Server::Server(Epoll& epoll, ServerConfig& config) : _epoll(epoll), _config(config)
+Waiter::Waiter(Epoll& epoll, Kitchen kitchen)
+	: _epoll(epoll), _kitchen(kitchen)
 {
+	Log::getInstance().print("Waiter has been hired");
+
 	_createSocket();
 	_bindToAddress();
-    _epoll.addFd(_serverfd, EPOLLIN);
+    _epoll.addFd(_waiterFd, EPOLLIN);
 
-	if (listen(_serverfd, SOMAXCONN) == -1)
-		throw WebservException("Server could not listen because: " + std::string(std::strerror(errno)) + "\n");
+	if (listen(_waiterFd, SOMAXCONN) == -1)
+		throw WebservException("Waiter could not listen because: " + std::string(std::strerror(errno)) + "\n");
 }
 
-Server::~Server()
+Waiter::~Waiter()
 {
-    if (_serverfd > 0)
-        close(_serverfd);
+    if (_waiterFd > 0)
+        close(_waiterFd);
 }
 
-void Server::run()
+void Waiter::work()
 {
+	Log::getInstance().print("Waiter is working with " + std::to_string(_kitchen.size()) + " Cooks in the kitchen");
     epoll_event events[CLI_LIMIT];
     while (true)
 	{
@@ -38,13 +43,13 @@ void Server::run()
     }    
 }
 
-void Server::_handleEvents(epoll_event* events, int numEvents)
+void Waiter::_handleEvents(epoll_event* events, int numEvents)
 {
     for (int i = 0; i < numEvents; i++)
 	{
-        if (events[i].data.fd == _serverfd)
-            _handleNewConnection();
+        if (events[i].data.fd == _waiterFd)
+            _welcomeCustomer();
         else
-            _handleClientRequest(events[i].data.fd);
+            _takeOrder(events[i].data.fd);
     }
 }

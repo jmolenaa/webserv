@@ -6,15 +6,15 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/23 14:55:47 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/27 15:30:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "dish.hpp"
 #include <ctime>
 #include <sstream>
 
-void	Response::_generateHeader()
+void	Dish::_generateHeader()
 {
 	_header += "HTTP/1.1 " + std::to_string(_status.getStatNum()) + " " + _status.getStatMessage() + "\r\n";
 	//_body += "Date: " + _getDateTime() + "\r\n";
@@ -23,7 +23,7 @@ void	Response::_generateHeader()
 	_header += "Connection: Closed\r\n";
 }
 
-std::string	Response::_getDateTime()
+std::string	Dish::_getDateTime()
 {
     std::time_t now = std::time(nullptr);
     std::tm* now_tm = std::localtime(&now);
@@ -32,7 +32,7 @@ std::string	Response::_getDateTime()
     return std::string(buffer);
 }
 
-std::string	Response::_getType()
+std::string	Dish::_getType()
 {
 	// switch (_filetype)
 	// {

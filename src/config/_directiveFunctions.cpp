@@ -16,9 +16,9 @@
 
 void ConfigParser::serverDirective() {
 	validateDirectiveSyntax("server", 1, "{");
-	std::cout << "server" << std::endl;
 	this->setState(SERVER_STATE);
 	this->getSettings().emplace_back();
+
 }
 
 void ConfigParser::serverNameDirective() {

@@ -6,13 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/24 12:27:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:45:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "dish.hpp"
 
-void Response::_get()
+void Dish::_get()
 {
 	_filetype = _extractFileType();
 	switch (_filetype)
@@ -32,15 +32,15 @@ void Response::_get()
 	}
 }
 
-Response::filetype	Response::_extractFileType()
+Dish::filetype	Dish::_extractFileType()
 {
-	size_t	dir = _path.find_last_of('/');
+	size_t	dir = _page.find_last_of('/');
 	if (dir == std::string::npos)
 		return (_status.updateState(BAD), NONE);
-	size_t pos = _path.find_last_of('.');
+	size_t pos = _page.find_last_of('.');
 	if (pos != std::string::npos)
 	{
-		std::string type = _path.substr(pos + 1);
+		std::string type = _page.substr(pos + 1);
 		if (type == "html")
 			return (HTML);
 		else if (type == "py")
@@ -52,17 +52,17 @@ Response::filetype	Response::_extractFileType()
 	{
 		if (_location.autoindex)
 			return (FOLDER);
-		_path += _location.index;
+		_page += _location.index;
 		return (HTML);
 	}
 }
 
 /**
- * @todo Needs to go through epoll, figure out root stuff for locations
+ * @todo Needs to go through epoll, figure out root stuff for cookbook
 */
-void	Response::_getHtml()
+void	Dish::_getHtml()
 {
-	std::string	filePath = _location.root + _path;
+	std::string	filePath = _location.root + _page;
 	
 	int fd = open(filePath.c_str(), O_RDONLY);
 	if (fd == -1)
@@ -79,7 +79,8 @@ void	Response::_getHtml()
 			_status.updateState(INTERNALERR);
 			break;
 		}
-		_body += buffer;
+		std::string append = std::string(buffer);
+		_body += append.substr(0, count);
 		count = read(fd, buffer, BUF_LIMIT);
 	}
 	close(fd);
@@ -88,7 +89,7 @@ void	Response::_getHtml()
 /**
  * @todo this.
 */
-void Response::_listFolder()
+void Dish::_listFolder()
 {
 	_body += "Totally listing the directory here:\nroot/\ntoask/\nsike just kidding\n";
 }

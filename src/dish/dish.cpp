@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   response.cpp                                        :+:    :+:            */
+/*   dish.cpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
@@ -10,28 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "response.hpp"
+#include "dish.hpp"
 
-Response::Response(Epoll& epoll, Request& request, Location location) :
-	_epoll(epoll), _location(location), _path(request.getPath()), _body("\r\n"), _filetype(NONE)
+Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
+	_epoll(epoll), _location(recipe), _page(order.getPath()), _body("\r\n"), _filetype(NONE)
 {
-	if (_path.empty())
+	if (_page.empty())
 		_status.updateState(BAD);
 	else
 	{
-		method m = request.getMethod();
+		method m = order.getMethod();
 
-		if ((m & location.allowedMethods) == 0)
+		if ((m & recipe.allowedMethods) == 0)
 			_status.updateState(METHODNOTALLOWED);
 
-		_doMethod(m, request);
+		_doMethod(m, order);
 	}
 	if (_status.getState() != OK)
 		_getError();
 	_generateHeader();
 }
 
-std::string Response::getResponseMessage()
+std::string Dish::getMeal()
 {
 	return (_header + _body);
 }
