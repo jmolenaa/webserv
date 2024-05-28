@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 15:41:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:45:58 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void Dish::_get()
 
 Dish::filetype	Dish::_extractFileType()
 {
-	size_t	dir = _path.find_last_of('/');
+	size_t	dir = _page.find_last_of('/');
 	if (dir == std::string::npos)
 		return (_status.updateState(BAD), NONE);
-	size_t pos = _path.find_last_of('.');
+	size_t pos = _page.find_last_of('.');
 	if (pos != std::string::npos)
 	{
-		std::string type = _path.substr(pos + 1);
+		std::string type = _page.substr(pos + 1);
 		if (type == "html")
 			return (HTML);
 		else if (type == "py")
@@ -52,7 +52,7 @@ Dish::filetype	Dish::_extractFileType()
 	{
 		if (_location.autoindex)
 			return (FOLDER);
-		_path += _location.index;
+		_page += _location.index;
 		return (HTML);
 	}
 }
@@ -62,7 +62,7 @@ Dish::filetype	Dish::_extractFileType()
 */
 void	Dish::_getHtml()
 {
-	std::string	filePath = _location.root + _path;
+	std::string	filePath = _location.root + _page;
 	
 	int fd = open(filePath.c_str(), O_RDONLY);
 	if (fd == -1)

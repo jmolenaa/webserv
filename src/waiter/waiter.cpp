@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 16:13:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:24:45 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Waiter::~Waiter()
 
 void Waiter::work()
 {
-	Log::getInstance().print("Waiter is working with " + std::to_string(_kitchen.size()) + " cooks in the kitchen");
+	Log::getInstance().print("Waiter is working with " + std::to_string(_kitchen.size()) + " Cooks in the kitchen");
     epoll_event events[CLI_LIMIT];
     while (true)
 	{

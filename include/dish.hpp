@@ -42,7 +42,7 @@ class Dish
 		Epoll&			_epoll;
 		Status			_status;
 		Recipe			_location;
-		std::string 	_path;
+		std::string 	_page;
 		std::string		_header;
 		std::string		_body;
 		filetype		_filetype;

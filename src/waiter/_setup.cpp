@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 16:46:05 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:44:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	Waiter::_createSocket()
 
 /**
  * Binds socketfd to sockaddr_in
- * @todo make it use its _config
 */
 void	Waiter::_bindToAddress()
 {
@@ -33,8 +32,9 @@ void	Waiter::_bindToAddress()
 	setsockopt(_waiterFd, SOL_SOCKET, SO_REUSEPORT, &optvalTrue, sizeof(optvalTrue));
 	sockaddr_in	waiterAddr{};
 	waiterAddr.sin_family = AF_INET;
-	waiterAddr.sin_port = htons(PORT);
-	waiterAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	Log::getInstance().print("Waiter is waiting at table " + std::to_string(ntohs(_kitchen.begin()->second.getTable())));
+	waiterAddr.sin_port = _kitchen.begin()->second.getTable();
+	waiterAddr.sin_addr.s_addr = _kitchen.begin()->second.getAddress();
 	if (bind(_waiterFd, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
 		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
 }

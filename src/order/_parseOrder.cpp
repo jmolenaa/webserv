@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 16:22:16 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:48:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,20 @@ void Order::_extractPath()
 	if (path_start != std::string::npos)
 	{
 		size_t path_end = _header.find_first_of(' ', path_start);
-		_path = _header.substr(path_start, path_end - path_start);
+		_page = _header.substr(path_start, path_end - path_start);
 		return;
 	}
-	_path = "";
+	_page = "";
 }
 
 void Order::_extractHost()
 {
 	_hostname = _keyValueFind(_header, "Host: ", ':');
-    _port = PORT;
+    _table = PORT;
 	std::string tmp = _keyValueFind(_header, "Host: ", '\n');
 	tmp = _keyValueFind(tmp, ":", '\n');
 	if (!tmp.empty())
-		_port = std::stoi(tmp);
+		_table = std::stoi(tmp);
 }
 
 void Order::_extractBody()
@@ -100,7 +100,7 @@ void Order::_printData()
 {
 	if (Log::getInstance().isEnabled())
 	{
-		std::string data =  "=====GOT ORDER=====\n";
+		std::string data =  "=====PLACING ORDER=====\n";
 		data += "\nMethod: ";
 		switch (_method)
 		{
@@ -116,9 +116,9 @@ void Order::_printData()
 			default:
 				data += "'NONE'";
 		}
-		data += "\nPath: '" + _path + "'"
+		data += "\nPath: '" + _page + "'"
 			+ "\nHost: '" + _hostname + "'";
-			+ "\nPort: '" + std::to_string(_port) + "'"
+			+ "\nTable: '" + std::to_string(_table) + "'"
 			+ "\nLength: '" + std::to_string(_contentLength) + "'"
 			+ "\nBody: '" + _body + "'"
 			+ "\n=====END OF ORDER=====\n";

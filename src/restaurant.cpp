@@ -21,7 +21,7 @@ Restaurant::Restaurant(std::string filename)
 
 	// parseConfig(std::string(configFileName));
 	//Move this into parsing. Could be a local class / private struct. This could all be garbage. Change as needed
-		//in some nested while loop based on Port number / address
+		//in some nested while loop based on Table number / address
 			Kitchen kitchen;
 			std::string cookName = "localhost"; //AKA "server_name"
 			Cookbook cookbook;
@@ -29,11 +29,11 @@ Restaurant::Restaurant(std::string filename)
 			//int another loop
 			//{
 				Recipe	recipe; //self-initialises with defaults
-				std::string	path = "root"; //extract from config
+				std::string	page = "root"; //extract from config
 				//update recipe stuff here where needed
-				//e.g. loc.path = locationPath
+				//e.g. loc.page = locationPath
 				//e.g. loc.index = lineFromFile.substr(start, size) whatever etc;
-				cookbook[path] = recipe;
+				cookbook[page] = recipe;
 		
 				//replace PORT and INADDR_ANY
 				kitchen[cookName] = Cook(htons(PORT), htonl(INADDR_ANY), cookName, cookbook);

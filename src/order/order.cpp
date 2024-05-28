@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "order.hpp"
+#include "log.hpp"
 
 /** 
  * @todo
@@ -43,7 +44,7 @@ method& Order::getMethod()
 
 std::string& Order::getPath()
 {
-	return _path;
+	return _page;
 }
 
 std::string& Order::getCookName()
@@ -51,9 +52,9 @@ std::string& Order::getCookName()
 	return _hostname;
 }
 
-uint& Order::getPort()
+uint& Order::getTable()
 {
-	return _port;
+	return _table;
 }
 
 uint& Order::getLength()

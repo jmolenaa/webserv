@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 15:30:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:45:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void Dish::_post(Order& order)
 
 void Dish::_delete(Order& order)
 {
-	std::string path = order.getPath();
-	_body += "You tried to delete: '" + path + "'\nNice try but deleting is not yet implemented.";
+	std::string page = order.getPath();
+	_body += "You tried to delete: '" + page + "'\nNice try but deleting is not yet implemented.";
 }
 
 void Dish::_executeCGI()

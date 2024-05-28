@@ -17,8 +17,8 @@
 # include <string>
 
 /**
- * Parses and contains order data such as method, hostname, port, and body if any
- * Use: getMethod(), getHostname(), getPort(), getLength(), getBody()
+ * Parses and contains order data such as method, hostname, table, and body if any
+ * Use: getMethod(), getHostname(), getTable(), getLength(), getBody()
 */
 class Order
 {
@@ -31,7 +31,7 @@ class Order
 		method&	   		getMethod();
 		std::string&    getPath();
 		std::string&    getCookName();
-		uint&	    	getPort();
+		uint&	    	getTable();
 		uint&		    getLength();
 		std::string&    getBody(); //check maxBodySize in dafault recipe unless overwritten
 
@@ -39,9 +39,9 @@ class Order
 		std::string	_order;
 		std::string _header;
 		method		_method;
-		std::string _path;
+		std::string _page;
 		std::string	_hostname;
-		uint		_port;
+		uint		_table;
 		uint		_contentLength;
 		std::string	_body;
 		

@@ -17,22 +17,22 @@
 #include "log.hpp"
 
 Cook::Cook()
-	: _port(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost")
+	: _table(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost")
 {
-	Log::getInstance().print("default Cook constructed with name: " + _name);
+	Log::getInstance().print("default Cook hired with name: " + _name);
 }
 
-Cook::Cook(uint16_t port, uint32_t address, std::string& name, Cookbook& cookbook)
-	: _port(port), _address(address), _name(name), _cookbook(cookbook)
+Cook::Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook)
+	: _table(table), _address(address), _name(name), _cookbook(cookbook)
 {
-	Log::getInstance().print("custom Cook constructed with name: " + _name);
+	Log::getInstance().print("custom Cook hired with name: " + _name);
 }
 
 Cook::Cook(const Cook& other)
 {
 	if (this == &other)
 		return;
-	this->_port = other.getPort();
+	this->_table = other.getTable();
 	this->_address = other.getAddress();
 	this->_name = other.getName();
 	this->_cookbook = other.getCookbook();
@@ -42,16 +42,16 @@ Cook& Cook::operator=(const Cook& other)
 {
 	if (this == &other)
 		return (*this);
-	this->_port = other.getPort();
+	this->_table = other.getTable();
 	this->_address = other.getAddress();
 	this->_name = other.getName();
 	this->_cookbook = other.getCookbook();
 	return (*this);
 }
 
-uint16_t Cook::getPort() const
+uint16_t Cook::getTable() const
 {
-	return this->_port;
+	return this->_table;
 }
 
 uint32_t Cook::getAddress() const
@@ -69,9 +69,9 @@ Cookbook Cook::getCookbook() const
 	return this->_cookbook;
 }
 
-Recipe Cook::getRecipe(std::string path) const
+Recipe Cook::getRecipe(std::string page) const
 {
-	auto recipe = _cookbook.find(path);
+	auto recipe = _cookbook.find(page);
 	if (recipe != _cookbook.end())
 		return (recipe->second);
 	return _cookbook.begin()->second;

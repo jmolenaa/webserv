@@ -20,19 +20,19 @@
 class Cook {
 	public:
 		explicit	Cook();
-		explicit	Cook(uint16_t port, uint32_t address, std::string& name, Cookbook& cookbook);
+		explicit	Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
 		explicit	Cook(const Cook& other);
 		Cook& 		operator=(const Cook& other);
 
 		std::string		getName() const;
-		uint16_t		getPort() const;
+		uint16_t		getTable() const;
 		uint32_t		getAddress() const;
 		Cookbook		getCookbook() const;
 
-		Recipe			getRecipe(std::string path) const;
+		Recipe			getRecipe(std::string page) const;
 	
 	private:
-		uint16_t	_port;
+		uint16_t	_table;
 		uint32_t	_address;
 		std::string	_name;
 		Cookbook	_cookbook;

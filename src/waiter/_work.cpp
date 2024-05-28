@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   _functionality.cpp                                 :+:    :+:            */
+/*   _work.cpp                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 16:37:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 12:45:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@ void Waiter::_takeOrder(int fd)
 		if (it != _kitchen.end())
 			cook = it->second;
 
-		std::string path = order.getPath();
-		Recipe recipe = cook.getRecipe(path);
-		while (!path.empty() && path != recipe.path) //double check this shit
+		std::string page = order.getPath();
+		Recipe recipe = cook.getRecipe(page);
+		while (!page.empty() && page != recipe.page) //double check this shit
 		{
-			// std::cout << path << std::endl; //DEEBUGGING
-			size_t end = path.find_last_of('/');
+			// std::cout << page << std::endl; //DEEBUGGING
+			size_t end = page.find_last_of('/');
 			if (end == std::string::npos)
 				break;
 			else
-				path = path.substr(0, end);
-			recipe = cook.getRecipe(path);
+				page = page.substr(0, end);
+			recipe = cook.getRecipe(page);
 		}
 		Dish dish(_epoll, order, recipe);
 		_serveCustomer(fd, dish.getMeal());

@@ -13,9 +13,9 @@
 #include "dish.hpp"
 
 Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
-	_epoll(epoll), _location(recipe), _path(order.getPath()), _body("\r\n"), _filetype(NONE)
+	_epoll(epoll), _location(recipe), _page(order.getPath()), _body("\r\n"), _filetype(NONE)
 {
-	if (_path.empty())
+	if (_page.empty())
 		_status.updateState(BAD);
 	else
 	{

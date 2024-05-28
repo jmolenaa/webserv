@@ -22,7 +22,7 @@
 
 struct Recipe
 {
-	std::string	path;
+	std::string	page;
 	std::string root;
 	std::string	index;
 	short		allowedMethods;
@@ -32,7 +32,7 @@ struct Recipe
 	std::pair<bool, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Recipe() :path("root"), root("root"), index("index.html"),
+	Recipe() :page("root"), root("root"), index("index.html"),
 		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(false, ""), 
 		errorPaths({
@@ -43,13 +43,13 @@ struct Recipe
 		"root/411.html",
 		"root/415.html",
 		"root/500.html"
-	}) {Log::getInstance().print("Recipe constructed on path: " + path);}
+	}) {Log::getInstance().print("Recipe prepared for page: " + page);}
 
 	Recipe(const Recipe& other)
 	{
 		if (this == &other)
 			return;
-		this->path = other.path;
+		this->page = other.page;
 		this->root = other.root;
 		this->index = other.index;
 		this->allowedMethods = other.allowedMethods;
@@ -66,7 +66,7 @@ struct Recipe
 	{
 		if (this == &other)
 			return (*this);
-		this->path = other.path;
+		this->page = other.page;
 		this->root = other.root;
 		this->index = other.index;
 		this->allowedMethods = other.allowedMethods;
