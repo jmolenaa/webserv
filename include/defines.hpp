@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/05/27 15:53:03 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 14:47:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ typedef enum {
 
 /**
  * NB!!! If adding to this enum:
- * remember to update _errorPaths in Locaiton constructor below
+ * remember to update _errorPaths in Recipe constructor
  * and status/status.cpp constructor
 */
 typedef enum
 {
 	OK, //200
 	BAD, //400
-	// FORBIDDEN, //403
+	FORBIDDEN, //403
 	NOTFOUND, //404
 	METHODNOTALLOWED, //405
 	LENGTHREQUIRED, //411

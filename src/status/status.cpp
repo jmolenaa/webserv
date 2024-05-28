@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:27:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/22 11:22:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 14:46:13 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ Status::Status() : _state(OK)
 	_status[BAD].first = "Bad Request";
 	_status[BAD].second = 400;
 
-	// _status[FORBIDDEN].first = "Forbidden";
-	// _status[FORBIDDEN].second = 403;
+	_status[FORBIDDEN].first = "Forbidden";
+	_status[FORBIDDEN].second = 403;
 
 	_status[NOTFOUND].first = "Not Found";
 	_status[NOTFOUND].second = 404;

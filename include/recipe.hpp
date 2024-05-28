@@ -38,6 +38,7 @@ struct Recipe
 		errorPaths({
 		"root/index.html",
 		"root/400.html",
+		"root/403.html",
 		"root/404.html",
 		"root/405.html",
 		"root/411.html",
