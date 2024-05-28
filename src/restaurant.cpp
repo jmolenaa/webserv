@@ -35,7 +35,7 @@ Restaurant::Restaurant(std::string filename)
 				//e.g. loc.index = lineFromFile.substr(start, size) whatever etc;
 				cookbook[page] = recipe;
 		
-				//replace PORT and INADDR_ANY
+				//replace PORT and INADDR_ANY maybe use getaddrinfo and freeaddrinfo for the default values?
 				kitchen[cookName] = Cook(htons(PORT), htonl(INADDR_ANY), cookName, cookbook);
 			//}
 				Waiter*	waiter = new Waiter(_epoll, kitchen);
