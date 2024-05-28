@@ -23,8 +23,8 @@ Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
 
 		if ((m & recipe.allowedMethods) == 0)
 			_status.updateState(METHODNOTALLOWED);
-
-		_doMethod(m, order);
+		else
+			_doMethod(m, order);
 	}
 	if (_status.getState() != OK)
 		_getError();
