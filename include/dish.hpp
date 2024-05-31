@@ -50,17 +50,18 @@ class Dish
 		filetype	_extractFileType();
 
 		void	_doMethod(method meth, Order& order);
+		void	_readFile(const char* filename);
+		void	_getError();
 
 		void	_get();
-		void	_getError();
 		void	_getHtml();
-		
 		void	_listFolder();
-
-		void	_post(Order& order);
-		void	_delete(Order& order);
-		void	_executeCGI(); //move this to CGI?
 		
+		void	_post(Order& order);
+		void	_executeCGI();
+		
+		void	_delete(Order& order);
+
 		void		_generateHeader();
 		std::string	_getType();
 		std::string _getDateTime();

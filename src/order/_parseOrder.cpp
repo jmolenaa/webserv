@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:48:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 14:28:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void Order::_printData()
 				data += "'NONE'";
 		}
 		data += "\nPath: '" + _page + "'"
-			+ "\nHost: '" + _hostname + "'";
+			+ "\nHost: '" + _hostname + "'"
 			+ "\nTable: '" + std::to_string(_table) + "'"
 			+ "\nLength: '" + std::to_string(_contentLength) + "'"
 			+ "\nBody: '" + _body + "'"

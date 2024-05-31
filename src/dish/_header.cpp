@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 15:30:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 14:03:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,15 @@ std::string	Dish::_getDateTime()
 
 std::string	Dish::_getType()
 {
+	return ("text/html");
+	
 	// switch (_filetype)
 	// {
 	// 	case HTML:
 	// 		return ("text/html");
-	// 	case PY:
+	// 	case FOLDER:
 	// 		return ("text/html");
 	// 	default:
-			return ("text/html");
+	// 		return ("text/html");
 	// }
 }

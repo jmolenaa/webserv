@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:34 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:44:42 by dliu          ########   odam.nl         */
+/*   Updated: 2024/05/28 14:12:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 /**
  * Creates waiters socket fd using socket()
+ * @todo research setsockopt, getsockname, getprotobyname etc
 */ 
 void	Waiter::_createSocket()
 {

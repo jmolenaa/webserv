@@ -1,27 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   _errors.cpp                                        :+:    :+:            */
+/*   _spatula.cpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/05/03 13:47:30 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:45:44 by dliu          ########   odam.nl         */
+/*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
+/*   Updated: 2024/05/28 14:22:48 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dish.hpp"
 
-/**
- * gets body with appropriate error file
- * @todo use epoll
-*/
-void	Dish::_getError()
+void Dish::_doMethod(method meth, Order& order)
 {
-	_body = "\r\n";
-	std::string errfile = _location.errorPaths[_status.getState()];
+	switch (meth)
+	{
+		case (GET):
+			_get();
+			break;
+		case (POST):
+			_post(order);
+			break;
+		case (DELETE):
+			_delete(order);
+			break;
+		default:
+			_status.updateState(METHODNOTALLOWED);
+			break;
+	}
+}
 
-	int fd = open(errfile.c_str(), O_RDONLY);
+void Dish::_readFile(const char* filename)
+{
+	int fd = open(filename, O_RDONLY);
 	if (fd == -1)
 	{
 		_body += "INTERNAL ERROR: No default page found for error " + _status.getStatMessage() + "!\n";
@@ -29,8 +41,9 @@ void	Dish::_getError()
 	}
 	
 		//DO EPOLL STUFF HERE
-
-	char 	buffer[BUF_LIMIT];
+		
+	char 	buffer[BUF_LIMIT] = "";
+	
 	ssize_t	count = read(fd, buffer, BUF_LIMIT);
 	while (count)
 	{
@@ -39,8 +52,20 @@ void	Dish::_getError()
 			_status.updateState(INTERNALERR);
 			break;
 		}
-		_body += buffer;
+		std::string append = std::string(buffer);
+		_body += append.substr(0, count);
 		count = read(fd, buffer, BUF_LIMIT);
 	}
 	close(fd);
+}
+
+/**
+ * gets body with appropriate error file
+*/
+void	Dish::_getError()
+{
+	_body = "\r\n";
+	std::string errfile = _location.errorPaths[_status.getState()];
+
+	_readFile(errfile.c_str());
 }
