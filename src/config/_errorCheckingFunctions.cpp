@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "configParser.hpp"
+#include "menu.hpp"
 #include "webservException.hpp"
 
-void ConfigParser::validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
+void Menu::validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
 	for (size_t i = 0; i < requiredTokenNumber; ++i) {
 		if (this->getTokens()[i].find("{;}") != std::string::npos && this->getTokens()[i] != closingToken) {
 			throw WebservException(std::string("Webserv: configuration file: unexpected '") += this->getTokens()[i] += "' in '" + directive += "' directive. Directive must be terminated by '" + closingToken += "'\n");
@@ -24,7 +24,7 @@ void ConfigParser::validateClosingToken(std::string const& directive, size_t req
 	}
 }
 
-void ConfigParser::validateArgumentNumber(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
+void Menu::validateArgumentNumber(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
 	if (this->getTokens().size() < requiredTokenNumber) {
 		throw WebservException("Webserv: configuration file: invalid number of arguments in '" + directive += "' directive\n");
 	}
@@ -35,7 +35,7 @@ void ConfigParser::validateArgumentNumber(std::string const& directive, size_t r
 	}
 }
 
-void ConfigParser::validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
+void Menu::validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
 	validateArgumentNumber(directive, requiredTokenNumber, closingToken);
 	validateClosingToken(directive, requiredTokenNumber, closingToken);
 }

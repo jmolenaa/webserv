@@ -32,14 +32,12 @@
 #include <iostream>
 #include <unordered_map>
 
-Menu::Menu(std::string lol) : _currentState(NO_STATE) , _currentCook(nullptr), _currentRecipe(nullptr){
+Menu::Menu(std::string lol) : _currentState(NO_STATE) {
 	(void)lol;
 }
 
-Menu::~Menu() {
-	delete getCurrentRecipe();
-	delete getCurrentCook();
-}
+//Menu::~Menu() {
+//}
 
 Menu::state Menu::getState() const {
 	return this->_currentState;
@@ -49,26 +47,8 @@ std::deque<std::string>& Menu::getTokens() {
 	return this->_tokens;
 }
 
-Cook *Menu::getCurrentCook() {
-	return this->_currentCook;
-}
-
-Recipe *Menu::getCurrentRecipe() {
-	return this->_currentRecipe;
-}
-
-//std::vector<Cook> &Menu::getSettings() {
-//	return this->_cooks;
-//}
-
-void Menu::setCurrentCook(Cook *newCook) {
-	delete this->getCurrentCook();
-	this->_currentCook = newCook;
-}
-
-void Menu::setCurrentRecipe(Recipe *newRecipe) {
-	delete this->getCurrentRecipe();
-	this->_currentRecipe = newRecipe;
+std::vector<Cook> &Menu::getSettings() {
+	return this->_serverSettings;
 }
 
 void Menu::setTokens(std::deque<std::string> tokens) {
@@ -118,8 +98,8 @@ bool Menu::isDirectiveInRightContext(std::string const& directive) const{
 void Menu::parse() {
 
 	std::unordered_map<std::string, std::function<void(Menu&)>>	directiveFunctions;
-	setupMap(directiveFunctions);
 
+	setupMap(directiveFunctions);
 
 	while (!this->getTokens().empty()) {
 		std::string directive = this->getTokens().front();
@@ -137,4 +117,5 @@ void Menu::parse() {
 			this->getTokens().pop_front();
 		}
 	}
+
 }

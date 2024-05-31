@@ -47,7 +47,7 @@ DEPS := $(OBJS:%.o=%.d)
 
 # if condition to create obj directories when compiling for the first time
 ifndef $(shell find $(OBJ_DIR) -maxdepth 1 -name $(OBJ_DIR))
-	DIR = obj obj/cgi obj/cook obj/epoll obj/order obj/dish obj/waiter obj/status obj/exceptions
+	DIR = obj obj/cgi obj/cook obj/epoll obj/order obj/dish obj/waiter obj/status obj/exceptions obj/config
 endif
 
 

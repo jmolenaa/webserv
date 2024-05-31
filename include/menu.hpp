@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   configParser.hpp                                   :+:    :+:            */
+/*   Menu.hpp                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: janmolenaar <janmolenaar@student.codam.      +#+                     */
 /*                                                   +#+                      */
@@ -12,18 +12,17 @@
 
 //config stuff goes here
 
-#ifndef CONFIGPARSER_HPP
-#define CONFIGPARSER_HPP
+#ifndef MENU_HPP
+#define MENU_HPP
 
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <deque>
 #include <functional>
-#include "serverConfig.hpp"
-#include "lexer.hpp"
+#include "waiter.hpp"
 
-class ConfigParser {
+class Menu {
 
 public:
 
@@ -33,16 +32,20 @@ public:
 		LOCATION_STATE
 	};
 
-	explicit ConfigParser(std::string);
-	~ConfigParser() = default;
+	explicit Menu(std::string);
+	~Menu();
 
 	void							lex(std::string const& filename);
 	void							parse();
 	state							getState() const;
 	std::deque<std::string>&		getTokens();
-	std::vector<ServerConfig>&		getSettings();
+	Cook*							getCurrentCook();
+	Recipe*							getCurrentRecipe();
+//	std::vector<Cook>&				getSettings();
 	void							setTokens(std::deque<std::string> tokens);
 	void							setState(state newState);
+	void							setCurrentCook(Cook*);
+	void							setCurrentRecipe(Recipe*);
 	bool							isDirectiveInRightContext(std::string const& directive) const;
 
 
@@ -68,9 +71,11 @@ public:
 private:
 
 
-	std::vector<ServerConfig>	_serverSettings;
+	std::vector<Waiter*>		_waiters;
 	std::deque<std::string>		_tokens;
 	state						_currentState;
+	Cook*						_currentCook;
+	Recipe*						_currentRecipe;
 
 };
 

@@ -10,81 +10,81 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "configParser.hpp"
+#include "menu.hpp"
 #include <iostream>
 #include "webservException.hpp"
 
-void ConfigParser::serverDirective() {
-	validateDirectiveSyntax("server", 1, "{");
+void Menu::serverDirective() {
+
+	this->validateDirectiveSyntax("server", 1, "{");
 	this->setState(SERVER_STATE);
-	this->getSettings().emplace_back();
+	this->setCurrentCook(new Cook());
+	this->setCurrentRecipe(new Recipe());
 
 }
 
-void ConfigParser::serverNameDirective() {
-	std::string	token;
+void Menu::serverNameDirective() {
+	this->validateDirectiveSyntax("server_name", 2, ";");
 
-	if (this->getTokens().empty()) {
-		throw WebservException("Webserv: configuration file: encountered");
-	}
+	std::string	token = this->getTokens().front();
 	std::cout << "servername" << std::endl;
 	this->getTokens().pop_front();
 }
 
-void ConfigParser::listenDirective() {
+void Menu::listenDirective() {
 	std::cout << "listen" << std::endl;
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::locationDirective() {
+void Menu::locationDirective() {
 	std::cout << "location" << std::endl;
 	this->getTokens().pop_front();
 }
 
-void ConfigParser::indexDirective() {
+void Menu::indexDirective() {
 	std::cout << "index" << std::endl;
 	this->getTokens().pop_front();
 }
 
-void ConfigParser::errorPageDirective() {
+void Menu::errorPageDirective() {
 	std::cout << "errorpage" << std::endl;
 	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::autoindexDirective() {
+void Menu::autoindexDirective() {
 	std::cout << "autoindex" << std::endl;
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::clientMaxBodySizeDirective() {
+void Menu::clientMaxBodySizeDirective() {
 	std::cout << "clinetmaxbody" << std::endl;
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::returnDirective() {
+void Menu::returnDirective() {
 	std::cout << "return" << std::endl;
 	this->getTokens().pop_front();
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::rootDirective() {
+void Menu::rootDirective() {
 	std::cout << "root" << std::endl;
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::allowedMethodsDirective() {
+void Menu::allowedMethodsDirective() {
 	this->getTokens().pop_front();
 
 }
 
-void ConfigParser::closeBracketDirective() {
+void Menu::closeBracketDirective() {
 
 }
 
