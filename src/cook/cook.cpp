@@ -15,6 +15,7 @@
 #include "cook.hpp"
 #include "defines.hpp"
 #include "log.hpp"
+#include "webservException.hpp"
 
 Cook::Cook()
 	: _table(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhost")
@@ -67,6 +68,28 @@ std::string Cook::getName() const
 Cookbook Cook::getCookbook() const
 {
 	return this->_cookbook;
+}
+
+void Cook::setName(std::string newName) {
+	this->_name = std::move(newName);
+}
+
+void Cook::setTable(uint16_t newTable) {
+	 this->_table = newTable;
+}
+
+void Cook::setAddress(uint32_t newAddress) {
+	this->_address = newAddress;
+}
+
+void Cook::addToCookbook(Recipe const& newRecipe) {
+
+	// checking if recipe is already in the cookbook
+	if (this->_cookbook.count(newRecipe.page) != 0) {
+		throw WebservException("Webserv: configuration file: location with path '" + newRecipe.page + "' is used twice\n");
+	}
+
+	this->_cookbook[newRecipe.page] = newRecipe;
 }
 
 Recipe Cook::getRecipe(std::string page) const

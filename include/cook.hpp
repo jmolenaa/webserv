@@ -28,6 +28,10 @@ class Cook {
 		uint16_t		getTable() const;
 		uint32_t		getAddress() const;
 		Cookbook		getCookbook() const;
+		void			setName(std::string);
+		void			setTable(uint16_t);
+		void			setAddress(uint32_t);
+		void			addToCookbook(Recipe const& newRecipe);
 
 		Recipe			getRecipe(std::string page) const;
 	
