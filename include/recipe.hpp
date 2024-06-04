@@ -29,14 +29,16 @@ struct Recipe
 	size_t		maxBodySize;
 	bool		autoindex;
 	
-	std::pair<bool, std::string>	redir;
+	std::pair<short, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
 	Recipe() :page("root"), root("root"), index("index.html"),
 		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
-		autoindex(false), redir(false, ""), 
+		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",
+		"root/301.html"
+		"root/302.html"
 		"root/400.html",
 		"root/403.html",
 		"root/404.html",
