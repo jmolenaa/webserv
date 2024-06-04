@@ -29,7 +29,7 @@ struct Recipe
 	size_t		maxBodySize;
 	bool		autoindex;
 	
-	std::pair<short, std::string>	redir;
+	std::pair<status, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
 	Recipe() :page("root"), root("root"), index("index.html"),
