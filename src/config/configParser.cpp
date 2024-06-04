@@ -93,7 +93,7 @@ void	setupMap(std::unordered_map<std::string, std::function<void(Menu&)>>& runDi
 	runDirective["location"] = &Menu::locationDirective;
 	runDirective["index"] = &Menu::indexDirective;
 	runDirective["error_page"] = &Menu::errorPageDirective;
-	runDirective["autoindex"] = &Menu::autoindexDirective;
+	runDirective["autoindex"] = &Menu::autoIndexDirective;
 	runDirective["client_max_body_size"] = &Menu::clientMaxBodySizeDirective;
 	runDirective["return"] = &Menu::returnDirective;
 	runDirective["root"] = &Menu::rootDirective;
@@ -122,8 +122,7 @@ void Menu::parse() {
 
 
 	while (!this->getTokens().empty()) {
-		std::string directive = this->getTokens().front();
-		this->getTokens().pop_front();
+		std::string directive = this->popFrontToken();
 		if (directiveFunctions.count(directive) == 0) {
 			throw WebservException("Webserv: configuration file: unrecognized directive: '" + directive + "'\n");
 		}
@@ -137,4 +136,5 @@ void Menu::parse() {
 			this->getTokens().pop_front();
 		}
 	}
+	std::cout << this->getCurrentRecipe()->allowedMethods << "\n";
 }

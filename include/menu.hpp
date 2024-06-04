@@ -49,10 +49,14 @@ public:
 	bool							isDirectiveInRightContext(std::string const& directive) const;
 
 
-	// syntax checking functions
-	void	validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
-	void	validateArgumentNumber(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
-	void	validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	// error checking functions
+	void			validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	void			validateArgumentNumber(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	void			validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
+	void			validateErrorCode(std::string const& errorCode);
+	static void		validateClientBodySize(std::stringstream const& streamBodySize);
+	static void		validateMethod(std::string const& method, short methodBit, short allowedMethodsBits);
+
 
 	// functions handling directives
 	void	serverDirective();
@@ -61,21 +65,27 @@ public:
 	void	locationDirective();
 	void	indexDirective();
 	void	errorPageDirective();
-	void	autoindexDirective();
+	void	autoIndexDirective();
 	void	clientMaxBodySizeDirective();
 	void	returnDirective();
 	void	rootDirective();
 	void	allowedMethodsDirective();
 	void	closeBracketDirective();
 
+	// helper functions for directives
+	int				getArrayIndex(std::string const& errorCode);
+	std::string		popFrontToken();
+	static short	identifyMethod(std::string const& method);
+
 private:
 
 
-	std::vector<Waiter*>		_waiters;
-	std::deque<std::string>		_tokens;
-	state						_currentState;
-	Cook*						_currentCook;
-	Recipe*						_currentRecipe;
+	std::vector<Kitchen>			_kitchens;
+	std::deque<std::string>			_tokens;
+	state							_currentState;
+	Cook*							_currentCook;
+	Recipe*							_currentRecipe;
+	std::array<std::string, COUNT>	_errorCodesArray = {"200", "400", "403", "404", "405", "411", "415", "500"};
 
 };
 
