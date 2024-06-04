@@ -40,6 +40,8 @@ typedef enum {
 typedef enum
 {
 	OK, //200
+	PERMANENTREDIRECT, //301
+	TEMPORARYREDIRECT, //302
 	BAD, //400
 	FORBIDDEN, //403
 	NOTFOUND, //404
