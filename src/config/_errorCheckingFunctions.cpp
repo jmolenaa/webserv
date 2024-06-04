@@ -48,7 +48,7 @@ void Menu::validateErrorCode(std::string const& errorCode) {
 			return ;
 		}
 	}
-	throw WebservException("Webserv: configuration file: invalid error number in 'error_page' directive\n");
+	throw WebservException("Webserv: configuration file: invalid error number '" + errorCode + "' in 'return' directive\n");
 }
 
 void Menu::validateClientBodySize(std::stringstream const& streamBodySize) {
@@ -67,4 +67,15 @@ void Menu::validateMethod(const std::string &method, short methodBit, short allo
 	if ((methodBit & allowedMethodsBits) != 0) {
 		throw WebservException("Webserv: configuration file: method '" + method + "' used more than once in 'allowed_methods' directive\n");
 	}
+}
+
+void Menu::validateRedirectCode(const std::string &redirectCode) {
+	// loops through error codes, if the given error code is not in our array it means it's an invalid code so we stop
+	// since this is for redirect codes, the only valid codes are the ones starting with 3 (all redirect codes are in between 300 and 400)
+	for (std::string const& validErrorCode : this->_errorCodesArray) {
+		if (validErrorCode == redirectCode && redirectCode[0] == '3') {
+			return ;
+		}
+	}
+	throw WebservException("Webserv: configuration file: invalid redirect code '" + redirectCode + "' in 'return' directive\n");
 }

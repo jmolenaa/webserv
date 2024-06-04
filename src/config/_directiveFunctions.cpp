@@ -81,8 +81,6 @@ void Menu::autoIndexDirective() {
 	}
 }
 
-// TODO
-// ask if we set a maximum for this
 void Menu::clientMaxBodySizeDirective() {
 	this->validateDirectiveSyntax("client_max_body_size", 2, ";");
 
@@ -95,14 +93,15 @@ void Menu::clientMaxBodySizeDirective() {
 	this->getCurrentRecipe()->maxBodySize = clientBodySizeInNbrForm;
 }
 
-// TODO
-// change bool to an integer?
 void Menu::returnDirective() {
 	this->validateDirectiveSyntax("return", 3, ";");
-	std::cout << "return" << std::endl;
-	this->getTokens().pop_front();
-	this->getTokens().pop_front();
+	std::string	redirectCode = this->popFrontToken();
+	this->validateRedirectCode(redirectCode);
 
+	// identifies the array index of the code given as redirection which corresponds to the
+	// actual code in the status enum
+	this->getCurrentRecipe()->redir.first = (status)getArrayIndex(redirectCode);
+	this->getCurrentRecipe()->redir.second = this->popFrontToken();
 }
 
 void Menu::rootDirective() {
@@ -133,6 +132,7 @@ void Menu::allowedMethodsDirective() {
 	this->getCurrentRecipe()->allowedMethods = allowedMethodsBits;
 }
 
+// TODO
 void Menu::closeBracketDirective() {
 
 }

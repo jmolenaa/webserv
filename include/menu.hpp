@@ -56,6 +56,7 @@ public:
 	void			validateErrorCode(std::string const& errorCode);
 	static void		validateClientBodySize(std::stringstream const& streamBodySize);
 	static void		validateMethod(std::string const& method, short methodBit, short allowedMethodsBits);
+	void			validateRedirectCode(std::string const& redirectCode);
 
 
 	// functions handling directives
@@ -85,7 +86,7 @@ private:
 	state							_currentState;
 	Cook*							_currentCook;
 	Recipe*							_currentRecipe;
-	std::array<std::string, COUNT>	_errorCodesArray = {"200", "400", "403", "404", "405", "411", "415", "500"};
+	std::array<std::string, COUNT>	_errorCodesArray = {"200", "301", "302", "400", "403", "404", "405", "411", "415", "500"};
 
 };
 
