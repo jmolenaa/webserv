@@ -52,7 +52,7 @@ void Menu::validateErrorCode(std::string const& errorCode) {
 }
 
 void Menu::validateClientBodySize(std::stringstream const& streamBodySize) {
-	// error checks, first one checks if the number given is outside the size_t range (sstream will set bit to fail)
+	// error checks, first one checks if the number given is outside the size_t range (sStream will set bit to fail)
 	// second just checks for anything that isn't a number
 	if (streamBodySize.fail() || streamBodySize.str().find_first_not_of("0123456789") != std::string::npos) {
 		throw WebservException("Webserv: configuration file: invalid value '" + streamBodySize.str() + "' in 'client_max_body_size' directive\n");

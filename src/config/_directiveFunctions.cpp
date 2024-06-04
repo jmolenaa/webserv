@@ -32,11 +32,16 @@ void Menu::serverNameDirective() {
 
 // TODO
 void Menu::listenDirective() {
-
 	this->validateDirectiveSyntax("listen", 2, ";");
-	std::string	newHostAndPort = this->getTokens().front();
+	std::string	IpAndPort = this->popFrontToken();
 
-	this->getTokens().pop_front();
+	// Initialising the strings to " ", so I have a way of identifying that they aren't part of the directive
+	// this is because nullptr does not exist for std::string
+	std::string	newIp = " ";
+	std::string newPort = " ";
+	splitAndInitialiseIpAndPortStrings(IpAndPort, newIp, newPort);
+	std::cout << "'" << newIp << "'	port: '" << newPort << "'\n";
+
 
 }
 
@@ -60,9 +65,9 @@ void Menu::errorPageDirective() {
 	std::string	errorCode = this->popFrontToken();
  	this->validateErrorCode(errorCode);
 
-	// identifies the index of the errorcode given in our errorpaths array
+	// identifies the index of the errorCode given in our errorPaths array
 	// then adds the path given into the array on the correct index
-	int	arrayIndex = getArrayIndex(errorCode);
+	int	arrayIndex = this->getArrayIndex(errorCode);
 	this->getCurrentRecipe()->errorPaths[arrayIndex] = this->popFrontToken();
 
 }
@@ -84,7 +89,7 @@ void Menu::autoIndexDirective() {
 void Menu::clientMaxBodySizeDirective() {
 	this->validateDirectiveSyntax("client_max_body_size", 2, ";");
 
-	//using stringstreams to easily convert the number to size_t
+	//using stringStreams to easily convert the number to size_t
 	std::stringstream	streamBodySize(this->popFrontToken());
 	size_t				clientBodySizeInNbrForm;
 	streamBodySize >> clientBodySizeInNbrForm;

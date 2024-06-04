@@ -40,3 +40,28 @@ short Menu::identifyMethod(const std::string &method) {
 	}
 	return 0;
 }
+
+void Menu::splitAndInitialiseIpAndPortStrings(const std::string &ipAndPort, std::string &newIp, std::string& newPort) {
+	size_t	posInString = ipAndPort.find(':');
+	if (posInString != std::string::npos) {
+		newIp = ipAndPort.substr(0, posInString);
+		newPort = ipAndPort.substr(posInString + 1, std::string::npos);
+		std::cout << "found Ip address and port in directive\n";
+	}
+	else if (ipAndPort.find('.') != std::string::npos) {
+		newIp = ipAndPort;
+		std::cout << "found Ip address in directive\n";
+	}
+	else {
+		newPort = ipAndPort;
+		std::cout << "found port in directive\n";
+	}
+}
+
+void Menu::setNewIp(const std::string &newIp) {
+	(void)newIp;
+}
+
+void Menu::setNewPort(const std::string &newPort) {
+	(void)newPort;
+}
