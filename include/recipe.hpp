@@ -37,15 +37,15 @@ struct Recipe
 		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",
-		"root/301.html"
-		"root/302.html"
-		"root/400.html",
-		"root/403.html",
-		"root/404.html",
-		"root/405.html",
-		"root/411.html",
-		"root/415.html",
-		"root/500.html"
+		"root/status/301.html",
+		"root/status/302.html",
+		"root/status/400.html",
+		"root/status/403.html",
+		"root/status/404.html",
+		"root/status/405.html",
+		"root/status/411.html",
+		"root/status/415.html",
+		"root/status/500.html"
 	}) {Log::getInstance().print("Recipe prepared for page: " + page);}
 
 	Recipe(const Recipe& other)

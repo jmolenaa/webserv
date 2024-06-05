@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:08:01 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:03:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/05 14:04:32 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ std::string	Dish::_getDateTime()
     std::time_t now = std::time(nullptr);
     std::tm* now_tm = std::localtime(&now);
     char buffer[100];
-    std::strftime(buffer, 100, "%a %d %b %Y %T %Z", now_tm);
+    // std::strftime(buffer, 100, "%a %d %b %Y %T %Z", now_tm);
+    std::strftime(buffer, 100, "%T", now_tm);
     return std::string(buffer);
 }
 

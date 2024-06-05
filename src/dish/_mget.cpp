@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:06:42 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/05 17:30:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ Dish::filetype	Dish::_extractFileType()
 	}
 	else
 	{
-		if (_location.autoindex)
+		if (_recipe.autoindex)
 			return (FOLDER);
-		_page += _location.index;
+		_page += _recipe.index;
 		return (HTML);
 	}
 }
@@ -57,15 +57,14 @@ Dish::filetype	Dish::_extractFileType()
 */
 void	Dish::_getHtml()
 {
-	std::string	filePath = _location.root + _page;
+	std::string	filePath = _recipe.root + _page;
 	
 	_readFile(filePath.c_str());
 }
 
-/**
- * @todo this.
-*/
 void Dish::_listFolder()
 {
-	_body += "Totally listing the directory here:\nroot/\ntoask/\nsike just kidding\n";
+	std::string	filePath = "root/dir.html";
+	
+	_readFile(filePath.c_str());
 }

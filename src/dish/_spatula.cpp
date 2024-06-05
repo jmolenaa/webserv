@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:22:48 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/05 16:54:02 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void Dish::_readFile(const char* filename)
 			_status.updateState(INTERNALERR);
 			break;
 		}
-		std::string append = std::string(buffer);
-		_body += append.substr(0, count);
+		std::string append(buffer);
+		_body += append;
 		count = read(fd, buffer, BUF_LIMIT);
 	}
 	close(fd);
@@ -65,7 +65,7 @@ void Dish::_readFile(const char* filename)
 void	Dish::_getError()
 {
 	_body = "\r\n";
-	std::string errfile = _location.errorPaths[_status.getState()];
+	std::string errfile = _recipe.errorPaths[_status.getState()];
 
 	_readFile(errfile.c_str());
 }

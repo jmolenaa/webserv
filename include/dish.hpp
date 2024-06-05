@@ -41,7 +41,7 @@ class Dish
 	private:
 		Epoll&			_epoll;
 		Status			_status;
-		Recipe			_location;
+		Recipe			_recipe;
 		std::string 	_page;
 		std::string		_header;
 		std::string		_body;
@@ -58,9 +58,12 @@ class Dish
 		void	_listFolder();
 		
 		void	_post(Order& order);
-		void	_executeCGI();
-		
+		void	_postExecCGI();
+		void 	_postCGIChild(int fd);
+
 		void	_delete(Order& order);
+		void	_deleteExecCGI();
+		void	_deleteCGIChild(int fd);
 
 		void		_generateHeader();
 		std::string	_getType();
