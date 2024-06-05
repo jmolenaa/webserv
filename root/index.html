@@ -7,23 +7,31 @@
 		<div>
 			<h1>Bonjour!</h1>
 			<p>Welcome to Le Restaurant Webserv</p>
-			<p>Place an order:</p>
+			<p>Please place an order:</p>
 		</div>
 		<div>
-			<form action="submit.py" method="post">
-				Starter: <input type="text" name="starter" />
-				 
+			<form action=submit.cgi name=post method=post>
+				Starter: <input type=text name=starter value=starter/>
 				<br />
-	 
-				Main: <input type="text" name="main" />
+				Main: <input type=text name=main value=main/>
+				<br />
+				Dessert: <input type=text name=dessert value=sweets/>
+				<br />
+				<input type=submit value=Submit />
+			</form>
+		</div>
 
+		<div>
+			<h3>CANCELLATION POLICY</h3>
+			<p> It is quite simple to cancel an order. Just use the form below.</p>
+		</div>
+		<div>
+			<form action=delete.cgi name=delete method=delete>
+				Please Enter the exact time (to the second) that your order was placed: 
 				<br />
-	 
-				Dessert: <input type="text" name="dessert" />
-
-				<br />
-	 
-				<input type="submit" value="Submit" />
+				Time: <input type=text name=filename/>
+				<br />	
+				<input type=submit value=Submit />
 			</form>
 		</div>
 	</body>
