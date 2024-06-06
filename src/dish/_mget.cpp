@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/05 17:30:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 12:34:15 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ Dish::filetype	Dish::_extractFileType()
 }
 
 /**
- * @todo double check root stuff for cookbook
+ * @todo double check routing when config parsing is done
 */
 void	Dish::_getHtml()
 {

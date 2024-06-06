@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 11:31:06 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 12:34:43 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ void Dish::_doMethod(method meth, Order& order)
 	}
 }
 
+/**
+ * @todo needs to go through epoll
+*/
 void Dish::_readFile(const char* filename)
 {
 	int fd = open(filename, O_RDONLY);

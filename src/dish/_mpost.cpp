@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/28 13:45:24 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 12:22:56 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 12:34:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@
 #include "log.hpp"
 #include "dish.hpp"
 
-/**
- * @todo USE EPOLL
-*/
 void Dish::_post(Order& order)
 {
 	if (order.getPath() != "/submit.cgi")
@@ -28,6 +25,9 @@ void Dish::_post(Order& order)
 	_postExecCGI(order.getBody());
 }
 
+/**
+ * @todo needs to go through epoll
+*/
 void Dish::_postExecCGI(std::string data)
 {
 	pid_t	pid;
