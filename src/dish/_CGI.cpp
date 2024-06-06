@@ -50,8 +50,9 @@ void Dish::CGI::_execChild()
 
     std::string path = "root/cgi" + _order.getPath();
     char* arg0 = const_cast<char*>(path.c_str());
-	char* arg1 = const_cast<char*>(_order.getBody().c_str());
-    char* argv[] = {arg0, arg1, nullptr};
+	std::string arg = _order.getBody();
+	char* arg1 = const_cast<char*>(arg.c_str());
+	char* argv[] = {arg0, arg1, nullptr};
 
     if (execve(arg0, argv, nullptr) < 0)
         throw WebservException("execve failed: " + std::string(std::strerror(errno)) + "\n");

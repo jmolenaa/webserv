@@ -7,9 +7,9 @@
     <div>
         <h1>Bonjour!</h1>
         <p>Welcome to Le Restaurant Webserv</p>
-	</div>
-	<div>
-		<h2>Order Food</h2>
+    </div>
+    <div>
+        <h2>Order Food</h2>
         <p>Place an order using the form below:</p>
         <form action="post.cgi" method="post" enctype="application/x-www-form-urlencoded">
             <label for="starter">Starter:</label>
@@ -36,26 +36,28 @@
         </form>
     </div>
 
+    <div id="response-container"></div>
+
     <script>
         function cancelOrder() {
             const orderTime = document.querySelector('input[name="orderTime"]').value;
-            const data = { filename: orderTime };
+            const data = new URLSearchParams();
+            data.append('orderTime', orderTime);
 
             fetch('/delete.cgi', {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify(data),
+                body: data.toString(),
             })
             .then(response => response.text())
             .then(html => {
-                document.open();
-                document.write(html);
-                document.close();
+                document.getElementById('response-container').innerHTML = html;
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('response-container').innerHTML = '<p>An error occurred while processing your request.</p>';
             });
         }
     </script>
