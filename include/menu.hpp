@@ -78,8 +78,8 @@ public:
 	std::string		popFrontToken();
 	static short	identifyMethod(std::string const& method);
 	static void		splitAndInitialiseIpAndPortStrings(std::string const& ipAndPort, std::string& newIp, std::string& newPort);
-	void			setNewIp(std::string const& newIp);
-	void			setNewPort(std::string const& newPort);
+	void			setNewIp(std::string const& newIp, std::string const& ipAndPort);
+	void			setNewPort(std::string const& newPort, std::string const& ipAndPort);
 
 private:
 

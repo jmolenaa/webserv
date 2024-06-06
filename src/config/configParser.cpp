@@ -136,5 +136,4 @@ void Menu::parse() {
 			this->getTokens().pop_front();
 		}
 	}
-	std::cout << this->getCurrentRecipe()->allowedMethods << "\n";
 }
