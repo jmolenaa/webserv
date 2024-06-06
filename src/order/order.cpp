@@ -29,11 +29,11 @@
 */
 Order::Order(char *order) : _order(order)
 {
+	// Log::getInstance().print("Got Order:" + _order);
 	_extractHeader();
 	_extractMethod();
 	_extractPath();
 	_extractHost();
-	_extractBody();
 	_printData();
 }
 

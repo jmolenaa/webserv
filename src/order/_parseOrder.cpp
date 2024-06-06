@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:28:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 12:06:04 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void Order::_extractMethod()
 	if (method_pos != std::string::npos)
 	{
 		_method = POST;
+		_extractContent();
 		return;
 	}
 	method_pos = _header.find("DELETE");
@@ -79,7 +80,7 @@ void Order::_extractHost()
 		_table = std::stoi(tmp);
 }
 
-void Order::_extractBody()
+void Order::_extractContent()
 {
     _contentLength = 0;
 	std::string tmp = _keyValueFind(_order, "Content-Length: ", '\n');
@@ -88,8 +89,9 @@ void Order::_extractBody()
 	
 	if (_contentLength)
 	{
-		uint pos = _order.find("\r\n\r\n");
-		if (pos == (unsigned int)std::string::npos)
+		_contentType = _keyValueFind(_order, "Content-Type: ", '\n');
+		size_t pos = _order.find("\r\n\r\n");
+		if (pos == std::string::npos)
 			_body = "";
 		else
 			_body = _order.substr(pos + 4,_contentLength);
@@ -120,6 +122,7 @@ void Order::_printData()
 			+ "\nHost: '" + _hostname + "'"
 			+ "\nTable: '" + std::to_string(_table) + "'"
 			+ "\nLength: '" + std::to_string(_contentLength) + "'"
+			+ "\nType: '" + _contentType + "'"
 			+ "\nBody: '" + _body + "'"
 			+ "\n=====END OF ORDER=====\n";
 		

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/05 16:54:02 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 11:31:06 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void Dish::_readFile(const char* filename)
 		
 	char 	buffer[BUF_LIMIT] = "";
 	
-	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	ssize_t	count = read(fd, buffer, BUF_LIMIT - 1);
 	while (count)
 	{
 		if (count < 0)
@@ -53,7 +53,7 @@ void Dish::_readFile(const char* filename)
 			break;
 		}
 		std::string append(buffer);
-		_body += append;
+		_body += append.substr(0, count);
 		count = read(fd, buffer, BUF_LIMIT);
 	}
 	close(fd);

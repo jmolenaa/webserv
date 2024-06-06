@@ -10,14 +10,17 @@
 			<p>Please place an order:</p>
 		</div>
 		<div>
-			<form action=submit.cgi name=post method=post>
-				Starter: <input type=text name=starter value=starter/>
+			<form action="submit.cgi" method="post" enctype="application/x-www-form-urlencoded">
+				<label for="starter">Starter:</label>
+				<input type="text" name="starter" id="starter" value="Soup"/>
 				<br />
-				Main: <input type=text name=main value=main/>
+				<label for="main">Main:</label>
+				<input type="text" name="main" id="main" value="Pasta"/>
 				<br />
-				Dessert: <input type=text name=dessert value=sweets/>
+				<label for="dessert">Dessert:</label>
+				<input type="text" name="dessert" id="dessert" value="Tiramisu"/>
 				<br />
-				<input type=submit value=Submit />
+				<input type="submit" value="Submit" />
 			</form>
 		</div>
 
@@ -26,12 +29,12 @@
 			<p> It is quite simple to cancel an order. Just use the form below.</p>
 		</div>
 		<div>
-			<form action=delete.cgi name=delete method=delete>
+			<form action="delete.cgi" method="delete" enctype="application/x-www-form-urlencoded">
 				Please Enter the exact time (to the second) that your order was placed: 
 				<br />
-				Time: <input type=text name=filename/>
+				Time: <input type="text" name="filename"/>
 				<br />	
-				<input type=submit value=Submit />
+				<input type="submit" value="Submit" />
 			</form>
 		</div>
 	</body>

@@ -58,8 +58,8 @@ class Dish
 		void	_listFolder();
 		
 		void	_post(Order& order);
-		void	_postExecCGI();
-		void 	_postCGIChild(int fd);
+		void	_postExecCGI(std::string data);
+		void 	_postCGIChild(int fd, std::string data);
 
 		void	_delete(Order& order);
 		void	_deleteExecCGI();

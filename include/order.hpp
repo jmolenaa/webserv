@@ -43,13 +43,14 @@ class Order
 		std::string	_hostname;
 		uint		_table;
 		uint		_contentLength;
+		std::string _contentType;
 		std::string	_body;
 		
 		void	_extractHeader();
 		void 	_extractMethod();
 		void	_extractPath();
 		void	_extractHost();
-		void	_extractBody();
+		void	_extractContent();
 		void	_printData();
 		
 		std::string		_keyValueFind(std::string string, std::string key, char delim);
