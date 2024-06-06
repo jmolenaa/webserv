@@ -28,12 +28,13 @@ class Order
 		Order(Order& other) = delete;
 		~Order() = default;
 
-		method&	   		getMethod();
-		std::string&    getPath();
-		std::string&    getCookName();
-		uint&	    	getTable();
-		uint&		    getLength();
-		std::string&    getBody(); //check maxBodySize in dafault recipe unless overwritten
+		method	   	getMethod() const;
+		std::string getPath() const;
+		std::string getCookName() const;
+		uint    	getTable() const;
+		uint	    getLength() const;
+		std::string	getType() const;
+		std::string getBody() const; //check maxBodySize in dafault recipe unless overwritten
 
 	private:
 		std::string	_order;

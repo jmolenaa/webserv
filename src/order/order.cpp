@@ -28,40 +28,46 @@
 */
 Order::Order(char *order) : _order(order)
 {
-	// Log::getInstance().print("Got Order:" + _order);
+	Log::getInstance().print("\nGOT REQUEST:\n" + _order);
 	_extractHeader();
 	_extractMethod();
 	_extractPath();
+	_extractContent();
 	_extractHost();
 	_printData();
 }
 
-method& Order::getMethod()
+method Order::getMethod() const
 {
 	return _method;
 }
 
-std::string& Order::getPath()
+std::string Order::getPath() const
 {
 	return _page;
 }
 
-std::string& Order::getCookName()
+std::string Order::getCookName() const
 {
 	return _hostname;
 }
 
-uint& Order::getTable()
+uint Order::getTable() const
 {
 	return _table;
 }
 
-uint& Order::getLength()
+uint Order::getLength() const
 {
 	return _contentLength;
 }
 
-std::string& Order::getBody()
+std::string Order::getType() const
+{
+	return _contentType;
+}
+
+std::string Order::getBody() const
 {
 	return _body;
 }

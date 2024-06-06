@@ -1,41 +1,63 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Index</title>
-	</head>
-	<body>
-		<div>
-			<h1>Bonjour!</h1>
-			<p>Welcome to Le Restaurant Webserv</p>
-			<p>Please place an order:</p>
-		</div>
-		<div>
-			<form action="submit.cgi" method="post" enctype="application/x-www-form-urlencoded">
-				<label for="starter">Starter:</label>
-				<input type="text" name="starter" id="starter" value="Soup"/>
-				<br />
-				<label for="main">Main:</label>
-				<input type="text" name="main" id="main" value="Pasta"/>
-				<br />
-				<label for="dessert">Dessert:</label>
-				<input type="text" name="dessert" id="dessert" value="Tiramisu"/>
-				<br />
-				<input type="submit" value="Submit" />
-			</form>
-		</div>
+<head>
+    <title>Le Restaurant Webserv</title>
+</head>
+<body>
+    <div>
+        <h1>Bonjour!</h1>
+        <p>Welcome to Le Restaurant Webserv</p>
+	</div>
+	<div>
+		<h2>Order Food</h2>
+        <p>Place an order using the form below:</p>
+        <form action="post.cgi" method="post" enctype="application/x-www-form-urlencoded">
+            <label for="starter">Starter:</label>
+            <input type="text" name="starter" id="starter" value="Soup">
+            <br>
+            <label for="main">Main:</label>
+            <input type="text" name="main" id="main" value="Pasta">
+            <br>
+            <label for="dessert">Dessert:</label>
+            <input type="text" name="dessert" id="dessert" value="Tiramisu">
+            <br>
+            <input type="submit" value="Submit Order">
+        </form>
+    </div>
 
-		<div>
-			<h3>CANCELLATION POLICY</h3>
-			<p> It is quite simple to cancel an order. Just use the form below.</p>
-		</div>
-		<div>
-			<form action="delete.cgi" method="delete" enctype="application/x-www-form-urlencoded">
-				Please Enter the exact time (to the second) that your order was placed: 
-				<br />
-				Time: <input type="text" name="filename"/>
-				<br />	
-				<input type="submit" value="Submit" />
-			</form>
-		</div>
-	</body>
+    <div>
+        <h2>Cancellation Policy</h2>
+        <p>It's easy to cancel an order. Just enter the exact time (to the second) when your order was placed:</p>
+        <form id="delete-form">
+            <label for="orderTime">Order Time:</label>
+            <input type="text" name="orderTime" id="orderTime" placeholder="Time of Order">
+            <br>
+            <button type="button" onclick="cancelOrder()">Cancel Order</button>
+        </form>
+    </div>
+
+    <script>
+        function cancelOrder() {
+            const orderTime = document.querySelector('input[name="orderTime"]').value;
+            const data = { filename: orderTime };
+
+            fetch('/delete.cgi', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
 </html>
