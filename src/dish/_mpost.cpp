@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/28 13:45:24 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 20:23:11 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 21:41:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,3 +57,4 @@ void Dish::_postCGIChild(int fd, std::string data)
 	if (execve(arg0, argv, nullptr) == -1)
 		throw WebservException("execve broke: " + std::string(std::strerror(errno)) + "\n");
 }
+

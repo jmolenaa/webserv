@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 12:06:04 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 15:17:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void Order::_extractMethod()
 	if (method_pos != std::string::npos)
 	{
 		_method = POST;
-		_extractContent();
 		return;
 	}
 	method_pos = _header.find("DELETE");
