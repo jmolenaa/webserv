@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/28 13:45:24 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 12:34:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 20:23:11 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Dish::_post(Order& order)
 void Dish::_postExecCGI(std::string data)
 {
 	pid_t	pid;
-	std::string filepath = "root/orders/" + _getDateTime();
+	std::string filepath = "root/posts/" + _getDateTime();
 	int fd = open(filepath.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO);
 
 	pid = fork();
