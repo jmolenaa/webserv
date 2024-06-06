@@ -66,6 +66,7 @@ class Dish
 			
 			private:
 				Order&		_order;
+				std::string	_cgiPath;
 				std::string _filename;
 				int			_fd;
 				char*		_env;

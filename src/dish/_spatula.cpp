@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 19:59:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 21:35:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void Dish::_doMethod(method m)
 			_status.updateState(METHODNOTALLOWED);
 			return;
 	}
-	_fileToBody(_dish.c_str());
+	if (_status.getState() == OK)
+		_fileToBody(_dish.c_str());
 }
 
 /**
@@ -45,8 +46,6 @@ void Dish::_fileToBody(const char* filename)
 		_status.updateState(INTERNALERR);
 	}
 	
-		//DO EPOLL STUFF HERE
-		
 	char 	buffer[BUF_LIMIT] = "";
 	
 	ssize_t	count = read(fd, buffer, BUF_LIMIT - 1);

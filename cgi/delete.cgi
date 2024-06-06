@@ -18,12 +18,12 @@ def print_html_response(title, message):
     print("</html>")
 
 form = cgi.FieldStorage()
-root = "root/orderlog/"
+folder = "orderlog/"
 order_time = form.getvalue("orderTime")
 
 if order_time:
     sanitized_filename = sanitize_filename(order_time)
-    file_path = os.path.join(root, sanitized_filename)
+    file_path = os.path.join(folder, sanitized_filename)
 
     try:
         os.remove(file_path)

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 18:52:16 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/06 21:15:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void Dish::_get()
 	else
 	{
 		if (_recipe.autoindex)
-			_dish = "root/dir.html";
+			_dish = _recipe.dir;
 		else
 			_dish += _recipe.index;
 	}
@@ -37,7 +37,7 @@ void Dish::_get()
 
 void Dish::_delete()
 {
-    if (_order.getPath() != "/delete.cgi")
+    if (_order.getPath() != "/cgi/delete.cgi")
         return (_status.updateState(FORBIDDEN));
     else
 	{
@@ -48,7 +48,7 @@ void Dish::_delete()
 
 void Dish::_post()
 {
-    if (_order.getPath() != "/post.cgi")
+    if (_order.getPath() != "/cgi/post.cgi")
         return (_status.updateState(FORBIDDEN));
     else
 	{

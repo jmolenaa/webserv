@@ -11,7 +11,7 @@
     <div>
         <h2>Order Food</h2>
         <p>Place an order using the form below:</p>
-        <form action="post.cgi" method="post" enctype="application/x-www-form-urlencoded">
+        <form action="cgi/post.cgi" method="post" enctype="application/x-www-form-urlencoded">
             <label for="starter">Starter:</label>
             <input type="text" name="starter" id="starter" value="Soup">
             <br>
@@ -35,30 +35,27 @@
             <button type="button" onclick="cancelOrder()">Cancel Order</button>
         </form>
     </div>
-
-    <div id="response-container"></div>
+	
+    <div id="response"></div>
 
     <script>
         function cancelOrder() {
-            const orderTime = document.querySelector('input[name="orderTime"]').value;
-            const data = new URLSearchParams();
-            data.append('orderTime', orderTime);
+            var orderTime = document.getElementById('orderTime').value;
+            var xhr = new XMLHttpRequest();
+            var url = 'cgi/delete.cgi'; // Change this to your actual delete URL
+            xhr.open('DELETE', url, true);
+			// xhr.open('DELETE', url + '?orderTime=' + encodeURIComponent(orderTime), true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		
+			xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    var responseDiv = document.getElementById('response');
+                    responseDiv.innerHTML = xhr.responseText;
+                }
+            };
 
-            fetch('/delete.cgi', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: data.toString(),
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('response-container').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('response-container').innerHTML = '<p>An error occurred while processing your request.</p>';
-            });
+			var params = 'orderTime=' + encodeURIComponent(orderTime);
+            xhr.send(params);
         }
     </script>
 </body>

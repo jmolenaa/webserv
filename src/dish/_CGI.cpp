@@ -7,9 +7,18 @@
 #include "log.hpp"
 #include "dish.hpp"
 
+/**
+ * @todo needs to go through epoll
+ */
 Dish::CGI::CGI(Order& order) : _order(order)
 {
-	_filename = "root/orderlog/" + _generateFilename();
+	if (_order.getMethod() == POST)
+		_cgiPath = "cgi/post.cgi";
+	else if (_order.getMethod() == DELETE)
+		_cgiPath = "cgi/delete.cgi";
+	else
+		throw WebservException("Wtf\n");
+	_filename = "orderlog/" + _generateFilename();
 	_fd = open(_filename.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO);
     if (_fd < 0)
         throw WebservException("Failed to create new file: " + std::string(std::strerror(errno)) + "\n");
@@ -48,8 +57,7 @@ void Dish::CGI::_execChild()
 
     // _setEnv();
 
-    std::string path = "root/cgi" + _order.getPath();
-    char* arg0 = const_cast<char*>(path.c_str());
+    char* arg0 = const_cast<char*>(_cgiPath.c_str());
 	std::string arg = _order.getBody();
 	char* arg1 = const_cast<char*>(arg.c_str());
 	char* argv[] = {arg0, arg1, nullptr};
