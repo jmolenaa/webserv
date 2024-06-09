@@ -49,9 +49,13 @@ void Menu::listenDirective() {
 // TODO
 void Menu::locationDirective() {
 	this->validateDirectiveSyntax("location", 2, "{");
-
-	std::cout << "location" << std::endl;
-	this->getTokens().pop_front();
+	this->setState(LOCATION_STATE);
+	if (this->getCurrentRecipe() != nullptr) {
+		this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
+	}
+	std::string	newRecipePage = this->popFrontToken();
+	this->setCurrentRecipe(new Recipe(this->getCurrentCook()->getRecipe("root")));
+	this->getCurrentRecipe()->page = newRecipePage;
 }
 
 void Menu::indexDirective() {

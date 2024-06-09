@@ -136,4 +136,12 @@ void Menu::parse() {
 			this->getTokens().pop_front();
 		}
 	}
+	Recipe test = this->getCurrentCook()->getRecipe("root");
+	std::cout << test.maxBodySize << "\n";
+	std::cout << test.page << "\n";
+	Recipe test2 = *this->getCurrentRecipe();
+	std::cout << test2.maxBodySize << "\n";
+	std::cout << test2.root << "\n";
+	std::cout << test2.page << "\n";
+
 }
