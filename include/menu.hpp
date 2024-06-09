@@ -80,11 +80,13 @@ public:
 	static void		splitAndInitialiseIpAndPortStrings(std::string const& ipAndPort, std::string& newIp, std::string& newPort);
 	void			setNewIp(std::string const& newIp, std::string const& ipAndPort);
 	void			setNewPort(std::string const& newPort, std::string const& ipAndPort);
+	void			closeLocation();
+	void			closeServer();
+	std::vector<Kitchen>			_kitchens;
 
 private:
 
 
-	std::vector<Kitchen>			_kitchens;
 	std::deque<std::string>			_tokens;
 	state							_currentState;
 	Cook*							_currentCook;

@@ -109,3 +109,18 @@ void Menu::setNewPort(const std::string &newPort, std::string const& ipAndPort) 
 	}
 	this->getCurrentCook()->setTable(htons(newPortNumber));
 }
+
+void Menu::closeLocation() {
+	this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
+	this->setCurrentRecipe(nullptr);
+}
+
+void Menu::closeServer() {
+	if (this->getCurrentRecipe() != nullptr) {
+		this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
+	}
+	this->setCurrentRecipe(nullptr);
+	for (Kitchen& kitchen : this->_kitchens) {
+
+	}
+}

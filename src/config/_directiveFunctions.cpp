@@ -46,16 +46,17 @@ void Menu::listenDirective() {
 //	std::cout << "'" << this->getCurrentCook()->getAddress() << "'	port: '" << this->getCurrentCook()->getTable() << "'\n";
 }
 
-// TODO
 void Menu::locationDirective() {
 	this->validateDirectiveSyntax("location", 2, "{");
 	this->setState(LOCATION_STATE);
+	// if we hadn't encountered a location directive yet, we add the default recipe
+	// to the cookbook
 	if (this->getCurrentRecipe() != nullptr) {
 		this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
 	}
-	std::string	newRecipePage = this->popFrontToken();
+	// create a new recipe based on the default recipe then assign the location page to it
 	this->setCurrentRecipe(new Recipe(this->getCurrentCook()->getRecipe("root")));
-	this->getCurrentRecipe()->page = newRecipePage;
+	this->getCurrentRecipe()->page = this->popFrontToken();
 }
 
 void Menu::indexDirective() {
@@ -144,6 +145,13 @@ void Menu::allowedMethodsDirective() {
 
 // TODO
 void Menu::closeBracketDirective() {
-
+	if (this->getState() == LOCATION_STATE) {
+		this->closeLocation();
+		this->setState(SERVER_STATE);
+	}
+	else {
+		this->closeServer();
+		this->setState(NO_STATE);
+	}
 }
 
