@@ -32,21 +32,20 @@ public:
 		LOCATION_STATE
 	};
 
-	explicit Menu(std::string);
+	Menu();
 	~Menu();
 
 	void							lex(std::string const& filename);
 	void							parse();
 	state							getState() const;
 	std::deque<std::string>&		getTokens();
+	std::vector<Kitchen>&			getKitchens();
 	Cook*							getCurrentCook();
 	Recipe*							getCurrentRecipe();
-//	std::vector<Cook>&				getSettings();
 	void							setTokens(std::deque<std::string> tokens);
 	void							setState(state newState);
 	void							setCurrentCook(Cook*);
 	void							setCurrentRecipe(Recipe*);
-	bool							isDirectiveInRightContext(std::string const& directive) const;
 
 
 	// error checking functions
@@ -57,7 +56,8 @@ public:
 	static void		validateClientBodySize(std::stringstream const& streamBodySize);
 	static void		validateMethod(std::string const& method, short methodBit, short allowedMethodsBits);
 	void			validateRedirectCode(std::string const& redirectCode);
-
+	bool			isDirectiveInRightContext(std::string const& directive);
+	void			validateDirective(std::string const& directive, std::unordered_map<std::string, std::function<void(Menu&)>> const&);
 
 	// functions handling directives
 	void	serverDirective();
@@ -82,11 +82,12 @@ public:
 	void			setNewPort(std::string const& newPort, std::string const& ipAndPort);
 	void			closeLocation();
 	void			closeServer();
-	std::vector<Kitchen>			_kitchens;
+	void			addToCookbook(Cook const& newCook);
+	void			printStuff();
 
 private:
 
-
+	std::vector<Kitchen>			_kitchens;
 	std::deque<std::string>			_tokens;
 	state							_currentState;
 	Cook*							_currentCook;
@@ -94,5 +95,7 @@ private:
 	std::array<std::string, COUNT>	_errorCodesArray = {"200", "301", "302", "400", "403", "404", "405", "411", "415", "500"};
 
 };
+
+typedef std::unordered_map<std::string, std::function<void(Menu&)>> directiveFunctions;
 
 #endif

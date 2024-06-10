@@ -42,8 +42,6 @@ void Menu::listenDirective() {
 	splitAndInitialiseIpAndPortStrings(ipAndPort, newIp, newPort);
 	this->setNewIp(newIp, ipAndPort);
 	this->setNewPort(newPort, ipAndPort);
-//	std::cout << "'" << ntohl(this->getCurrentCook()->getAddress()) << "'	port: '" << ntohs(this->getCurrentCook()->getTable()) << "'\n";
-//	std::cout << "'" << this->getCurrentCook()->getAddress() << "'	port: '" << this->getCurrentCook()->getTable() << "'\n";
 }
 
 void Menu::locationDirective() {

@@ -37,8 +37,8 @@ struct Recipe
 		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",
-		"root/301.html"
-		"root/302.html"
+		"root/301.html",
+		"root/302.html",
 		"root/400.html",
 		"root/403.html",
 		"root/404.html",

@@ -14,6 +14,32 @@
 #include "webservException.hpp"
 #include <sstream>
 
+bool Menu::isDirectiveInRightContext(std::string const& directive) {
+	if (this->getState() == NO_STATE && directive != "server") {
+		return false;
+	}
+	else if (this->getState() == SERVER_STATE && directive == "server") {
+		return false;
+	}
+	else if (this->getState() == LOCATION_STATE &&
+			 (directive == "server" || directive == "location" || directive == "listen" || directive == "server_name")) {
+		return false;
+	}
+	else if (this->getState() == SERVER_STATE && this->getCurrentRecipe() == nullptr && directive != "location" && directive != "}") {
+		throw WebservException("Webserv: configuration file: default server settings should be set before any location directives\n");
+	}
+	return true;
+}
+
+void Menu::validateDirective(const std::string &directive, directiveFunctions const& directiveFunctions)  {
+	if (directiveFunctions.count(directive) == 0) {
+		throw WebservException("Webserv: configuration file: unrecognized directive: '" + directive + "'\n");
+	}
+	else if (!isDirectiveInRightContext(directive)) {
+		throw WebservException("Webserv: configuration file: directive '" + directive + "' is in wrong context\n");
+	}
+}
+
 void Menu::validateClosingToken(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken) {
 	for (size_t i = 0; i < requiredTokenNumber; ++i) {
 		if (this->getTokens()[i].find("{;}") != std::string::npos && this->getTokens()[i] != closingToken) {
@@ -63,7 +89,7 @@ void Menu::validateMethod(const std::string &method, short methodBit, short allo
 	if (method != "GET" && method != "DELETE" && method != "POST") {
 		throw WebservException("Webserv: configuration file: unrecognized method '" + method + "' in 'allowed_methods' directive\n");
 	}
-	// checks if method has already bene added
+	// checks if method has already been added
 	if ((methodBit & allowedMethodsBits) != 0) {
 		throw WebservException("Webserv: configuration file: method '" + method + "' used more than once in 'allowed_methods' directive\n");
 	}

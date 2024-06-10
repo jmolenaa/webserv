@@ -115,12 +115,29 @@ void Menu::closeLocation() {
 	this->setCurrentRecipe(nullptr);
 }
 
+void	Menu::addToCookbook(Cook const& newCook) {
+	for (Kitchen& kitchen : this->getKitchens()) {
+		if (kitchen.begin()->second.getTable() == newCook.getTable()
+			&& kitchen.begin()->second.getAddress() == newCook.getAddress())
+		{
+			if (kitchen.count(newCook.getName()) != 0) {
+				throw WebservException("Webserv: configuration file: conflicting server name '" + newCook.getName() + "'\n");
+			}
+			kitchen[newCook.getName()] = newCook;
+			return ;
+		}
+	}
+	Kitchen	newKitchen;
+	newKitchen[newCook.getName()] = newCook;
+	this->getKitchens().push_back(newKitchen);
+}
+
 void Menu::closeServer() {
+	// adding recipe to cookbook in case the server directive doesn't contain a location directive
 	if (this->getCurrentRecipe() != nullptr) {
 		this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
+		this->setCurrentRecipe(nullptr);
 	}
-	this->setCurrentRecipe(nullptr);
-	for (Kitchen& kitchen : this->_kitchens) {
-
-	}
+	this->addToCookbook(*this->getCurrentCook());
+	this->setCurrentCook(nullptr);
 }
