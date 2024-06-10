@@ -44,6 +44,7 @@ typedef enum
  * NB!!! If adding to this enum:
  * remember to update _errorPaths in Recipe constructor
  * and status/status.cpp constructor
+ * also add it in menu.hpp to the _errorCodesArray in the proper spot (is in the private variables part, at the bottom)
 */
 typedef enum
 {
