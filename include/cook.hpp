@@ -19,9 +19,9 @@
 
 class Cook {
 	public:
-		explicit	Cook();
-		explicit	Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
-		explicit	Cook(const Cook& other);
+		Cook();
+		Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
+		Cook(const Cook& other);
 		Cook& 		operator=(const Cook& other);
 
 		std::string		getName() const;

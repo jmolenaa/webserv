@@ -32,10 +32,9 @@ public:
 		LOCATION_STATE
 	};
 
-	Menu();
+	explicit Menu(std::string const& filename);
 	~Menu();
 
-	void							lex(std::string const& filename);
 	void							parse();
 
 

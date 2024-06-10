@@ -16,18 +16,19 @@
 #include <vector>
 #include "waiter.hpp"
 
-
 class	Restaurant {
 
 public:
-	explicit Restaurant(std::string filename);
-	explicit Restaurant() = delete;
+	explicit Restaurant(std::string const& filename);
+	Restaurant() = delete;
 	Restaurant(Restaurant& other) = delete;
 	~Restaurant() = default;
 	
 	void	run();
+	void	oldInit(); // remove later, kept just in case
 
 private:
+	void					_initialiseWaiters(std::string const& filename);
 	Epoll 					_epoll;
 	std::vector<Waiter*>	_waiters;
 };

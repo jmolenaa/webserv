@@ -15,7 +15,11 @@
 #include "lexer.hpp"
 #include <unordered_map>
 
-Menu::Menu() : _currentState(NO_STATE) , _currentCook(nullptr), _currentRecipe(nullptr){
+Menu::Menu(std::string const& filename) : _currentState(NO_STATE) , _currentCook(nullptr), _currentRecipe(nullptr){
+	Lexer	lexer(filename);
+
+	this->setTokens(lexer.lex());
+	this->parse();
 }
 
 Menu::~Menu() {
@@ -59,13 +63,6 @@ void Menu::setTokens(std::deque<std::string> tokens) {
 
 void Menu::setState(Menu::state newState) {
 	this->_currentState = newState;
-}
-
-void Menu::lex(std::string const& filename) {
-
-	Lexer	lexer(filename);
-
-	this->setTokens(lexer.lex());
 }
 
 void	setupMap(directiveFunctions& runDirective) {

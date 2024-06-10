@@ -19,6 +19,9 @@
 #include <iostream>
 
 Lexer::Lexer(std::string const& filename) : _file(filename) {
+	if (filename.substr(filename.length() - 5, 5) != ".conf") {
+		throw WebservException("Wrong file extension: " + filename + ", file should end with '.conf'\n");
+	}
 	if (this->_file.fail()) {
 		throw WebservException("Failed to open configuration file: " + filename + "\n");
 	}
@@ -59,14 +62,3 @@ std::deque<std::string> Lexer::lex() {
 	}
 	return tokens;
 }
-
-//std::vector<std::string> Lexer::getTokens() const {
-//	return this->_tokens;
-//}
-
-//std::ostream&	operator<<(std::ostream& out, Lexer const& rhs) {
-//	for (const auto & _token : rhs.getTokens()) {
-//		out << _token << std::endl;
-//	}
-//	return out;
-//}

@@ -20,28 +20,21 @@
 // make headers understandable, where we actually need them
 // change localhost to default
 
-void	parseConfigFile(std::string const& filename) {
-	ConfigParser	configParser("no");
-	ConfigParser	test(configParser);
-
-	configParser.lex(filename);
-	configParser.parse();
-}
-
 int main(int argc, char *argv[])
 {
-	(void)argv;
-	if (argc != 2) {
-		std::cerr << RED << "Invalid number of arguments\nUsage: ./restaurant [page to configuration file, ending with .conf]\n";
+	if (argc > 2) {
+		std::cerr << RED << "Invalid number of arguments\nUsage: ./restaurant [page to configuration file, ending with .conf]\nOr ./restaurant to start with default configuration\n";
 		return EXIT_FAILURE;
 	}
 
+	std::string	filename("configFiles/default.conf");
+	if (argc == 2) {
+		filename = argv[1];
+	}
 	try {
-		parseConfigFile(std::string(argv[1]));
-		exit(0);
 		Log::getInstance().enableLog(true); //comment out to disable logging.
 		
-		Restaurant	restaurant(argv[1]);
+		Restaurant	restaurant(filename);
 		restaurant.run();
 	}
 	catch (WebservException& e) {
