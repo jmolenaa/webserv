@@ -13,9 +13,9 @@
 #include "dish.hpp"
 
 Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
-	_epoll(epoll), _location(recipe), _page(order.getPath()), _body("\r\n"), _filetype(NONE)
+	_epoll(epoll), _order(order), _recipe(recipe), _dishFD(-1)
 {
-	if (_page.empty())
+	if (_order.getPath().find_last_of('/') == std::string::npos)
 		_status.updateState(BAD);
 	else
 	{
@@ -24,10 +24,15 @@ Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
 		if ((m & recipe.allowedMethods) == 0)
 			_status.updateState(METHODNOTALLOWED);
 		else
-			_doMethod(m, order);
+			_doMethod(m);
 	}
 	if (_status.getState() != OK)
-		_getError();
+	{
+		std::string errfile = _recipe.errorPaths[_status.getState()];
+		close(_dishFD);
+		_dishFD = open(errfile.c_str(), O_RDONLY);
+	}
+	_dishToBody();
 	_generateHeader();
 }
 

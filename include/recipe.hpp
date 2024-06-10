@@ -25,6 +25,7 @@ struct Recipe
 	std::string	page;
 	std::string root;
 	std::string	index;
+	std::string dir;
 	short		allowedMethods;
 	size_t		maxBodySize;
 	bool		autoindex;
@@ -32,20 +33,20 @@ struct Recipe
 	std::pair<status, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Recipe() :page("root"), root("root"), index("index.html"),
+	Recipe() :page("root"), root("root"), index("index.html"), dir("root/dir.html"),
 		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",
-		"root/301.html",
-		"root/302.html",
-		"root/400.html",
-		"root/403.html",
-		"root/404.html",
-		"root/405.html",
-		"root/411.html",
-		"root/415.html",
-		"root/500.html"
+		"root/status/301.html",
+		"root/status/302.html",
+		"root/status/400.html",
+		"root/status/403.html",
+		"root/status/404.html",
+		"root/status/405.html",
+		"root/status/411.html",
+		"root/status/415.html",
+		"root/status/500.html"
 	}) {Log::getInstance().print("Recipe prepared for page: " + page);}
 
 	Recipe(const Recipe& other)

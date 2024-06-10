@@ -14,7 +14,6 @@
 #include "log.hpp"
 
 /** 
- * @todo
  * read from the socket until you encounter the 0x0D 0x0A sequence of bytes denoting the end of the dish line, which contains the HTTP version, Status Code, and Reason text.
  * then read from the socket until you encounter the 0x0D 0x0A 0x0D 0x0A sequence of bytes denoting the end of the dish headers.
  * then analyze the dish line and headers to know if a message body is present, and if so in what format it is being sent as, which dictates how you must read it.
@@ -29,40 +28,51 @@
 */
 Order::Order(char *order) : _order(order)
 {
+	Log::getInstance().print("\nGOT REQUEST:\n" + _order);
 	_extractHeader();
 	_extractMethod();
 	_extractPath();
+	_extractContent();
 	_extractHost();
-	_extractBody();
 	_printData();
 }
 
-method& Order::getMethod()
+method Order::getMethod() const
 {
 	return _method;
 }
 
-std::string& Order::getPath()
+std::string Order::getPath() const
 {
 	return _page;
 }
 
-std::string& Order::getCookName()
+std::string Order::getCookName() const
 {
 	return _hostname;
 }
 
-uint& Order::getTable()
+uint Order::getTable() const
 {
 	return _table;
 }
 
-uint& Order::getLength()
+std::string Order::getOrder() const
+{
+	return _order;
+}
+
+uint Order::getLength() const
 {
 	return _contentLength;
 }
 
-std::string& Order::getBody()
+std::string Order::getType() const
+{
+	return _contentType;
+}
+
+std::string Order::getBody() const
 {
 	return _body;
 }

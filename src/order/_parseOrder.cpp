@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:28:24 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/10 14:49:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ void Order::_extractHost()
 		_table = std::stoi(tmp);
 }
 
-void Order::_extractBody()
+/**
+ * @todo Fix this so it works for uploading files
+ */
+void Order::_extractContent()
 {
     _contentLength = 0;
 	std::string tmp = _keyValueFind(_order, "Content-Length: ", '\n');
@@ -88,8 +91,9 @@ void Order::_extractBody()
 	
 	if (_contentLength)
 	{
-		uint pos = _order.find("\r\n\r\n");
-		if (pos == (unsigned int)std::string::npos)
+		_contentType = _keyValueFind(_order, "Content-Type: ", '\n');
+		size_t pos = _order.find("\r\n\r\n");
+		if (pos == std::string::npos)
 			_body = "";
 		else
 			_body = _order.substr(pos + 4,_contentLength);
@@ -116,11 +120,12 @@ void Order::_printData()
 			default:
 				data += "'NONE'";
 		}
-		data += "\nPath: '" + _page + "'"
-			+ "\nHost: '" + _hostname + "'"
-			+ "\nTable: '" + std::to_string(_table) + "'"
-			+ "\nLength: '" + std::to_string(_contentLength) + "'"
-			+ "\nBody: '" + _body + "'"
+		data += "\n	Path: '" + _page + "'"
+			+ "\n	Host: '" + _hostname + "'"
+			+ "\n	Table: '" + std::to_string(_table) + "'"
+			+ "\n	Length: '" + std::to_string(_contentLength) + "'"
+			+ "\n	ContentType: '" + _contentType + "'"
+			+ "\n	Body: '" + _body + "'"
 			+ "\n=====END OF ORDER=====\n";
 		
 		Log::getInstance().print(data);

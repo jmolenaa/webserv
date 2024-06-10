@@ -6,45 +6,46 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:22:48 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/10 13:06:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dish.hpp"
 
-void Dish::_doMethod(method meth, Order& order)
+void Dish::_doMethod(method m)
 {
-	switch (meth)
+	switch (m)
 	{
 		case (GET):
 			_get();
 			break;
 		case (POST):
-			_post(order);
+			_post();
 			break;
 		case (DELETE):
-			_delete(order);
+			_delete();
 			break;
 		default:
 			_status.updateState(METHODNOTALLOWED);
-			break;
+			return;
 	}
 }
 
-void Dish::_readFile(const char* filename)
+/**
+ * @todo needs to go through epoll
+*/
+void Dish::_dishToBody()
 {
-	int fd = open(filename, O_RDONLY);
-	if (fd == -1)
+	_body = "\r\n";
+	if (_dishFD == -1)
 	{
-		_body += "INTERNAL ERROR: No default page found for error " + _status.getStatMessage() + "!\n";
+		_body += "INTERNAL ERROR";
 		_status.updateState(INTERNALERR);
 	}
 	
-		//DO EPOLL STUFF HERE
-		
 	char 	buffer[BUF_LIMIT] = "";
 	
-	ssize_t	count = read(fd, buffer, BUF_LIMIT);
+	ssize_t	count = read(_dishFD, buffer, BUF_LIMIT - 1);
 	while (count)
 	{
 		if (count < 0)
@@ -52,20 +53,17 @@ void Dish::_readFile(const char* filename)
 			_status.updateState(INTERNALERR);
 			break;
 		}
-		std::string append = std::string(buffer);
+		std::string append(buffer);
 		_body += append.substr(0, count);
-		count = read(fd, buffer, BUF_LIMIT);
+		count = read(_dishFD, buffer, BUF_LIMIT);
 	}
-	close(fd);
+	close(_dishFD);
 }
 
-/**
- * gets body with appropriate error file
-*/
-void	Dish::_getError()
+void	Dish::_generateHeader()
 {
-	_body = "\r\n";
-	std::string errfile = _location.errorPaths[_status.getState()];
-
-	_readFile(errfile.c_str());
+	_header += "HTTP/1.1 " + std::to_string(_status.getStatNum()) + " " + _status.getStatMessage() + "\r\n";
+	_header += "Content-Type: text/html \r\n";
+	_header += "Content-Length: " + std::to_string(_body.size()) + "\r\n";
+	_header += "Connection: Closed\r\n";
 }

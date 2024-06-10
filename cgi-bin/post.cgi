@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import cgi, cgitb
 
 form = cgi.FieldStorage()
@@ -6,16 +8,16 @@ starter=form.getvalue("starter")
 main=form.getvalue("main")
 dessert=form.getvalue("dessert")
 
-print("Content-type:text/html\r\n\r\n")
-
+print("<!DOCTYPE html>")
 print("<html>")
 print("<head>")
 print("<title> YOUR ORDER </title>")
 print("</head>")
 print("<body>")
-print("<h3> Your Order is Served! </h3><")
-print("Please enjoy your starter: %s" %(starter))
-print("Here is your main: %s" %(main))
-print("And finally, here is your dessert: %s" %(dessert))
+print("<h3> Your Order is Served! </h3> <br/>")
+print(f"This is your starter: {starter} <br/>")
+print(f"Here is your main: {main} <br/>")
+print(f"And finally, your dessert: {dessert} <br/>")
+print("<br/> ENJOY YOUR MEAL!")
 print("</body>")
 print("</html>")

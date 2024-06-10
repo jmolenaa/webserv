@@ -1,30 +1,64 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Index</title>
-	</head>
-	<body>
-		<div>
-			<h1>Bonjour!</h1>
-			<p>Welcome to Le Restaurant Webserv</p>
-			<p>Place an order:</p>
-		</div>
-		<div>
-			<form action="submit.py" method="post">
-				Starter: <input type="text" name="starter" />
-				 
-				<br />
-	 
-				Main: <input type="text" name="main" />
+<head>
+    <title>Le Restaurant Webserv</title>
+</head>
+<body>
+    <div>
+        <h1>Bonjour!</h1>
+        <p>Welcome to Le Restaurant Webserv</p>
+    </div>
+    <div>
+        <h2>Order Food</h2>
+        <p>Place an order using the form below:</p>
+        <form action="cgi-bin/post.cgi" method="post" enctype="application/x-www-form-urlencoded">
+            <label for="starter">Starter:</label>
+            <input type="text" name="starter" id="starter" value="Soup">
+            <br>
+            <label for="main">Main:</label>
+            <input type="text" name="main" id="main" value="Pasta">
+            <br>
+            <label for="dessert">Dessert:</label>
+            <input type="text" name="dessert" id="dessert" value="Tiramisu">
+            <br>
+            <input type="submit" value="Submit Order">
+        </form>
+    </div>
+	
+	<div>
+		<h2>Send Some Money</h2>
+		<form action="/cgi-bin/upload.cgi" method="post" enctype="multipart/form-data">
+			<label for="file">Choose file:</label><br>
+			<input type="file" id="file" name="file" required><br><br>
+			<input type="submit" value="Upload">
+		</form>
+	</div>
 
-				<br />
-	 
-				Dessert: <input type="text" name="dessert" />
-
-				<br />
-	 
-				<input type="submit" value="Submit" />
-			</form>
-		</div>
-	</body>
+    <div>
+        <h2>Cancellation Policy</h2>
+        <p>It's easy to cancel an order. Just enter the exact time (to the second) when your order was placed:</p>
+		<form id="deleteForm">
+		  <label for="filename">File Name:</label>
+		  <input type="text" id="filename" name="filename" required>
+		  <button type="button" onclick="deleteFile()">Delete</button>
+		</form>
+		
+		<script>
+		function deleteFile() {
+		  var filename = document.getElementById("filename").value;
+		  var xhr = new XMLHttpRequest();
+		  xhr.open("DELETE", "/orders/" + filename, true);
+		  xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4) {
+			  if (xhr.status === 200) {
+				alert("File deleted successfully");
+			  } else {
+				alert("Error deleting file: " + xhr.statusText);
+			  }
+			}
+		  };
+		  xhr.send();
+		}
+    </script>
+</body>
 </html>

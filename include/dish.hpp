@@ -27,7 +27,6 @@ class Dish
 	{
 		NONE,
 		HTML,
-		PY,
 		FOLDER
 	}	filetype;
 
@@ -40,31 +39,45 @@ class Dish
 	
 	private:
 		Epoll&			_epoll;
+		Order&			_order;
 		Status			_status;
-		Recipe			_location;
-		std::string 	_page;
+		Recipe			_recipe;
+		int				_dishFD;
 		std::string		_header;
 		std::string		_body;
-		filetype		_filetype;
 
+		void	_doMethod(method m);
+		void	_dishToBody();
+		void	_generateHeader();
+
+		void		_get();
 		filetype	_extractFileType();
 
-		void	_doMethod(method meth, Order& order);
-		void	_readFile(const char* filename);
-		void	_getError();
+		void	_post();
+		void	_delete();
 
-		void	_get();
-		void	_getHtml();
-		void	_listFolder();
-		
-		void	_post(Order& order);
-		void	_executeCGI();
-		
-		void	_delete(Order& order);
+		class CGI
+		{
+			public: 
+				explicit CGI(Order& order, Status& status);
+				CGI() = delete;
+				
+				int	execute();
+			
+			private:
+				Order&		_order;
+				Status&		_status;
+				std::string _query;
+				std::string	_path;
+				char*		_env[4];
+				int			_inFD[2];
+				int			_outFD[2];
+				pid_t		_pid;
 
-		void		_generateHeader();
-		std::string	_getType();
-		std::string _getDateTime();
+				void 		_execChild();
+				void		_setEnv();
+				void		_execError(std::string what, std::string why);
+		};
 };
 
 #endif

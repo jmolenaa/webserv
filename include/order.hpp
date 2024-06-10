@@ -28,12 +28,14 @@ class Order
 		Order(Order& other) = delete;
 		~Order() = default;
 
-		method&	   		getMethod();
-		std::string&    getPath();
-		std::string&    getCookName();
-		uint&	    	getTable();
-		uint&		    getLength();
-		std::string&    getBody(); //check maxBodySize in dafault recipe unless overwritten
+		method	   	getMethod() const;
+		std::string getPath() const;
+		std::string getCookName() const;
+		uint    	getTable() const;
+		uint	    getLength() const;
+		std::string	getType() const;
+		std::string getBody() const;
+		std::string getOrder() const; //check maxBodySize in dafault recipe unless overwritten
 
 	private:
 		std::string	_order;
@@ -43,13 +45,14 @@ class Order
 		std::string	_hostname;
 		uint		_table;
 		uint		_contentLength;
+		std::string _contentType;
 		std::string	_body;
 		
 		void	_extractHeader();
 		void 	_extractMethod();
 		void	_extractPath();
 		void	_extractHost();
-		void	_extractBody();
+		void	_extractContent();
 		void	_printData();
 		
 		std::string		_keyValueFind(std::string string, std::string key, char delim);
