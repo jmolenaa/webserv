@@ -37,6 +37,9 @@ public:
 
 	void							lex(std::string const& filename);
 	void							parse();
+
+
+	// getters and setters
 	state							getState() const;
 	std::deque<std::string>&		getTokens();
 	std::vector<Kitchen>&			getKitchens();
@@ -46,7 +49,6 @@ public:
 	void							setState(state newState);
 	void							setCurrentCook(Cook*);
 	void							setCurrentRecipe(Recipe*);
-
 
 	// error checking functions
 	void			validateDirectiveSyntax(std::string const& directive, size_t requiredTokenNumber, std::string const& closingToken);
@@ -82,7 +84,7 @@ public:
 	void			setNewPort(std::string const& newPort, std::string const& ipAndPort);
 	void			closeLocation();
 	void			closeServer();
-	void			addToCookbook(Cook const& newCook);
+	void			addToKitchen(Cook const& newCook);
 	void			printStuff();
 
 private:

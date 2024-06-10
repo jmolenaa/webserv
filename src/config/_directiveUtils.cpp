@@ -88,7 +88,7 @@ void Menu::setNewIp(const std::string &newIp, std::string const& ipAndPort) {
 	int			bitShift = 24;
 	size_t	i = 0;
 	// loops over the dots in the string and converts the octets to numbers then bitshifts them into the new address
-	for (size_t start = 0; i != std::string::npos && bitShift >= 0; start = i + 1) {
+	for (size_t start = 0; i != std::string::npos; start = i + 1) {
 		i = newIp.find('.', start);
 		int currentOctet = convertStringToNumber(newIp.substr(start, i - start), ipAndPort, 255);
 		newIpAddress |= currentOctet << bitShift;
@@ -113,9 +113,16 @@ void Menu::setNewPort(const std::string &newPort, std::string const& ipAndPort) 
 void Menu::closeLocation() {
 	this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
 	this->setCurrentRecipe(nullptr);
+	this->setState(SERVER_STATE);
 }
 
-void	Menu::addToCookbook(Cook const& newCook) {
+// TODO
+// possibly change this to have some better way of checking the ip address
+void	Menu::addToKitchen(Cook const& newCook) {
+	// loops through the kitchens so far and checks if we already have a kitchen
+	// with the current cooks host and port, if we do we check if we have that name already
+	// if not we add it to that kitchen
+	// if we don't find a kitchen with host and port we make a new one and add it to the vector
 	for (Kitchen& kitchen : this->getKitchens()) {
 		if (kitchen.begin()->second.getTable() == newCook.getTable()
 			&& kitchen.begin()->second.getAddress() == newCook.getAddress())
@@ -138,6 +145,7 @@ void Menu::closeServer() {
 		this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
 		this->setCurrentRecipe(nullptr);
 	}
-	this->addToCookbook(*this->getCurrentCook());
+	this->addToKitchen(*this->getCurrentCook());
 	this->setCurrentCook(nullptr);
+	this->setState(NO_STATE);
 }

@@ -11,18 +11,14 @@
 /* ************************************************************************** */
 
 #include "menu.hpp"
-#include <iostream>
 #include "webservException.hpp"
 #include <sstream>
-#include <arpa/inet.h>
 
 void Menu::serverDirective() {
-
 	this->validateDirectiveSyntax("server", 1, "{");
 	this->setState(SERVER_STATE);
 	this->setCurrentCook(new Cook());
 	this->setCurrentRecipe(new Recipe());
-
 }
 
 void Menu::serverNameDirective() {
@@ -34,9 +30,6 @@ void Menu::serverNameDirective() {
 void Menu::listenDirective() {
 	this->validateDirectiveSyntax("listen", 2, ";");
 	std::string	ipAndPort = this->popFrontToken();
-
-	// Initialising the strings to " ", so I have a way of identifying that they aren't part of the directive
-	// this is because nullptr does not exist for std::string
 	std::string	newIp;
 	std::string newPort;
 	splitAndInitialiseIpAndPortStrings(ipAndPort, newIp, newPort);
@@ -141,15 +134,12 @@ void Menu::allowedMethodsDirective() {
 	this->getCurrentRecipe()->allowedMethods = allowedMethodsBits;
 }
 
-// TODO
 void Menu::closeBracketDirective() {
 	if (this->getState() == LOCATION_STATE) {
 		this->closeLocation();
-		this->setState(SERVER_STATE);
 	}
 	else {
 		this->closeServer();
-		this->setState(NO_STATE);
 	}
 }
 
