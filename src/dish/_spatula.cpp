@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 21:35:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/10 13:06:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,23 @@ void Dish::_doMethod(method m)
 			_status.updateState(METHODNOTALLOWED);
 			return;
 	}
-	if (_status.getState() == OK)
-		_fileToBody(_dish.c_str());
 }
 
 /**
  * @todo needs to go through epoll
 */
-void Dish::_fileToBody(const char* filename)
+void Dish::_dishToBody()
 {
 	_body = "\r\n";
-	int fd = open(filename, O_RDONLY);
-	if (fd == -1)
+	if (_dishFD == -1)
 	{
-		_body += "INTERNAL ERROR: " + std::string(filename) + "not found!\n";
+		_body += "INTERNAL ERROR";
 		_status.updateState(INTERNALERR);
 	}
 	
 	char 	buffer[BUF_LIMIT] = "";
 	
-	ssize_t	count = read(fd, buffer, BUF_LIMIT - 1);
+	ssize_t	count = read(_dishFD, buffer, BUF_LIMIT - 1);
 	while (count)
 	{
 		if (count < 0)
@@ -58,9 +55,9 @@ void Dish::_fileToBody(const char* filename)
 		}
 		std::string append(buffer);
 		_body += append.substr(0, count);
-		count = read(fd, buffer, BUF_LIMIT);
+		count = read(_dishFD, buffer, BUF_LIMIT);
 	}
-	close(fd);
+	close(_dishFD);
 }
 
 void	Dish::_generateHeader()

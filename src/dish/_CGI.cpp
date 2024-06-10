@@ -7,78 +7,98 @@
 #include "log.hpp"
 #include "dish.hpp"
 
-/**
- * @todo needs to go through epoll
- */
-Dish::CGI::CGI(Order& order) : _order(order)
+Dish::CGI::CGI(Order& order, Status& status) : _order(order), _status(status)
 {
-	if (_order.getMethod() == POST)
-		_cgiPath = "cgi/post.cgi";
-	else if (_order.getMethod() == DELETE)
-		_cgiPath = "cgi/delete.cgi";
-	else
-		throw WebservException("Wtf\n");
-	_filename = "orderlog/" + _generateFilename();
-	_fd = open(_filename.c_str(), O_RDWR | O_APPEND | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO);
-    if (_fd < 0)
-        throw WebservException("Failed to create new file: " + std::string(std::strerror(errno)) + "\n");
+	try
+	{
+		size_t	qpos = _order.getPath().find('?');
+		if (qpos == std::string::npos)
+		{
+			_path = _order.getPath().substr(1);
+			_query = _order.getBody();
+		}
+		else
+		{
+			_path = _order.getPath().substr(1, qpos);
+			_query = _order.getPath().substr(qpos + 1);
+		}
+	}
+	catch (...) {
+		throw WebservException("Critical Error: " + std::string(std::strerror(errno)) + "\n");
+	}
 }
 
-std::string Dish::CGI::execute()
+void Dish::CGI::_setEnv()
 {
-    pid_t pid = fork();
-    if (pid < 0)
+	switch (_order.getMethod())
+	{
+		case GET:
+			_env[0] = const_cast<char*>("REQUEST_METHOD=GET");
+			break;
+		case POST:
+			_env[0] = const_cast<char*>("REQUEST_METHOD=POST");
+			break;
+		case DELETE:
+			_env[0] = const_cast<char*>("REQUEST_METHOD=DELETE");
+			break;
+		default:
+			throw WebservException("Something real bad went down");
+	}
+	std::string string = "CONTENT_LENGTH=" + std::to_string(_order.getLength());
+	_env[1] = const_cast<char*>(string.c_str());
+	string = "QUERY_STRING=" + _query;
+	_env[2] = const_cast<char*>(string.c_str());
+	_env[3] = nullptr;
+}
+
+int Dish::CGI::execute()
+{
+	pipe(_inFD);
+	pipe(_outFD);
+
+	_pid = fork();
+    if (_pid < 0)
         throw WebservException("Fork broke: " + std::string(std::strerror(errno)) + "\n");
     
-    if (pid == 0) {
+    if (_pid == 0)
+	{
        	_execChild();
+		_execError("This should NEVER happen.", std::string(std::strerror(errno)));
 	}
 
-	close(_fd);
-	waitpid(pid, NULL, 0);
-	return (_filename);
+	close(_outFD[1]);
+	close(_inFD[0]);
+	write(_inFD[1], _order.getBody().c_str(), _order.getLength());
+	close(_inFD[1]);
+	waitpid(_pid, NULL, 0);
+	return (_outFD[0]);
 }
 
-std::string	Dish::CGI::_generateFilename()
+void Dish::CGI::_execError(std::string what, std::string why)
 {
-    std::time_t now = std::time(nullptr);
-    char buffer[100];
-    std::strftime(buffer, sizeof(buffer), "%H%M%S", std::localtime(&now));
-    return std::string(buffer);
+	close(_inFD[0]);
+	close(_inFD[1]);
+	close(_outFD[0]);
+    close(_outFD[1]);
+	_status.updateState(INTERNALERR);
+    throw WebservException(what + why + "\n");
 }
 
 void Dish::CGI::_execChild()
 {
-	if (dup2(_fd, STDOUT_FILENO) < 0) {
-        close(_fd);
-        throw WebservException("Couldn't dup2 stdout: " + std::string(std::strerror(errno)) + "\n");
-    }
-    close(_fd);
+	_setEnv();
+	if (dup2(_outFD[1], STDOUT_FILENO) < 0)
+		_execError("Couldn't dup2 output", std::string(std::strerror(errno)));
+    if (dup2(_inFD[0], STDIN_FILENO) < 0)
+		_execError("Couldn't dup2 input", std::string(std::strerror(errno)));
+    
+	close(_inFD[0]);
+	close(_inFD[1]);
+	close(_outFD[0]);
+    close(_outFD[1]);
 
-    // _setEnv();
-
-    char* arg0 = const_cast<char*>(_cgiPath.c_str());
-	std::string arg = _order.getBody();
-	char* arg1 = const_cast<char*>(arg.c_str());
-	char* argv[] = {arg0, arg1, nullptr};
-
-    if (execve(arg0, argv, nullptr) < 0)
-        throw WebservException("execve failed: " + std::string(std::strerror(errno)) + "\n");
+    char* path = const_cast<char*>(_path.c_str());
+	char* argv[] = {path, path, nullptr};
+    if (execve(path, argv, _env) < 0)
+       _execError("execve failed: ", std::string(std::strerror(errno)));
 }
-
-// void Dish::CGI::_setEnv()
-// {
-// 	switch (_order.getMethod())
-// 	{
-// 		case POST:
-// 			setenv("REQUEST_METHOD", "POST", 1);
-// 			break;
-// 		case DELETE:
-// 			setenv("REQUEST_METHOD", "DELETE", 1);
-// 			break;
-// 		default:
-// 			throw WebservException("Something real bad went down");
-// 	}
-// 	setenv("CONTENT_LENGTH", std::to_string(_order.getLength()).c_str(), 1);
-// 	setenv("CONTENT_TYPE", _order.getType().c_str(), 1);
-// }

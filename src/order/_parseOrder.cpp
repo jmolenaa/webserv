@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/06 15:17:14 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/10 14:49:10 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,9 @@ void Order::_extractHost()
 		_table = std::stoi(tmp);
 }
 
+/**
+ * @todo Fix this so it works for uploading files
+ */
 void Order::_extractContent()
 {
     _contentLength = 0;
@@ -117,12 +120,12 @@ void Order::_printData()
 			default:
 				data += "'NONE'";
 		}
-		data += "\nPath: '" + _page + "'"
-			+ "\nHost: '" + _hostname + "'"
-			+ "\nTable: '" + std::to_string(_table) + "'"
-			+ "\nLength: '" + std::to_string(_contentLength) + "'"
-			+ "\nType: '" + _contentType + "'"
-			+ "\nBody: '" + _body + "'"
+		data += "\n	Path: '" + _page + "'"
+			+ "\n	Host: '" + _hostname + "'"
+			+ "\n	Table: '" + std::to_string(_table) + "'"
+			+ "\n	Length: '" + std::to_string(_contentLength) + "'"
+			+ "\n	ContentType: '" + _contentType + "'"
+			+ "\n	Body: '" + _body + "'"
 			+ "\n=====END OF ORDER=====\n";
 		
 		Log::getInstance().print(data);

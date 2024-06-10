@@ -34,7 +34,8 @@ class Order
 		uint    	getTable() const;
 		uint	    getLength() const;
 		std::string	getType() const;
-		std::string getBody() const; //check maxBodySize in dafault recipe unless overwritten
+		std::string getBody() const;
+		std::string getOrder() const; //check maxBodySize in dafault recipe unless overwritten
 
 	private:
 		std::string	_order;

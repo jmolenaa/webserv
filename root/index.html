@@ -11,7 +11,7 @@
     <div>
         <h2>Order Food</h2>
         <p>Place an order using the form below:</p>
-        <form action="cgi/post.cgi" method="post" enctype="application/x-www-form-urlencoded">
+        <form action="cgi-bin/post.cgi" method="post" enctype="application/x-www-form-urlencoded">
             <label for="starter">Starter:</label>
             <input type="text" name="starter" id="starter" value="Soup">
             <br>
@@ -24,39 +24,41 @@
             <input type="submit" value="Submit Order">
         </form>
     </div>
+	
+	<div>
+		<h2>Send Some Money</h2>
+		<form action="/cgi-bin/upload.cgi" method="post" enctype="multipart/form-data">
+			<label for="file">Choose file:</label><br>
+			<input type="file" id="file" name="file" required><br><br>
+			<input type="submit" value="Upload">
+		</form>
+	</div>
 
     <div>
         <h2>Cancellation Policy</h2>
         <p>It's easy to cancel an order. Just enter the exact time (to the second) when your order was placed:</p>
-        <form id="delete-form">
-            <label for="orderTime">Order Time:</label>
-            <input type="text" name="orderTime" id="orderTime" placeholder="Time of Order">
-            <br>
-            <button type="button" onclick="cancelOrder()">Cancel Order</button>
-        </form>
-    </div>
-	
-    <div id="response"></div>
-
-    <script>
-        function cancelOrder() {
-            var orderTime = document.getElementById('orderTime').value;
-            var xhr = new XMLHttpRequest();
-            var url = 'cgi/delete.cgi'; // Change this to your actual delete URL
-            xhr.open('DELETE', url, true);
-			// xhr.open('DELETE', url + '?orderTime=' + encodeURIComponent(orderTime), true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		<form id="deleteForm">
+		  <label for="filename">File Name:</label>
+		  <input type="text" id="filename" name="filename" required>
+		  <button type="button" onclick="deleteFile()">Delete</button>
+		</form>
 		
-			xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    var responseDiv = document.getElementById('response');
-                    responseDiv.innerHTML = xhr.responseText;
-                }
-            };
-
-			var params = 'orderTime=' + encodeURIComponent(orderTime);
-            xhr.send(params);
-        }
+		<script>
+		function deleteFile() {
+		  var filename = document.getElementById("filename").value;
+		  var xhr = new XMLHttpRequest();
+		  xhr.open("DELETE", "/orders/" + filename, true);
+		  xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4) {
+			  if (xhr.status === 200) {
+				alert("File deleted successfully");
+			  } else {
+				alert("Error deleting file: " + xhr.statusText);
+			  }
+			}
+		  };
+		  xhr.send();
+		}
     </script>
 </body>
 </html>

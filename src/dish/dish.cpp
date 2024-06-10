@@ -13,7 +13,7 @@
 #include "dish.hpp"
 
 Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
-	_epoll(epoll), _order(order), _recipe(recipe)
+	_epoll(epoll), _order(order), _recipe(recipe), _dishFD(-1)
 {
 	if (_order.getPath().find_last_of('/') == std::string::npos)
 		_status.updateState(BAD);
@@ -27,7 +27,12 @@ Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
 			_doMethod(m);
 	}
 	if (_status.getState() != OK)
-		_fileToBody(_recipe.errorPaths[_status.getState()].c_str());
+	{
+		std::string errfile = _recipe.errorPaths[_status.getState()];
+		close(_dishFD);
+		_dishFD = open(errfile.c_str(), O_RDONLY);
+	}
+	_dishToBody();
 	_generateHeader();
 }
 

@@ -57,6 +57,11 @@ uint Order::getTable() const
 	return _table;
 }
 
+std::string Order::getOrder() const
+{
+	return _order;
+}
+
 uint Order::getLength() const
 {
 	return _contentLength;

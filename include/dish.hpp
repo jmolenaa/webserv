@@ -42,12 +42,12 @@ class Dish
 		Order&			_order;
 		Status			_status;
 		Recipe			_recipe;
-		std::string		_dish;
+		int				_dishFD;
 		std::string		_header;
 		std::string		_body;
 
 		void	_doMethod(method m);
-		void	_fileToBody(const char* filename);
+		void	_dishToBody();
 		void	_generateHeader();
 
 		void		_get();
@@ -59,21 +59,24 @@ class Dish
 		class CGI
 		{
 			public: 
-				explicit CGI(Order& order);
+				explicit CGI(Order& order, Status& status);
 				CGI() = delete;
 				
-				std::string	execute();
+				int	execute();
 			
 			private:
 				Order&		_order;
-				std::string	_cgiPath;
-				std::string _filename;
-				int			_fd;
-				char*		_env;
+				Status&		_status;
+				std::string _query;
+				std::string	_path;
+				char*		_env[4];
+				int			_inFD[2];
+				int			_outFD[2];
+				pid_t		_pid;
 
-				std::string _generateFilename();
 				void 		_execChild();
 				void		_setEnv();
+				void		_execError(std::string what, std::string why);
 		};
 };
 
