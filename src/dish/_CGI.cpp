@@ -22,6 +22,7 @@ Dish::CGI::CGI(Order& order, Status& status) : _order(order), _status(status)
 			_path = _order.getPath().substr(1, qpos);
 			_query = _order.getPath().substr(qpos + 1);
 		}
+		_setEnv();
 	}
 	catch (...) {
 		throw WebservException("Critical Error: " + std::string(std::strerror(errno)) + "\n");
@@ -33,22 +34,38 @@ void Dish::CGI::_setEnv()
 	switch (_order.getMethod())
 	{
 		case GET:
-			_env[0] = const_cast<char*>("REQUEST_METHOD=GET");
+			_vec.push_back("REQUEST_METHOD=GET");
 			break;
 		case POST:
-			_env[0] = const_cast<char*>("REQUEST_METHOD=POST");
+			_vec.push_back("REQUEST_METHOD=POST");
 			break;
 		case DELETE:
-			_env[0] = const_cast<char*>("REQUEST_METHOD=DELETE");
+			_vec.push_back("REQUEST_METHOD=DELETE");
 			break;
 		default:
 			throw WebservException("Something real bad went down");
 	}
-	std::string string = "CONTENT_LENGTH=" + std::to_string(_order.getLength());
-	_env[1] = const_cast<char*>(string.c_str());
-	string = "QUERY_STRING=" + _query;
-	_env[2] = const_cast<char*>(string.c_str());
-	_env[3] = nullptr;
+	_vec.push_back("CONTENT_TYPE=" + _order.getType());
+	_vec.push_back("CONTENT_LENGTH=" + std::to_string(_order.getLength()));
+	_vec.push_back("QUERY_STRING=" + _query);
+	_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
+	_vec.push_back("SCRIPT_NAME=" + _path);
+	_env = new char*[_vec.size()];
+
+	for (size_t i = 0; i < _vec.size(); i++)
+	{
+		_env[i] = new char[_vec[i].length() + 1];
+		std::strcpy(_env[i], _vec[i].c_str());
+		Log::getInstance().print(std::string(_env[i]));
+	}
+}
+
+void Dish::CGI::_freeEnv()
+{
+	for (size_t i = 0; i < _vec.size(); ++i)
+        delete[] _env[i];
+ 
+     delete[] _env;
 }
 
 int Dish::CGI::execute()
@@ -58,7 +75,7 @@ int Dish::CGI::execute()
 
 	_pid = fork();
     if (_pid < 0)
-        throw WebservException("Fork broke: " + std::string(std::strerror(errno)) + "\n");
+		_execError("Fork broke: ", std::string(std::strerror(errno)) + "\n");
     
     if (_pid == 0)
 	{
@@ -68,9 +85,10 @@ int Dish::CGI::execute()
 
 	close(_outFD[1]);
 	close(_inFD[0]);
-	write(_inFD[1], _order.getBody().c_str(), _order.getLength());
+	write(_inFD[1], _order.getOrder().c_str(), _order.getOrder().size());
 	close(_inFD[1]);
 	waitpid(_pid, NULL, 0);
+	_freeEnv();
 	return (_outFD[0]);
 }
 
@@ -80,13 +98,13 @@ void Dish::CGI::_execError(std::string what, std::string why)
 	close(_inFD[1]);
 	close(_outFD[0]);
     close(_outFD[1]);
+	_freeEnv();
 	_status.updateState(INTERNALERR);
     throw WebservException(what + why + "\n");
 }
 
 void Dish::CGI::_execChild()
 {
-	_setEnv();
 	if (dup2(_outFD[1], STDOUT_FILENO) < 0)
 		_execError("Couldn't dup2 output", std::string(std::strerror(errno)));
     if (dup2(_inFD[0], STDIN_FILENO) < 0)

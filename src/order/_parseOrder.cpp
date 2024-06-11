@@ -6,14 +6,14 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/10 14:49:10 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/11 19:21:12 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "order.hpp"
 #include "log.hpp"
 
-std::string Order::_keyValueFind(std::string string, std::string key, char delim)
+std::string Order::_extractValue(std::string string, std::string key, char delim)
 {
 	size_t start = string.find(key);
 	if (start == std::string::npos)
@@ -71,10 +71,10 @@ void Order::_extractPath()
 
 void Order::_extractHost()
 {
-	_hostname = _keyValueFind(_header, "Host: ", ':');
+	_hostname = _extractValue(_header, "Host: ", ':');
     _table = PORT;
-	std::string tmp = _keyValueFind(_header, "Host: ", '\n');
-	tmp = _keyValueFind(tmp, ":", '\n');
+	std::string tmp = _extractValue(_header, "Host: ", '\n');
+	tmp = _extractValue(tmp, ":", '\n');
 	if (!tmp.empty())
 		_table = std::stoi(tmp);
 }
@@ -85,13 +85,13 @@ void Order::_extractHost()
 void Order::_extractContent()
 {
     _contentLength = 0;
-	std::string tmp = _keyValueFind(_order, "Content-Length: ", '\n');
+	std::string tmp = _extractValue(_order, "Content-Length: ", '\n');
 	if (!tmp.empty())
 		_contentLength = std::stoi(tmp);
 	
 	if (_contentLength)
 	{
-		_contentType = _keyValueFind(_order, "Content-Type: ", '\n');
+		_contentType = _extractValue(_order, "Content-Type: ", '\n');
 		size_t pos = _order.find("\r\n\r\n");
 		if (pos == std::string::npos)
 			_body = "";

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/11 17:58:33 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/11 19:38:54 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,19 @@ void Waiter::_welcomeCustomer()
 */
 void Waiter::_takeOrder(int fd)
 {
-	//if order is larger than buffer size, this needs to loop
-	char buffer[BUF_LIMIT];
+	//if move this to be inside order, first get header, then get content by size
+	char buffer[2048];
 	ssize_t numBytes = read(fd, buffer, sizeof(buffer) - 1);
 	buffer[numBytes] = '\0';
 	std::string orderString(buffer);
-
-	// while (numBytes > 0)
-	// {
-	// 	orderString += std::string(buffer);
-	// 	numBytes = read(fd, buffer, sizeof(buffer) - 1);
-	// 	buffer[numBytes] = '\0';
-	// }
 	if (numBytes < 0)
 	{
 		close(fd);
 		orderString = "";
 	}
 	
+	Log::getInstance().print("\nGOT REQUEST:\n" + orderString);
+
 	Order order(orderString);
 	const Cook* cook = _kitchen.find(order.getCookName()); //default cook
 	if (cook == nullptr)

@@ -69,11 +69,15 @@ class Dish
 				Status&		_status;
 				std::string _query;
 				std::string	_path;
-				char*		_env[4];
 				int			_inFD[2];
 				int			_outFD[2];
 				pid_t		_pid;
 
+				char**						_env;
+				std::vector<std::string>	_vec;
+				void		_vectorToEnv(const std::vector<std::string>& vec);	
+				void		_freeEnv();
+				
 				void 		_execChild();
 				void		_setEnv();
 				void		_execError(std::string what, std::string why);

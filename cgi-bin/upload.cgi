@@ -2,13 +2,9 @@
 
 import cgi
 import os
-import cgitb
-
-# Enable debugging
-cgitb.enable()
 
 # Set the directory where uploaded files will be stored
-upload_dir = "root/orders"
+upload_dir = "root/orders/"
 
 # Create a FieldStorage instance
 form = cgi.FieldStorage()
@@ -26,11 +22,11 @@ def print_html_response(title, message):
     print("</html>")
 
 # Check if the file field is present
-if "file" not in form:
+if "fileToUpload" not in form:
     print_html_response("Nope", "No file was uploaded")
 else:
     # Retrieve the uploaded file
-    file_item = form["file"]
+    file_item = form["fileToUpload"]
 
     # Check if the file was uploaded
     if file_item.filename:

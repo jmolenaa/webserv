@@ -56,7 +56,7 @@ class Order
 		void	_extractContent();
 		void	_printData();
 		
-		std::string		_keyValueFind(std::string string, std::string key, char delim);
+		std::string		_extractValue(std::string string, std::string key, char delim);
 };
 
 #endif

@@ -28,13 +28,12 @@
 */
 Order::Order(std::string order) : _order(order)
 {
-	Log::getInstance().print("\nGOT REQUEST:\n" + _order);
 	_extractHeader();
 	_extractMethod();
 	_extractPath();
 	_extractContent();
 	_extractHost();
-	_printData();
+	// _printData();
 }
 
 method Order::getMethod() const

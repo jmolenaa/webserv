@@ -26,11 +26,10 @@
     </div>
 	
 	<div>
-		<h2>Send Some Money</h2>
-		<form action="/cgi-bin/upload.cgi" method="post" enctype="multipart/form-data">
-			<label for="file">Choose file:</label><br>
-			<input type="file" id="file" name="file" required><br><br>
-			<input type="submit" value="Upload">
+		<h2>Send Some Money (As a .txt file)</h2>
+		<form action="cgi-bin/upload.cgi" method="post" enctype="multipart/form-data">
+			<input type="file" name="fileToUpload" id="fileToUpload">
+			<input type="submit" value="Upload File">
 		</form>
 	</div>
 
@@ -44,21 +43,54 @@
 		</form>
 		
 		<script>
-		function deleteFile() {
-		  var filename = document.getElementById("filename").value;
-		  var xhr = new XMLHttpRequest();
-		  xhr.open("DELETE", "/orders/" + filename, true);
-		  xhr.onreadystatechange = function() {
-			if (xhr.readyState === 4) {
-			  if (xhr.status === 200) {
-				alert("File deleted successfully");
-			  } else {
-				alert("Error deleting file: " + xhr.statusText);
-			  }
+			// function uploadFile()
+			// {
+			// 	var fileInput = document.getElementById('file-upload');
+			// 	var file = fileInput.files[0];
+			// 	var formData = new FormData();
+			// 	formData.append('file', file);
+
+			// 	var xhr = new XMLHttpRequest();
+			// 	xhr.open('POST', 'upload.cgi', true);
+
+			// 	xhr.onreadystatechange = function()
+			// 	{
+			// 		if (xhr.readyState === 4)
+			// 		{
+			// 			if (xhr.status === 200)
+			// 			{
+			// 				alert("File uploaded successfully");
+			// 			}
+			// 			else
+			// 			{
+			// 				alert("Error uploading file: " + xhr.statusText);
+			// 			}
+			// 		}
+			// 	};
+   			// 	xhr.send(formData);
+  			// }
+
+			function deleteFile()
+			{
+				var filename = document.getElementById("filename").value;
+				var xhr = new XMLHttpRequest();
+				xhr.open("DELETE", "/orders/" + filename, true);
+				xhr.onreadystatechange = function()
+				{
+					if (xhr.readyState === 4)
+					{
+						if (xhr.status === 200)
+						{
+							alert("File deleted successfully");
+						}
+						else
+						{
+							alert("Error deleting file: " + xhr.statusText);
+						}
+					}
+				};
+				xhr.send();
 			}
-		  };
-		  xhr.send();
-		}
     </script>
 </body>
 </html>
