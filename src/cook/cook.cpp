@@ -94,8 +94,8 @@ void Cook::addToCookbook(Recipe const& newRecipe) {
 
 Recipe Cook::getRecipe(std::string page) const
 {
-	auto recipe = _cookbook.find(page);
-	if (recipe != _cookbook.end())
-		return (recipe->second);
-	return _cookbook.begin()->second;
+	const Recipe* recipe = _cookbook.find(page);
+	if (recipe == nullptr)
+		recipe = _cookbook.begin();
+	return (*recipe);
 }

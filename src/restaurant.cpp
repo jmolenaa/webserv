@@ -52,7 +52,7 @@ Restaurant::Restaurant(std::string const& filename)
 
 	// if something broke after this just comment out the initialiseWaiters and uncomment oldInit
 	this->_initialiseWaiters(filename);
-//	oldInit();
+	// oldInit();
 }
 
 void Restaurant::_initialiseWaiters(const std::string &filename) {

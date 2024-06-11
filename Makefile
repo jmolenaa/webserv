@@ -6,7 +6,7 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/05/27 16:42:02 by dliu          ########   odam.nl          #
+#    Updated: 2024/06/11 17:59:38 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ END=\033[0m
 # Add it to the $(DIR) variable on line 46 with changing the src prefix to the obj prefix
 
 # Compilation variables
-NAME = Webserv
+NAME = webserv
 INCLUDE = -I include
 CXX = c++
 ifdef DEBUG

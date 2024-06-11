@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/03 14:54:16 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/03 14:54:16 by jmolenaa      ########   odam.nl         */
+/*   Updated: 2024/06/11 18:00:47 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void	Menu::addToKitchen(Cook const& newCook) {
 	// if not we add it to that kitchen
 	// if we don't find a kitchen with host and port we make a new one and add it to the vector
 	for (Kitchen& kitchen : this->getKitchens()) {
-		if (kitchen.begin()->second.getTable() == newCook.getTable()
-			&& kitchen.begin()->second.getAddress() == newCook.getAddress())
+		if (kitchen.begin()->getTable() == newCook.getTable()
+			&& kitchen.begin()->getAddress() == newCook.getAddress())
 		{
 			if (kitchen.count(newCook.getName()) != 0) {
 				throw WebservException("Webserv: configuration file: conflicting server name '" + newCook.getName() + "'\n");

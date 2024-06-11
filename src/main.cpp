@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:05:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:45:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/11 14:32:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 int main(int argc, char *argv[])
 {
 	if (argc > 2) {
-		std::cerr << RED << "Invalid number of arguments\nUsage: ./restaurant [page to configuration file, ending with .conf]\nOr ./restaurant to start with default configuration\n";
+		std::cerr << RED << "Invalid number of arguments\nUsage: ./webserv [page to configuration file, ending with .conf]\nOr ./webserv to start with default configuration\n";
 		return EXIT_FAILURE;
 	}
 

@@ -14,7 +14,7 @@
 #define COOK_HPP
 
 # include <string>
-# include <unordered_map>
+# include "orderedMap.hpp"
 # include "recipe.hpp"
 
 class Cook {
@@ -42,6 +42,6 @@ class Cook {
 		Cookbook	_cookbook;
 };
 
-typedef std::unordered_map<std::string, Cook> Kitchen;
+typedef orderedMap<std::string, Cook> Kitchen;
 
 #endif

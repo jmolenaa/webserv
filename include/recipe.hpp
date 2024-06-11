@@ -15,8 +15,8 @@
 
 # include <array>
 # include <string>
-# include <unordered_map>
 
+# include "orderedMap.hpp"
 # include "defines.hpp"
 # include "log.hpp"
 
@@ -84,6 +84,6 @@ struct Recipe
 	}
 };
 
-typedef	std::unordered_map<std::string, Recipe> Cookbook;
+typedef	orderedMap<std::string, Recipe> Cookbook;
 
 #endif

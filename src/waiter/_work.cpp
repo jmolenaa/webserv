@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:45:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/11 17:58:33 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,37 +28,48 @@ void Waiter::_welcomeCustomer()
 	_epoll.addFd(customerFd, EPOLLIN);
 }
 
+/**
+ * @todo fix this shit
+*/
 void Waiter::_takeOrder(int fd)
 {
-	char buffer[1024];
-	ssize_t numBytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
-	if (numBytes <= 0)
-		close(fd);
-	else
+	//if order is larger than buffer size, this needs to loop
+	char buffer[BUF_LIMIT];
+	ssize_t numBytes = read(fd, buffer, sizeof(buffer) - 1);
+	buffer[numBytes] = '\0';
+	std::string orderString(buffer);
+
+	// while (numBytes > 0)
+	// {
+	// 	orderString += std::string(buffer);
+	// 	numBytes = read(fd, buffer, sizeof(buffer) - 1);
+	// 	buffer[numBytes] = '\0';
+	// }
+	if (numBytes < 0)
 	{
-		buffer[numBytes] = '\0';
-		Order order(buffer);
-
-		Cook& cook = _kitchen.begin()->second;
-		auto it = _kitchen.find(order.getCookName());
-		if (it != _kitchen.end())
-			cook = it->second;
-
-		std::string page = order.getPath();
-		Recipe recipe = cook.getRecipe(page);
-		while (!page.empty() && page != recipe.page) //double check this shit
-		{
-			// std::cout << page << std::endl; //DEEBUGGING
-			size_t end = page.find_last_of('/');
-			if (end == std::string::npos)
-				break;
-			else
-				page = page.substr(0, end);
-			recipe = cook.getRecipe(page);
-		}
-		Dish dish(_epoll, order, recipe);
-		_serveCustomer(fd, dish.getMeal());
+		close(fd);
+		orderString = "";
 	}
+	
+	Order order(orderString);
+	const Cook* cook = _kitchen.find(order.getCookName()); //default cook
+	if (cook == nullptr)
+		cook = _kitchen.begin();
+
+	std::string page = order.getPath();
+	Recipe recipe(cook->getRecipe(page));
+	while (!page.empty() && page != recipe.page) //double check this shit
+	{
+		// std::cout << page << std::endl; //DEEBUGGING
+		size_t end = page.find_last_of('/');
+		if (end == std::string::npos)
+			break;
+		else
+			page = page.substr(0, end);
+		recipe = cook->getRecipe(page);
+	}
+	Dish dish(_epoll, order, recipe);
+	_serveCustomer(fd, dish.getMeal());
 }
 
 void Waiter::_serveCustomer(int customerFd, const std::string& meal)

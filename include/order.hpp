@@ -13,8 +13,9 @@
 #ifndef ORDER_HPP
 # define ORDER_HPP
 
-# include "defines.hpp"
 # include <string>
+
+# include "defines.hpp"
 
 /**
  * Parses and contains order data such as method, hostname, table, and body if any
@@ -23,7 +24,7 @@
 class Order
 {
 	public:
-		explicit Order(char *order);
+		explicit Order(std::string order);
 		Order() = delete;
 		Order(Order& other) = delete;
 		~Order() = default;

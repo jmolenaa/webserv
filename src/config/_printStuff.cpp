@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/10 12:25:06 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/10 12:25:06 by jmolenaa      ########   odam.nl         */
+/*   Updated: 2024/06/11 18:02:25 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ void	printRecipe(Recipe const& recipe) {
 void	printLocations(Cookbook cookbook) {
 	std::cout << "--------Default location:----------\n";
 	printRecipe(cookbook["root"]);
-	for (auto recipe : cookbook) {
-		if (recipe.first != "root") {
-			std::cout << "-------Next location-------\n";
-			printRecipe(recipe.second);
-		}
-	}
+	// for (auto recipe : cookbook) {
+	// 	if (recipe.first != "root") {
+	// 		std::cout << "-------Next location-------\n";
+	// 		printRecipe(recipe.second);
+	// 	}
+	// }
 }
 
 void	printAddress(uint32_t address) {
@@ -78,25 +78,25 @@ void	printAddress(uint32_t address) {
 	std::cout << str;
 }
 
-void	printKitchen(Kitchen const& kitchen) {
-	std::cout << BLUE << "\n----------New kitchen-----------\n";
-	std::cout << "Server listening on host ";
-	printAddress(kitchen.begin()->second.getAddress());
-	std::cout << " and port " << ntohs(kitchen.begin()->second.getTable()) << "\n";
-	std::cout << "Default server being " << kitchen.begin()->second.getName() << "\n" << RESET;
-	for (auto& it : kitchen) {
-		Cook cookie;
-		cookie = it.second;
-		std::cout << GREEN << "\n<<<<<<<Next server>>>>>>>\n" << RESET;
-		std::cout << "\nServer name: " << cookie.getName();
-		std::cout << "\nWith locations: \n\n";
-		printLocations(cookie.getCookbook());
-	}
-}
+// void	printKitchen(Kitchen const& kitchen) {
+// 	std::cout << BLUE << "\n----------New kitchen-----------\n";
+// 	std::cout << "Server listening on host ";
+// 	printAddress(kitchen.begin()->getAddress());
+// 	std::cout << " and port " << ntohs(kitchen.begin()->getTable()) << "\n";
+// 	std::cout << "Default server being " << kitchen.begin()->getName() << "\n" << RESET;
+// 	for (Kitchen* it : kitchen) {
+// 		Cook cookie;
+// 		cookie = *it;
+// 		std::cout << GREEN << "\n<<<<<<<Next server>>>>>>>\n" << RESET;
+// 		std::cout << "\nServer name: " << cookie.getName();
+// 		std::cout << "\nWith locations: \n\n";
+// 		printLocations(cookie.getCookbook());
+// 	}
+// }
 
 
 void Menu::printStuff() {
-	for (Kitchen kitchen : this->getKitchens()) {
-		printKitchen(kitchen);
-	}
+	// for (Kitchen kitchen : this->getKitchens()) {
+	// 	printKitchen(kitchen);
+	// }
 }
