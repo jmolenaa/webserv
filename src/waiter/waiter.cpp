@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 14:20:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 15:08:59 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ Waiter::~Waiter()
         close(_waiterFd);
 }
 
+/**
+ * @todo epoll needs to keep checking FDs until they are done reading / have been closed
+ * Consider making a class for reading and writing
+ * 
+ * Places where reading/writing will take place:
+ * Read the request from client
+ * Read the file from root
+ * CGIs read and write through pipes
+ * Write the response to the client
+*/
 void Waiter::work()
 {
 	Log::getInstance().print("Waiter is working with " + std::to_string(_kitchen.size()) + " Cooks in the kitchen");
@@ -39,17 +49,12 @@ void Waiter::work()
     while (true)
 	{
         _epoll.wait_events(-1, events);
-        _handleEvents(events, _epoll.getNumEvents());
-    }
-}
-
-void Waiter::_handleEvents(epoll_event* events, int numEvents)
-{
-    for (int i = 0; i < numEvents; i++)
-	{
-        if (events[i].data.fd == _waiterFd)
-            _welcomeCustomer();
-        else
-            _takeOrder(events[i].data.fd);
+		for (int i = 0; i < _epoll.getNumEvents(); i++)
+		{
+			if (events[i].data.fd == _waiterFd)
+				_welcomeCustomer();
+			else
+				_takeOrder(events[i].data.fd);
+		}
     }
 }

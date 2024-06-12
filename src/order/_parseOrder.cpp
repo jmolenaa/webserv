@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/11 19:21:12 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 15:03:44 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,6 @@ void Order::_extractHost()
 		_table = std::stoi(tmp);
 }
 
-/**
- * @todo Fix this so it works for uploading files
- */
 void Order::_extractContent()
 {
     _contentLength = 0;

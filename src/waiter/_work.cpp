@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:16:25 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/11 19:38:54 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 15:06:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ void Waiter::_welcomeCustomer()
 }
 
 /**
- * @todo fix this shit
+ * @todo needs to go through epoll
+ * move this to be inside Order class? Or make a new class for handling all reading and writing?
+ * First read the request header BUF_LIMIT at a time until it finds "\r\n"
+ * Then parse the content based on the headers CONTENT_LENGTH, BUF_LIMIT at a time (if it's smaller than limit)
 */
 void Waiter::_takeOrder(int fd)
 {
-	//if move this to be inside order, first get header, then get content by size
 	char buffer[2048];
 	ssize_t numBytes = read(fd, buffer, sizeof(buffer) - 1);
 	buffer[numBytes] = '\0';
@@ -67,6 +69,10 @@ void Waiter::_takeOrder(int fd)
 	_serveCustomer(fd, dish.getMeal());
 }
 
+/**
+ * @todo needs to go through epoll
+ * send BUF_LIMIT at a time
+*/
 void Waiter::_serveCustomer(int customerFd, const std::string& meal)
 {
 	Log::getInstance().print("=====SEND=====\n" + meal + "\n=====END=====\n");

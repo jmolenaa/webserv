@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 13:50:41 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 14:58:22 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void Dish::_doMethod(method m)
 
 /**
  * @todo needs to go through epoll
+ * read BUF_LIMIT at a time until done.
 */
 void Dish::_dishToBody()
 {

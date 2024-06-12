@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 14:22:31 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 15:04:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include "sstream"
 
 /**
- * @todo double check routing when config parsing is done
+ * @todo autoindex stuff
+ * 
  */
 void Dish::_get()
 {
