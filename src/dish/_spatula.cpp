@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/10 13:06:41 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 13:50:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void Dish::_dishToBody()
 	}
 	
 	char 	buffer[BUF_LIMIT] = "";
-	
 	ssize_t	count = read(_dishFD, buffer, BUF_LIMIT - 1);
 	while (count)
 	{
+		buffer[count] = '\0';
 		if (count < 0)
 		{
 			_status.updateState(INTERNALERR);
@@ -55,7 +55,7 @@ void Dish::_dishToBody()
 		}
 		std::string append(buffer);
 		_body += append.substr(0, count);
-		count = read(_dishFD, buffer, BUF_LIMIT);
+		count = read(_dishFD, buffer, BUF_LIMIT - 1);
 	}
 	close(_dishFD);
 }

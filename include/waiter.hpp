@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 17:04:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 13:46:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 class Waiter
 {
 	public:
-		explicit Waiter(Epoll& epoll, Kitchen kitchen);
+		Waiter(Epoll& epoll, Kitchen kitchen);
 		Waiter() = delete;
 		~Waiter();
 

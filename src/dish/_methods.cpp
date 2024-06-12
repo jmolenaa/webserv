@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/10 13:22:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 14:22:31 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,16 @@ void Dish::_get()
 	}
 	else
 	{
-		if (_recipe.autoindex)
-			_dishFD = open(_recipe.dir.c_str(), O_RDONLY);
-		else
-		{
+		//if !isDirectory()
+			//return (_status.updateState(UNSUPPORTED));
+
+		// if (_recipe.autoindex)
+			 //do CGI stuff here to list directory contents
+		// else
+		// {
 			std::string index = page + _recipe.index;
 			_dishFD = open(index.c_str(), O_RDONLY);
-		}
+		// }
 	}
 	if (_dishFD < 0)
 		return (_status.updateState(NOTFOUND));
@@ -49,7 +52,7 @@ void Dish::_post()
 		return (_status.updateState(FORBIDDEN));
 	else
 	{	
-		CGI cgi(_order, _status);
+		CGI cgi(*this);
 		_dishFD = cgi.execute();
 	}
 }
@@ -60,7 +63,7 @@ void Dish::_delete()
         return (_status.updateState(FORBIDDEN));
     else
 	{
-		CGI cgi(_order, _status);
+		CGI cgi(*this);
 		_dishFD = cgi.execute();
 	}
 }

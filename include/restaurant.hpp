@@ -25,10 +25,9 @@ public:
 	~Restaurant() = default;
 	
 	void	run();
-	void	oldInit(); // remove later, kept just in case
+	// void	oldInit();
 
 private:
-	void					_initialiseWaiters(std::string const& filename);
 	Epoll 					_epoll;
 	std::vector<Waiter*>	_waiters;
 };

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 12:24:45 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/12 14:20:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void Waiter::work()
 	{
         _epoll.wait_events(-1, events);
         _handleEvents(events, _epoll.getNumEvents());
-    }    
+    }
 }
 
 void Waiter::_handleEvents(epoll_event* events, int numEvents)

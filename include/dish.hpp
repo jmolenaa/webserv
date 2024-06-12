@@ -31,7 +31,7 @@ class Dish
 	}	filetype;
 
 	public:
-		explicit Dish(Epoll& epoll, Order& order, Recipe& recipe);
+		Dish(Epoll& epoll, Order& order, Recipe& recipe);
 		Dish() = delete;
 		~Dish() = default;
 
@@ -59,14 +59,13 @@ class Dish
 		class CGI
 		{
 			public: 
-				explicit CGI(Order& order, Status& status);
+				explicit CGI(Dish& parent);
 				CGI() = delete;
 				
 				int	execute();
 			
 			private:
-				Order&		_order;
-				Status&		_status;
+				Dish&		_parent;
 				std::string _query;
 				std::string	_path;
 				int			_inFD[2];

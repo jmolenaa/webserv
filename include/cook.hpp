@@ -23,16 +23,16 @@ class Cook {
 		Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
 		Cook(const Cook& other);
 		Cook& 		operator=(const Cook& other);
-
-		std::string		getName() const;
-		uint16_t		getTable() const;
-		uint32_t		getAddress() const;
-		Cookbook		getCookbook() const;
+		
 		void			setName(std::string);
 		void			setTable(uint16_t);
 		void			setAddress(uint32_t);
 		void			addToCookbook(Recipe const& newRecipe);
 
+		std::string		getName() const;
+		uint16_t		getTable() const;
+		uint32_t		getAddress() const;
+		Cookbook		getCookbook() const;
 		Recipe			getRecipe(std::string page) const;
 	
 	private:
