@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/03 14:54:16 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/11 18:00:47 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/13 20:12:13 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include "webservException.hpp"
 
 std::string Menu::popFrontToken() {
 	std::string	nextToken = this->getTokens().front();

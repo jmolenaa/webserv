@@ -15,13 +15,12 @@
 
 # include <fcntl.h>
 
-# include "epoll.hpp"
-# include "order.hpp"
+# include "defines.hpp"
 # include "status.hpp"
 # include "recipe.hpp"
-# include "defines.hpp"
+# include "fdHandler.hpp"
 
-class Dish
+class Dish : public FdHandler
 {
 	typedef enum
 	{
@@ -31,16 +30,18 @@ class Dish
 	}	filetype;
 
 	public:
-		Dish(Epoll& epoll, Order& order, Recipe& recipe);
+		Dish(Status& stat, void* order, Recipe& recipe);
 		Dish() = delete;
-		~Dish() = default;
+		~Dish();
 
-		std::string		getMeal();
-	
+		status		input(int eventFD) override;
+		status		output(int eventFD) override;
+
+		std::string tmpGetResponse();
+
 	private:
-		Epoll&			_epoll;
-		Order&			_order;
-		Status			_status;
+		Status&			_status;
+		void*			_order;
 		Recipe			_recipe;
 		int				_dishFD;
 		std::string		_header;

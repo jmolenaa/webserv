@@ -10,16 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "dish.hpp"
+#include <unistd.h>
 
-Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
-	_epoll(epoll), _order(order), _recipe(recipe), _dishFD(-1)
+#include "dish.hpp"
+#include "order.hpp"
+#include "webservException.hpp"
+
+Dish::Dish(Status& stat, void* order, Recipe& recipe) :
+	_status(stat), _order(order), _recipe(recipe), _dishFD(-1)
 {
-	if (_order.getPath().find_last_of('/') == std::string::npos)
+	Order* ord = (Order*)_order;
+	if (ord->getPath().find_last_of('/') == std::string::npos)
 		_status.updateState(BAD);
 	else
 	{
-		method m = order.getMethod();
+		method m = ord->getMethod();
 
 		if ((m & recipe.allowedMethods) == 0)
 			_status.updateState(METHODNOTALLOWED);
@@ -36,8 +41,23 @@ Dish::Dish(Epoll& epoll, Order& order, Recipe& recipe) :
 	_generateHeader();
 }
 
-std::string Dish::getMeal()
+Dish::~Dish(){}
+
+std::string Dish::tmpGetResponse()
 {
 	return (_header + _body);
 }
 
+status	Dish::input(int eventFD)
+{
+	if (eventFD != _dishFD)
+   		throw WebservException("Bad call in Dish input\n");
+	return (OK);
+}
+
+status	Dish::output(int eventFD)
+{
+	if (eventFD != _dishFD)
+   		throw WebservException("Bad call in Dish output\n");
+	return (OK);
+}

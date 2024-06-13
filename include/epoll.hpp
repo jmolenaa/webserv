@@ -20,12 +20,12 @@ class Epoll
 		Epoll();										//create epoll instance
 		~Epoll();										//close epollfd
 
-		void addFd(int fd, uint32_t events); 			//addition of sockets
-		void modifyFd(int fd, uint32_t events);			//modification of sockets
-		void removeFd(int fd);							//removal of sockets
-		void wait_events(int timeout, epoll_event *events);
-		int getNumEvents(); 
-		int getEpollFd();
+		void	addFd(int fd, uint32_t events); 			//addition of sockets
+		void	modifyFd(int fd, uint32_t events);			//modification of sockets
+		void	removeFd(int fd);							//removal of sockets
+		void	wait_events(int timeout, epoll_event *events);
+		int 	getNumEvents(); 
+		int		getEpollFd();
 		epoll_event *getEvents();
 		
 	private:

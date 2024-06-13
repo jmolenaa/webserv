@@ -10,8 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+
 #include "order.hpp"
 #include "log.hpp"
+#include "cook.hpp"
+#include "dish.hpp"
+#include "waiter.hpp"
+#include "webservException.hpp"
 
 /** 
  * read from the socket until you encounter the 0x0D 0x0A sequence of bytes denoting the end of the dish line, which contains the HTTP version, Status Code, and Reason text.
@@ -26,52 +32,102 @@
  * if the dish is not read in full successfully, or if a keep-alive is NOT being used (a Connection: close header is present in an HTTP 1.1 dish, or a Connection: keep-alive header is not present in an HTTP 1.0 dish), then close the socket.
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
-Order::Order(std::string order) : _order(order)
+
+Order::Order(void* wait, int fd) : waiter(wait), _orderFD(fd), _done(false), _dish(nullptr)
+{}
+
+Order::~Order()
 {
-	_extractHeader();
-	_extractMethod();
-	_extractPath();
-	_extractContent();
-	_extractHost();
-	// _printData();
+	if (_dish != nullptr)
+		delete _dish;
 }
 
+status Order::input(int eventFD)
+{
+	if (eventFD != _orderFD)
+		throw WebservException("Order fired bad input FD event\n");
+	if (this->_header.empty())
+		_extractHeader();
+	else
+		_extractBody();
+	if (this->_done)
+	{
+		Log::getInstance().print("\nGOT REQUEST:\n" + this->_header + this->_body);
+		Waiter* wait = (Waiter*)waiter;
+		const Cook* cook = wait->kitchen.find(this->_hostname);
+		if (cook == nullptr)
+			cook = wait->kitchen.begin();
+
+		std::string page = this->_path;
+		Recipe recipe(cook->getRecipe(page));
+		while (!page.empty() && page != recipe.page) //double check this shit
+		{
+			size_t end = page.find_last_of('/');
+			if (end == std::string::npos)
+				break;
+			else
+				page = page.substr(0, end);
+			recipe = cook->getRecipe(page);
+		}
+		this->_dish = new Dish(this->_status, this, recipe);
+		send(this->_orderFD, _dish->tmpGetResponse().c_str(), _dish->tmpGetResponse().size(), 0);
+		close(this->_orderFD);
+		wait->finishOrder(this->_orderFD);
+	}
+	return (OK);
+}
+
+status Order::output(int eventFD)
+{
+	if (eventFD != this->_orderFD)
+		throw WebservException("Order fired bad output FD\n");
+	// if (this->_dish == nullptr)
+	// 	throw WebservException("Order fired bad output without a dish FD\n");
+	// //send order from dish in chunks. Consider piping dish output directly to client?
+	// send(this->_orderFD, _dish->tmpGetResponse().c_str(), _dish->tmpGetResponse().size(), 0);
+	// Waiter* wait = (Waiter*)waiter;
+	// wait->finishOrder(this->_orderFD);
+	return (_status.getState());
+}
+
+//Returns the method GET, POST, DELETE
 method Order::getMethod() const
 {
 	return _method;
 }
 
+//Returns the request path
 std::string Order::getPath() const
 {
-	return _page;
+	return _path;
 }
 
-std::string Order::getCookName() const
-{
-	return _hostname;
-}
-
+//returns the Port number
 uint Order::getTable() const
 {
 	return _table;
 }
 
-std::string Order::getOrder() const
-{
-	return _order;
-}
-
+//returns CONTENT_LENGTH
 uint Order::getLength() const
 {
 	return _contentLength;
 }
 
+//returns CONTENT_TYPE
 std::string Order::getType() const
 {
 	return _contentType;
 }
 
+//returns the body of the request only
 std::string Order::getBody() const
 {
 	return _body;
+}
+
+//returns the full request message
+std::string Order::getOrder() const
+{
+	return _header + _body;
 }

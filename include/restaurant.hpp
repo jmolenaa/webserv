@@ -14,22 +14,32 @@
 # define RESTAURANT_HPP
 
 #include <vector>
+#include <unordered_map>
+
+#include "epoll.hpp"
 #include "waiter.hpp"
 
-class	Restaurant {
+class Restaurant
+{
+	public:
+		explicit Restaurant(std::string const& filename);
+		Restaurant() = delete;
+		Restaurant(Restaurant& other) = delete;
+		~Restaurant() = default;
+		
+		void	run();
+		void	addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType);
 
-public:
-	explicit Restaurant(std::string const& filename);
-	Restaurant() = delete;
-	Restaurant(Restaurant& other) = delete;
-	~Restaurant() = default;
+	private:
+		Epoll	_epoll;
 	
-	void	run();
-	// void	oldInit();
+		std::vector<Waiter*>	_waiters;
 
-private:
-	Epoll 					_epoll;
-	std::vector<Waiter*>	_waiters;
+		std::unordered_map<int, FdHandler*>	_In;
+		std::unordered_map<int, FdHandler*>	_Out;
+
+		void	_handleInput(int eventFD);
+		void	_handleOutput(int eventFD);
 };
 
 #endif

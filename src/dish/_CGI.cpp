@@ -6,21 +6,24 @@
 
 #include "log.hpp"
 #include "dish.hpp"
+#include "webservException.hpp"
+#include "order.hpp"
 
 Dish::CGI::CGI(Dish& parent) : _parent(parent)
 {
 	try
 	{
-		size_t	qpos = _parent._order.getPath().find('?');
+		Order* ord = (Order*)_parent._order;
+		size_t	qpos = ord->getPath().find('?');
 		if (qpos == std::string::npos)
 		{
-			_path = _parent._order.getPath().substr(1);
-			_query = _parent._order.getBody();
+			_path = ord->getPath().substr(1);
+			_query = ord->getBody();
 		}
 		else
 		{
-			_path = _parent._order.getPath().substr(1, qpos);
-			_query = _parent._order.getPath().substr(qpos + 1);
+			_path = ord->getPath().substr(1, qpos);
+			_query = ord->getPath().substr(qpos + 1);
 		}
 		_setEnv();
 	}
@@ -31,7 +34,8 @@ Dish::CGI::CGI(Dish& parent) : _parent(parent)
 
 void Dish::CGI::_setEnv()
 {
-	switch (_parent._order.getMethod())
+	Order* ord = (Order*)_parent._order;
+	switch (ord->getMethod())
 	{
 		case GET:
 			_vec.push_back("REQUEST_METHOD=GET");
@@ -45,8 +49,8 @@ void Dish::CGI::_setEnv()
 		default:
 			throw WebservException("Something real bad went down");
 	}
-	_vec.push_back("CONTENT_TYPE=" + _parent._order.getType());
-	_vec.push_back("CONTENT_LENGTH=" + std::to_string(_parent._order.getLength()));
+	_vec.push_back("CONTENT_TYPE=" + ord->getType());
+	_vec.push_back("CONTENT_LENGTH=" + std::to_string(ord->getLength()));
 	_vec.push_back("QUERY_STRING=" + _query);
 	_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	_vec.push_back("SCRIPT_NAME=" + _path);
@@ -84,9 +88,10 @@ int Dish::CGI::execute()
 		_execError("This should NEVER happen.", std::string(std::strerror(errno)));
 	}
 
+	Order* ord = (Order*)_parent._order;
 	close(_outFD[1]);
 	close(_inFD[0]);
-	write(_inFD[1], _parent._order.getOrder().c_str(), _parent._order.getOrder().size());
+	write(_inFD[1], ord->getOrder().c_str(), ord->getOrder().size());
 	close(_inFD[1]);
 	waitpid(_pid, NULL, 0);
 	_freeEnv();

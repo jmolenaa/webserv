@@ -6,12 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 15:04:20 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/13 20:04:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dish.hpp"
 #include "sstream"
+#include "order.hpp"
 
 /**
  * @todo autoindex stuff
@@ -19,7 +20,8 @@
  */
 void Dish::_get()
 {
-	std::string page = _recipe.root + _order.getPath();
+	Order* ord = (Order*)_order;
+	std::string page = _recipe.root + ord->getPath();
 	size_t pos = page.find_last_of('.');
 	if (pos != std::string::npos)
 	{
@@ -48,8 +50,9 @@ void Dish::_get()
 
 void Dish::_post()
 {
-	if (_order.getPath().find("/cgi-bin/post.cgi") != 0
-		&& _order.getPath().find("/cgi-bin/upload.cgi") != 0)
+	Order* ord = (Order*)_order;
+	if (ord->getPath().find("/cgi-bin/post.cgi") != 0
+		&& ord->getPath().find("/cgi-bin/upload.cgi") != 0)
 		return (_status.updateState(FORBIDDEN));
 	else
 	{	
@@ -60,7 +63,8 @@ void Dish::_post()
 
 void Dish::_delete()
 {
-    if (_order.getPath().find("/cgi-bin/delete.cgi") != 0)
+	Order* ord = (Order*)_order;
+    if (ord->getPath().find("/cgi-bin/delete.cgi") != 0)
         return (_status.updateState(FORBIDDEN));
     else
 	{

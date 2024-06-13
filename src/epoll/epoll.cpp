@@ -76,6 +76,7 @@ void Epoll::modifyFd(int fd, uint32_t events)
 void Epoll::removeFd(int fd)
 {
     std::cout<<"epoll remove fd"<<std::endl;
+	close(fd);
     if (epoll_ctl(_epollfd, EPOLL_CTL_DEL, fd, nullptr) == -1)
     {
         throw (WebservException("Failed to remove file descriptor in epoll"));
