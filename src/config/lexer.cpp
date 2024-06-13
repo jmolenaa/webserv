@@ -37,6 +37,9 @@ std::deque<std::string> Lexer::lex() {
 	std::string				buffer;
 
 	while (std::getline(this->_file, buffer)) {
+		if (buffer[0] == '#') {
+			continue;
+		}
 
 		size_t	endPosition = 0;
 		size_t	startPosition = 0;

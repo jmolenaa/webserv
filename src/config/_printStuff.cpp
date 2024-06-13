@@ -48,6 +48,8 @@ void	printRecipe(Recipe const& recipe) {
 	std::cout << "name: " << recipe.page << "\n";
 	std::cout << "root: " << recipe.root << "\n";
 	std::cout << "index: " << recipe.index << "\n";
+	std::cout << "upload directory: " << recipe.uploadDir << "\n";
+	std::cout << "upload allowed: " << std::boolalpha << recipe.allowUploading << "\n";
 	std::cout << "allowed_methods: ";
 	printMethods(recipe.allowedMethods);
 	std::cout << "client body size: " << recipe.maxBodySize << "\n";
@@ -62,12 +64,13 @@ void	printRecipe(Recipe const& recipe) {
 void	printLocations(Cookbook cookbook) {
 	std::cout << "--------Default location:----------\n";
 	printRecipe(cookbook["root"]);
-	// for (auto recipe : cookbook) {
-	// 	if (recipe.first != "root") {
-	// 		std::cout << "-------Next location-------\n";
-	// 		printRecipe(recipe.second);
-	// 	}
-	// }
+	 for (size_t i = 0; i < cookbook.size(); ++i) {
+		std::string recipePage = cookbook.at(i).page;
+	 	if (recipePage != "root") {
+	 		std::cout << "-------Next location-------\n";
+	 		printRecipe(cookbook[recipePage]);
+	 	}
+	 }
 }
 
 void	printAddress(uint32_t address) {
@@ -78,25 +81,24 @@ void	printAddress(uint32_t address) {
 	std::cout << str;
 }
 
-// void	printKitchen(Kitchen const& kitchen) {
-// 	std::cout << BLUE << "\n----------New kitchen-----------\n";
-// 	std::cout << "Server listening on host ";
-// 	printAddress(kitchen.begin()->getAddress());
-// 	std::cout << " and port " << ntohs(kitchen.begin()->getTable()) << "\n";
-// 	std::cout << "Default server being " << kitchen.begin()->getName() << "\n" << RESET;
-// 	for (Kitchen* it : kitchen) {
-// 		Cook cookie;
-// 		cookie = *it;
-// 		std::cout << GREEN << "\n<<<<<<<Next server>>>>>>>\n" << RESET;
-// 		std::cout << "\nServer name: " << cookie.getName();
-// 		std::cout << "\nWith locations: \n\n";
-// 		printLocations(cookie.getCookbook());
-// 	}
-// }
+ void	printKitchen(Kitchen kitchen) {
+ 	std::cout << BLUE << "\n----------New kitchen-----------\n";
+ 	std::cout << "Server listening on host ";
+ 	printAddress(kitchen.begin()->getAddress());
+ 	std::cout << " and port " << ntohs(kitchen.begin()->getTable()) << "\n";
+ 	std::cout << "Default server being " << kitchen.begin()->getName() << "\n" << RESET;
+ 	for (size_t i = 0; i < kitchen.size(); ++i) {
+ 		Cook const cookie = kitchen.at(i);
+ 		std::cout << GREEN << "\n<<<<<<<Next server>>>>>>>\n" << RESET;
+ 		std::cout << "\nServer name: " << cookie.getName();
+ 		std::cout << "\nWith locations: \n\n";
+ 		printLocations(cookie.getCookbook());
+ 	}
+ }
 
 
 void Menu::printStuff() {
-	// for (Kitchen kitchen : this->getKitchens()) {
-	// 	printKitchen(kitchen);
-	// }
+	 for (const auto & i : this->getKitchens()) {
+	 	printKitchen(i);
+	 }
 }
