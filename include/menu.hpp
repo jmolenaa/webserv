@@ -74,6 +74,8 @@ public:
 	void	allowedMethodsDirective();
 	void	uploadDirDirective();
 	void	allowUploadDirective();
+	void	cgiExtensionDirective();
+	void	allowCgiDirective();
 	void	closeBracketDirective();
 
 	// helper functions for directives

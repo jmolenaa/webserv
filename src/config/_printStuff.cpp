@@ -50,6 +50,8 @@ void	printRecipe(Recipe const& recipe) {
 	std::cout << "index: " << recipe.index << "\n";
 	std::cout << "upload directory: " << recipe.uploadDir << "\n";
 	std::cout << "upload allowed: " << std::boolalpha << recipe.allowUploading << "\n";
+	std::cout << "cgi extension: " << recipe.cgiExtension << "\n";
+	std::cout << "cgi allowed: " << std::boolalpha << recipe.allowCgi << "\n";
 	std::cout << "allowed_methods: ";
 	printMethods(recipe.allowedMethods);
 	std::cout << "client body size: " << recipe.maxBodySize << "\n";

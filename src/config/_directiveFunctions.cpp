@@ -135,6 +135,16 @@ void Menu::uploadDirDirective() {
 	this->getCurrentRecipe()->uploadDir = this->popFrontToken();
 }
 
+void Menu::cgiExtensionDirective() {
+	this->validateDirectiveSyntax("cgi_extension", 2, ";");
+	this->getCurrentRecipe()->cgiExtension = this->popFrontToken();
+}
+
+void Menu::allowCgiDirective() {
+	this->validateDirectiveSyntax("allow_cgi", 2, ";");
+	setAndValidateBoolValue(this->popFrontToken(), this->getCurrentRecipe()->allowCgi, "allow_cgi");
+}
+
 void Menu::closeBracketDirective() {
 	if (this->getState() == LOCATION_STATE) {
 		this->closeLocation();
