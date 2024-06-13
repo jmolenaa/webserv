@@ -71,16 +71,7 @@ void Menu::errorPageDirective() {
 
 void Menu::autoIndexDirective() {
 	this->validateDirectiveSyntax("autoindex", 2, ";");
-	std::string	autoIndexValue = this->popFrontToken();
-	if (autoIndexValue != "off" && autoIndexValue != "on") {
-		throw WebservException("Webserv: configuration file: invalid value '" + autoIndexValue + "' in 'autoindex' directive, should be 'on' or 'off'\n");
-	}
-	if (autoIndexValue == "off") {
-		this->getCurrentRecipe()->autoindex = false;
-	}
-	else {
-		this->getCurrentRecipe()->autoindex = true;
-	}
+	setAndValidateBoolValue(this->popFrontToken(), this->getCurrentRecipe()->autoindex, "autoindex");
 }
 
 void Menu::clientMaxBodySizeDirective() {
@@ -132,6 +123,16 @@ void Menu::allowedMethodsDirective() {
 		allowedMethodsBits |= methodBit;
 	}
 	this->getCurrentRecipe()->allowedMethods = allowedMethodsBits;
+}
+
+void Menu::allowUploadDirective() {
+	this->validateDirectiveSyntax("allow_upload", 2, ";");
+	setAndValidateBoolValue(this->popFrontToken(), this->getCurrentRecipe()->allowUploading, "allow_upload");
+}
+
+void Menu::uploadDirDirective() {
+	this->validateDirectiveSyntax("upload_dir", 2, ";");
+	this->getCurrentRecipe()->uploadDir = this->popFrontToken();
 }
 
 void Menu::closeBracketDirective() {

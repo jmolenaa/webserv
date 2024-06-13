@@ -26,6 +26,7 @@ struct Recipe
 	std::string root;
 	std::string	index;
 	std::string uploadDir;
+	bool		allowUploading;
 	short		allowedMethods;
 	size_t		maxBodySize;
 	bool		autoindex;
@@ -33,7 +34,7 @@ struct Recipe
 	std::pair<status, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Recipe() :page("root"), root("root"), index("index.html"), uploadDir("root/orders/"),
+	Recipe() :page("root"), root("root"), index("index.html"), uploadDir("root/orders/"), allowUploading(true),
 		allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
@@ -56,6 +57,8 @@ struct Recipe
 		this->page = other.page;
 		this->root = other.root;
 		this->index = other.index;
+		this->uploadDir = other.uploadDir;
+		this->allowUploading = other.allowUploading;
 		this->allowedMethods = other.allowedMethods;
 		this->maxBodySize = other.maxBodySize;
 		this->autoindex = other.autoindex;
@@ -73,6 +76,8 @@ struct Recipe
 		this->page = other.page;
 		this->root = other.root;
 		this->index = other.index;
+		this->uploadDir = other.uploadDir;
+		this->allowUploading = other.allowUploading;
 		this->allowedMethods = other.allowedMethods;
 		this->maxBodySize = other.maxBodySize;
 		this->autoindex = other.autoindex;

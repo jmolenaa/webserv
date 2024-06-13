@@ -110,6 +110,19 @@ void Menu::setNewPort(const std::string &newPort, std::string const& ipAndPort) 
 	this->getCurrentCook()->setTable(htons(newPortNumber));
 }
 
+void Menu::setAndValidateBoolValue(std::string const& stringValue, bool &valueToSet, const std::string &directive) {
+	if (stringValue != "off" && stringValue != "on") {
+		throw WebservException("Webserv: configuration file: invalid value '" + stringValue + "' in '" + directive + "' directive, should be 'on' or 'off'\n");
+	}
+	if (stringValue == "off") {
+		valueToSet = false;
+	}
+	else {
+		valueToSet = true;
+	}
+
+}
+
 void Menu::closeLocation() {
 	this->getCurrentCook()->addToCookbook(*this->getCurrentRecipe());
 	this->setCurrentRecipe(nullptr);

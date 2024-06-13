@@ -72,6 +72,8 @@ public:
 	void	returnDirective();
 	void	rootDirective();
 	void	allowedMethodsDirective();
+	void	uploadDirDirective();
+	void	allowUploadDirective();
 	void	closeBracketDirective();
 
 	// helper functions for directives
@@ -85,6 +87,7 @@ public:
 	void			closeServer();
 	void			addToKitchen(Cook const& newCook);
 	void			printStuff();
+	static void		setAndValidateBoolValue(std::string const& stringValue, bool& valueToSet, std::string const& directive);
 
 private:
 
