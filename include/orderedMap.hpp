@@ -55,7 +55,7 @@ class orderedMap
 			keys.erase(std::remove(keys.begin(), keys.end(), key), keys.end());
 		}
 
-		Value& at(size_t pos) const
+		Value& at(size_t pos)
 		{
 			return (map.at(keys.at(pos)));
 		}
