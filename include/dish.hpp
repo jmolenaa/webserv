@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RESPONSE_HPP
-# define RESPONSE_HPP
+#ifndef DISH_HPP
+# define DISH_HPP
 
 # include <fcntl.h>
 
@@ -19,6 +19,7 @@
 # include "status.hpp"
 # include "recipe.hpp"
 # include "fdHandler.hpp"
+# include "order.hpp"
 
 class Dish : public FdHandler
 {
@@ -30,20 +31,18 @@ class Dish : public FdHandler
 	}	filetype;
 
 	public:
-		Dish(Status& stat, void* order, Recipe& recipe);
+		Dish(Order& order, Recipe& recipe, void* restaurantPointer);
 		Dish() = delete;
 		~Dish();
 
-		status		input(int eventFD) override;
-		status		output(int eventFD) override;
+		void		input(int eventFD) override;
+		void		output(int eventFD) override;
 
 		std::string tmpGetResponse();
 
 	private:
-		Status&			_status;
-		void*			_order;
-		Recipe			_recipe;
-		int				_dishFD;
+		Order&			_order;
+		Recipe&			_recipe;
 		std::string		_header;
 		std::string		_body;
 

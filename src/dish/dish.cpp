@@ -14,28 +14,28 @@
 
 #include "dish.hpp"
 #include "order.hpp"
+#include "waiter.hpp"
 #include "webservException.hpp"
 
-Dish::Dish(Status& stat, void* order, Recipe& recipe) :
-	_status(stat), _order(order), _recipe(recipe), _dishFD(-1)
+Dish::Dish(Order& order, Recipe& recipe, void* restuarantPointer)
+	: FdHandler(restuarantPointer), _order(order), _recipe(recipe)
 {
-	Order* ord = (Order*)_order;
-	if (ord->getPath().find_last_of('/') == std::string::npos)
-		_status.updateState(BAD);
+	if (_order.getPath().find_last_of('/') == std::string::npos)
+		_order.status.updateState(BAD);
 	else
 	{
-		method m = ord->getMethod();
+		method m = _order.getMethod();
 
 		if ((m & recipe.allowedMethods) == 0)
-			_status.updateState(METHODNOTALLOWED);
+			order.status.updateState(METHODNOTALLOWED);
 		else
 			_doMethod(m);
 	}
-	if (_status.getState() != OK)
+	if (order.status.getState() != OK)
 	{
-		std::string errfile = _recipe.errorPaths[_status.getState()];
-		close(_dishFD);
-		_dishFD = open(errfile.c_str(), O_RDONLY);
+		std::string errfile = _recipe.errorPaths[order.status.getState()];
+		close(_outFD);
+		_outFD = open(errfile.c_str(), O_RDONLY);
 	}
 	_dishToBody();
 	_generateHeader();
@@ -48,16 +48,14 @@ std::string Dish::tmpGetResponse()
 	return (_header + _body);
 }
 
-status	Dish::input(int eventFD)
+void	Dish::input(int eventFD)
 {
-	if (eventFD != _dishFD)
+	if (eventFD != _inFD)
    		throw WebservException("Bad call in Dish input\n");
-	return (OK);
 }
 
-status	Dish::output(int eventFD)
+void	Dish::output(int eventFD)
 {
-	if (eventFD != _dishFD)
+	if (eventFD != _inFD)
    		throw WebservException("Bad call in Dish output\n");
-	return (OK);
 }

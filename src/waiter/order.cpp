@@ -10,13 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "order.hpp"
 #include <unistd.h>
 
-#include "order.hpp"
 #include "log.hpp"
+#include "restaurant.hpp"
 #include "cook.hpp"
-#include "dish.hpp"
 #include "waiter.hpp"
+#include "dish.hpp"
 #include "webservException.hpp"
 
 /** 
@@ -33,18 +34,20 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Order::Order(void* wait, int fd) : waiter(wait), _orderFD(fd), _done(false), _dish(nullptr)
-{}
-
-Order::~Order()
+Order::Order(void* waiterPointer, int fd, void* restaurantPointer) : FdHandler(restaurantPointer), _wP(waiterPointer), _done(false)
 {
-	if (_dish != nullptr)
-		delete _dish;
+	this->_inFD = fd;
+	
+	Restaurant* restaurant = (Restaurant*)this->resP;
+	restaurant->addFdHandler(_inFD, this, EPOLLIN);
 }
 
-status Order::input(int eventFD)
+Order::~Order() {}
+
+//taking the order
+void Order::input(int eventFD)
 {
-	if (eventFD != _orderFD)
+	if (eventFD != _inFD)
 		throw WebservException("Order fired bad input FD event\n");
 	if (this->_header.empty())
 		_extractHeader();
@@ -52,34 +55,17 @@ status Order::input(int eventFD)
 		_extractBody();
 	if (this->_done)
 	{
+		Restaurant* restaurant = (Restaurant*)this->resP;
+		restaurant->removeFdHander(_inFD);
 		Log::getInstance().print("\nGOT REQUEST:\n" + this->_header + this->_body);
-		Waiter* wait = (Waiter*)waiter;
-		const Cook* cook = wait->kitchen.find(this->_hostname);
-		if (cook == nullptr)
-			cook = wait->kitchen.begin();
-
-		std::string page = this->_path;
-		Recipe recipe(cook->getRecipe(page));
-		while (!page.empty() && page != recipe.page) //double check this shit
-		{
-			size_t end = page.find_last_of('/');
-			if (end == std::string::npos)
-				break;
-			else
-				page = page.substr(0, end);
-			recipe = cook->getRecipe(page);
-		}
-		this->_dish = new Dish(this->_status, this, recipe);
-		send(this->_orderFD, _dish->tmpGetResponse().c_str(), _dish->tmpGetResponse().size(), 0);
-		close(this->_orderFD);
-		wait->finishOrder(this->_orderFD);
+		Waiter* waiter = (Waiter*)_wP;
+		waiter->prepOrder(_outFD);
 	}
-	return (OK);
 }
 
-status Order::output(int eventFD)
+void Order::output(int eventFD)
 {
-	if (eventFD != this->_orderFD)
+	if (eventFD != this->_outFD)
 		throw WebservException("Order fired bad output FD\n");
 	// if (this->_dish == nullptr)
 	// 	throw WebservException("Order fired bad output without a dish FD\n");
@@ -87,7 +73,7 @@ status Order::output(int eventFD)
 	// send(this->_orderFD, _dish->tmpGetResponse().c_str(), _dish->tmpGetResponse().size(), 0);
 	// Waiter* wait = (Waiter*)waiter;
 	// wait->finishOrder(this->_orderFD);
-	return (_status.getState());
+	// return (_status.getState());
 }
 
 //Returns the method GET, POST, DELETE
@@ -106,6 +92,12 @@ std::string Order::getPath() const
 uint Order::getTable() const
 {
 	return _table;
+}
+
+//returns the hostname
+std::string Order::getHostname() const
+{
+	return _hostname;
 }
 
 //returns CONTENT_LENGTH

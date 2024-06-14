@@ -6,36 +6,38 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/13 20:17:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 13:47:28 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
 #include "order.hpp"
+#include "waiter.hpp"
 #include "log.hpp"
 
 void Order::_extractHeader()
 {
-	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
 		_done = true;
-		_status.updateState(INTERNALERR);
+		status.updateState(INTERNALERR);
 	}
 	else
 	{
 		_buffer[count] = '\0';
 		_bufStr += std::string(_buffer);
 		size_t pos = _bufStr.find("\r\n\r\n");
-		if (pos != std::string::npos)
-		{
-			pos += 4;
-			_header = _bufStr.substr(0, pos);
-			if (pos != _bufStr.size())
-				_body += _bufStr.substr(pos);
-			_parseHeader();
+		if (pos == std::string::npos) {
+			return;
 		}
+		pos += 4;
+		_header = _bufStr.substr(0, pos);
+		if (pos != _bufStr.size())
+			_body += _bufStr.substr(pos);
+		_bufStr = "";
+		_parseHeader();
 	}
 }
 
@@ -102,22 +104,22 @@ void Order::_extractHost()
 
 void Order::_extractBody()
 {
-	if (_body.size() == _contentLength)
+	if (_body.size() >= _contentLength)
+	{
 		_done = true;
+		return ;
+	}
+	
+	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
+	if (count < 0)
+	{
+		_done = true;
+		status.updateState(INTERNALERR);		
+	}
 	else
 	{
-		ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
-		if (count < 0)
-		{
-			_done = true;
-			_status.updateState(INTERNALERR);
-		}
-		else
-		{
-			_buffer[count] = '\0';
-			_bufStr += std::string(_buffer);
-			_body += _bufStr;
-		}
+		_buffer[count] = '\0';
+		_body += std::string(_buffer);
 	}
 }
 

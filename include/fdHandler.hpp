@@ -23,8 +23,8 @@ class FdHandler
 		FdHandler(void* restaurantPointer);
 		virtual ~FdHandler();
 
-		virtual status input(int eventFD) = 0;
-		virtual status output(int eventFD) = 0;
+		virtual void input(int eventFD) = 0;
+		virtual void output(int eventFD) = 0;
 
 		int	getIn();
 		int getOut();

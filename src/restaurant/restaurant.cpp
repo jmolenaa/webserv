@@ -79,5 +79,5 @@ void Restaurant::removeFdHander(int fd)
 	_Out.erase(fd);
 	_In.erase(fd);
 	_epoll.removeFd(fd);
-	close(fd);
+	// close(fd);
 }

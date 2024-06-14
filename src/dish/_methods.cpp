@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/13 20:04:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 14:14:17 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,15 @@
  */
 void Dish::_get()
 {
-	Order* ord = (Order*)_order;
-	std::string page = _recipe.root + ord->getPath();
+	std::string page = _recipe.root + _order.getPath();
 	size_t pos = page.find_last_of('.');
 	if (pos != std::string::npos)
 	{
 		std::string type = page.substr(pos + 1);
 		if (type != "html")
-			return (_status.updateState(UNSUPPORTED));
+			return (_order.status.updateState(UNSUPPORTED));
 	
-		_dishFD = open(page.c_str(), O_RDONLY);
+		_inFD = open(page.c_str(), O_RDONLY);
 	}
 	else
 	{
@@ -41,34 +40,32 @@ void Dish::_get()
 		// else
 		// {
 			std::string index = page + _recipe.index;
-			_dishFD = open(index.c_str(), O_RDONLY);
+			_inFD = open(index.c_str(), O_RDONLY);
 		// }
 	}
-	if (_dishFD < 0)
-		return (_status.updateState(NOTFOUND));
+	if (_inFD < 0)
+		return (_order.status.updateState(NOTFOUND));
 }
 
 void Dish::_post()
 {
-	Order* ord = (Order*)_order;
-	if (ord->getPath().find("/cgi-bin/post.cgi") != 0
-		&& ord->getPath().find("/cgi-bin/upload.cgi") != 0)
-		return (_status.updateState(FORBIDDEN));
+	if (_order.getPath().find("/cgi-bin/post.cgi") != 0
+		&& _order.getPath().find("/cgi-bin/upload.cgi") != 0)
+		return (_order.status.updateState(FORBIDDEN));
 	else
 	{	
 		CGI cgi(*this);
-		_dishFD = cgi.execute();
+		_inFD = cgi.execute();
 	}
 }
 
 void Dish::_delete()
 {
-	Order* ord = (Order*)_order;
-    if (ord->getPath().find("/cgi-bin/delete.cgi") != 0)
-        return (_status.updateState(FORBIDDEN));
+    if (_order.getPath().find("/cgi-bin/delete.cgi") != 0)
+        return (_order.status.updateState(FORBIDDEN));
     else
 	{
 		CGI cgi(*this);
-		_dishFD = cgi.execute();
+		_inFD = cgi.execute();
 	}
 }

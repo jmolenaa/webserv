@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/13 20:05:22 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 13:55:46 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include "status.hpp"
 # include "order.hpp"
 # include "cook.hpp"
+# include "dish.hpp"
 
 class Waiter : public FdHandler
 {
@@ -29,17 +30,17 @@ class Waiter : public FdHandler
 		Waiter() = delete;
 		~Waiter();
 
-		status	input(int eventFD) override;
-		status	output(int eventFD) override;
+		void	input(int eventFD) override;
+		void	output(int eventFD) override;
 
-		const Kitchen	kitchen;
-		void*			restaurant;
-
+		void	prepOrder(int orderFD);
 		void	finishOrder(int orderFD);
 
+		const Kitchen	kitchen;
+
 	private:
-		int									_waiterFD;	
-		std::unordered_map<int, Order*> 	_orders;
+		std::unordered_map<int, Order*> _orders;
+		std::unordered_map<int, Dish*>	_dishes;
 };
 
 #endif

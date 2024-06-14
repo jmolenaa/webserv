@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/13 20:03:09 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 14:13:47 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void Dish::_doMethod(method m)
 			_delete();
 			break;
 		default:
-			_status.updateState(METHODNOTALLOWED);
+			_order.status.updateState(METHODNOTALLOWED);
 			return;
 	}
 }
@@ -40,32 +40,32 @@ void Dish::_doMethod(method m)
 void Dish::_dishToBody()
 {
 	_body = "\r\n";
-	if (_dishFD == -1)
+	if (_inFD == -1)
 	{
 		_body += "INTERNAL ERROR";
-		_status.updateState(INTERNALERR);
+		_order.status.updateState(INTERNALERR);
 	}
 	
 	char 	buffer[BUF_LIMIT] = "";
-	ssize_t	count = read(_dishFD, buffer, BUF_LIMIT - 1);
+	ssize_t	count = read(_inFD, buffer, BUF_LIMIT - 1);
 	while (count)
 	{
 		buffer[count] = '\0';
 		if (count < 0)
 		{
-			_status.updateState(INTERNALERR);
+			_order.status.updateState(INTERNALERR);
 			break;
 		}
 		std::string append(buffer);
 		_body += append.substr(0, count);
-		count = read(_dishFD, buffer, BUF_LIMIT - 1);
+		count = read(_inFD, buffer, BUF_LIMIT - 1);
 	}
-	close(_dishFD);
+	close(_inFD);
 }
 
 void	Dish::_generateHeader()
 {
-	_header += "HTTP/1.1 " + std::to_string(_status.getStatNum()) + " " + _status.getStatMessage() + "\r\n";
+	_header += "HTTP/1.1 " + std::to_string(_order.status.getStatNum()) + " " + _order.status.getStatMessage() + "\r\n";
 	_header += "Content-Type: text/html \r\n";
 	_header += "Content-Length: " + std::to_string(_body.size()) + "\r\n";
 	_header += "Connection: Closed\r\n";
