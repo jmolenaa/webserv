@@ -26,6 +26,12 @@ Restaurant::Restaurant(std::string const& filename)
 	}
 }
 
+Restaurant::~Restaurant()
+{
+	for (auto waiter : _waiters)
+		delete waiter;
+}
+
 void Restaurant::run()
 {
     epoll_event events[CLI_LIMIT];
@@ -66,4 +72,12 @@ void Restaurant::addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType)
 		_Out[fd] = fdhandler;
 	}
 	_epoll.addFd(fd, eventType);
+}
+
+void Restaurant::removeFdHander(int fd)
+{
+	_Out.erase(fd);
+	_In.erase(fd);
+	_epoll.removeFd(fd);
+	close(fd);
 }

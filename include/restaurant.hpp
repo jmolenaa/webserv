@@ -25,10 +25,11 @@ class Restaurant
 		explicit Restaurant(std::string const& filename);
 		Restaurant() = delete;
 		Restaurant(Restaurant& other) = delete;
-		~Restaurant() = default;
+		~Restaurant();
 		
 		void	run();
 		void	addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType);
+		void	removeFdHander(int fd);
 
 	private:
 		Epoll	_epoll;

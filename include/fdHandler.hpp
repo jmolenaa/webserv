@@ -18,9 +18,21 @@
 class FdHandler
 {
 	public:
-		virtual ~FdHandler() = default;
+		void*	resP;
+
+		FdHandler(void* restaurantPointer);
+		virtual ~FdHandler();
+
 		virtual status input(int eventFD) = 0;
 		virtual status output(int eventFD) = 0;
+
+		int	getIn();
+		int getOut();
+	
+	protected:
+		int	_inFD;
+		int _outFD;
+
 };
 
 #endif
