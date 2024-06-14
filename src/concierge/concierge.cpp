@@ -19,6 +19,7 @@ EPOLLERR: Error condition happened on the associated file descriptor.
 EPOLLET: Sets the Edge Triggered behavior for the associated file descriptor. The default behavior for epoll is Level Triggered.
 EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs.
 */
+#include <cstring>
 
 #include "concierge.hpp"
 #include <iostream>
@@ -30,7 +31,7 @@ Concierge::Concierge()
     _numEvents = 0;
     if (_epollfd == -1)
     {
-        throw (WebservException("Failed to create epoll"));
+        throw (WebservException("Failed to create epoll" + std::string(std::strerror(errno))));
     }
 }
 
@@ -40,12 +41,6 @@ Concierge::~Concierge()
         close(_epollfd);
 }
 
-/* 
-example:
-epoll.addFd(newSocket, EPOLLIN | EPOLLET);
-// add new socket with edge-triggered bahavior
- */
-
 void Concierge::addFd(int fd, uint32_t events)
 {
     Log::getInstance().print("Concierge is monitoring fd " + std::to_string(fd));
@@ -54,7 +49,8 @@ void Concierge::addFd(int fd, uint32_t events)
     event.data.fd = fd;
     if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1)
     {
-        throw (WebservException("Failed to add file descriptor to epoll"));
+		Log::getInstance().print("THrowing A TANTRUM");
+        throw WebservException("Could not add fd to epoll: " + std::string(std::strerror(errno)));
     }
 }
 
@@ -75,7 +71,7 @@ void Concierge::removeFd(int fd)
     Log::getInstance().print("Concierge will stop monitoring fd " + std::to_string(fd) + "\n");
     if (epoll_ctl(_epollfd, EPOLL_CTL_DEL, fd, nullptr) == -1)
     {
-        throw (WebservException("Failed to remove file descriptor from epoll"));
+        throw WebservException("Failed to remove fd to epoll: " + std::string(std::strerror(errno)));
     }
 }
 
@@ -85,7 +81,7 @@ void Concierge::wait(int timeout, epoll_event *events)
     Log::getInstance().print("Concierge is waiting on " + std::to_string(_numEvents) + " events");
     if (_numEvents < 0)
     {
-        throw (WebservException("epoll wait error"));
+        throw (WebservException("Epoll wait error" + std::string(std::strerror(errno))));
     }
 }
 

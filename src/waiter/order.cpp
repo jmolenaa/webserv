@@ -47,7 +47,9 @@ Order::Order(void* waiterPointer, int fd, void* restaurantPointer)
 	restaurant->addFdHandler(_inFD, this, EPOLLIN);
 }
 
-Order::~Order() {}
+Order::~Order() {
+	delete _dish;
+}
 
 //taking the order
 void Order::input(int eventFD)
@@ -63,25 +65,31 @@ void Order::input(int eventFD)
 	if (this->_done)
 	{
 		_printData();
-		Restaurant* restaurant = (Restaurant*)this->resP;
-		restaurant->removeFdHander(_inFD);
-
-		Waiter* waiter = (Waiter*)_wP;
-		waiter->prepOrder(_outFD);
+		// Restaurant* restaurant = (Restaurant*)this->resP;
+		// restaurant->removeFdHander(this->_inFD);
+		_prepDish();
 	}
 }
 
-void Order::output(int eventFD)
+//find the correct recipe / location
+void Order::_prepDish()
 {
-	if (eventFD != this->_outFD)
-		throw WebservException("Order fired bad output FD\n");
-	// if (this->_dish == nullptr)
-	// 	throw WebservException("Order fired bad output without a dish FD\n");
-	// //send order from dish in chunks. Consider piping dish output directly to client?
-	// send(this->_orderFD, _dish->tmpGetResponse().c_str(), _dish->tmpGetResponse().size(), 0);
-	// Waiter* wait = (Waiter*)waiter;
-	// wait->finishOrder(this->_orderFD);
-	// return (_status.getState());
+	Waiter* waiter = (Waiter*)_wP;
+	const Cook* cook = waiter->kitchen.find(_hostname);
+	if (cook == nullptr)
+		cook = waiter->kitchen.begin();
+	std::string page = _path;
+	Recipe recipe(cook->getRecipe(page));
+	while (!page.empty() && page != recipe.page) //double check this shit
+	{
+		size_t end = page.find_last_of('/');
+		if (end == std::string::npos)
+			break;
+		else
+			page = page.substr(0, end);
+		recipe = cook->getRecipe(page);
+	}
+	_dish = new Dish(*this, recipe, this->resP);
 }
 
 void Order::orderDone()
@@ -137,4 +145,11 @@ std::string Order::getBody() const
 std::string Order::getOrder() const
 {
 	return _header + _body;
+}
+
+//Shouldn't happen
+void Order::output(int eventFD)
+{
+	if (eventFD != this->_outFD)
+		throw WebservException("Bad output FD event on Order\n");
 }

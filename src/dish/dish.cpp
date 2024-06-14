@@ -26,31 +26,31 @@ Dish::Dish(Order& order, Recipe& recipe, void* restuarantPointer)
 		_order.status.updateState(BAD);
 	else
 		_doMethod();
-
-	if (order.status.getState() != OK)
+	if (order.status.getState() != OK || _inFD < 0)
 	{
-		Log::getInstance().print("Encountered error while creating dish " + std::to_string(_inFD));
-		if (_inFD > 0)
-			close(_inFD);
+		close(_inFD);
 		std::string errfile = _recipe.errorPaths[order.status.getState()];
 		_inFD = open(errfile.c_str(), O_RDONLY);
-	}
-	if (_inFD < 0)
-	{
-		_order.status.updateState(INTERNALERR);
-		_body = "500 Internal Server Error";
-		_serveDish();
+		if (_inFD < 0)
+		{
+			_order.status.updateState(INTERNALERR);
+			_body = "500 Internal Server Error";
+			_serveDish();
+		}
 	}
 	else
 	{
 		Log::getInstance().print("Readying dish " + std::to_string(_inFD) + " for order " + std::to_string(_order.getIn()));
+		
 		Restaurant* restaurant = (Restaurant*)_order.resP;
 		restaurant->addFdHandler(_inFD, this, EPOLLIN);
-		// Log::getInstance().print("TESTING");
-		// char testbuffer[BUF_LIMIT];
-		// size_t count = read(_inFD, testbuffer, 50);
-		// testbuffer[count] = '\0';
-		// Log::getInstance().print("Test read: " + std::string(testbuffer));
+		//BUGGGGINNNNGGGG OUUUUUUUUUUTTTTTT
+	
+		Log::getInstance().print("TESTING");
+		char testbuffer[BUF_LIMIT];
+		size_t count = read(_inFD, testbuffer, 50);
+		testbuffer[count] = '\0';
+		Log::getInstance().print("Test read: " + std::string(testbuffer));
 	}
 }
 
@@ -84,8 +84,8 @@ void	Dish::input(int eventFD)
 void	Dish::_serveDish()
 {
 	Restaurant* restaurant = (Restaurant*)_order.resP;
-	restaurant->removeFdHander(_inFD);
-	close(_inFD);
+	// restaurant->removeFdHander(_inFD);
+	// close(_inFD);
 	_generateHeader();
 	_sendMessage = _header + _body;
 	_sendSize = _sendMessage.size();

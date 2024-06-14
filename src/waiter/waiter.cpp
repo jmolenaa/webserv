@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 18:24:03 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 22:14:27 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ Waiter::~Waiter()
 {
 	for (auto order : _orders)
 		delete (order.second);
-
-	for (auto dish : _dishes)
-		delete (dish.second);
 }
 
 //accept the order
@@ -71,32 +68,6 @@ void Waiter::input(int eventFD)
 	this->_orders[orderFD] = order;
 }
 
-void Waiter::prepOrder(int orderFD)
-{
-	if (_orders.find(orderFD) == _orders.end())
-		throw WebservException("Order not found in orders map???\n");
-	
-	Log::getInstance().print("Sending order " + std::to_string(orderFD) + " to the cook");
-	Order* order = _orders[orderFD];
-
-	const Cook* cook = kitchen.find(order->getHostname());
-	if (cook == nullptr)
-		cook = kitchen.begin();
-	std::string page = order->getPath();
-	Recipe recipe(cook->getRecipe(page));
-	while (!page.empty() && page != recipe.page) //double check this shit
-	{
-		size_t end = page.find_last_of('/');
-		if (end == std::string::npos)
-			break;
-		else
-			page = page.substr(0, end);
-		recipe = cook->getRecipe(page);
-	}
-	
-	_dishes[orderFD] = new Dish(*order, recipe, this->resP);
-}
-
 void Waiter::output(int eventFD)
 {
 	if (eventFD != _outFD)
@@ -105,17 +76,13 @@ void Waiter::output(int eventFD)
 
 void Waiter::finishOrder(int orderFD)
 {
+	Log::getInstance().print("Finishing order " + std::to_string(orderFD));
 	Restaurant* restaurant = (Restaurant*)resP;
 	restaurant->removeFdHander(orderFD);
 	if (this->_orders.find(orderFD) != this->_orders.end())
 	{
 		this->_orders.erase(orderFD);
 		delete (this->_orders[orderFD]);
-	}
-	if (this->_dishes.find(orderFD) != this->_dishes.end())
-	{
-		this->_dishes.erase(orderFD);
-		delete (this->_dishes[orderFD]);
 	}
 	throw WebservException("Order does not exist and could not be erased\n");
 }

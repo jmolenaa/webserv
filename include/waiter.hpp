@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 13:55:46 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 22:08:21 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ class Waiter : public FdHandler
 
 	private:
 		std::unordered_map<int, Order*> _orders;
-		std::unordered_map<int, Dish*>	_dishes;
 };
 
 #endif

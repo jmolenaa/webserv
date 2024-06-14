@@ -21,6 +21,8 @@
 # include "fdHandler.hpp"
 # include "order.hpp"
 
+class Order;
+
 class Dish : public FdHandler
 {
 	typedef enum
@@ -38,8 +40,6 @@ class Dish : public FdHandler
 		void		input(int eventFD) override;
 		void		output(int eventFD) override;
 
-		std::string tmpGetResponse();
-
 	private:
 		Order&			_order;
 		Recipe&			_recipe;
@@ -52,15 +52,11 @@ class Dish : public FdHandler
 		size_t			_sendPos;
 
 		void	_doMethod();
-		void	_readyDish();
-		void	_serveDish();
-		void	_generateHeader();
-
-		void		_get();
-		filetype	_extractFileType();
-
+		void	_get();
 		void	_post();
 		void	_delete();
+		void	_generateHeader();
+		void	_serveDish();
 
 		class CGI
 		{
@@ -71,7 +67,7 @@ class Dish : public FdHandler
 				int	execute();
 			
 			private:
-				Dish&		_parent;
+				Dish&		_dish;
 				std::string _query;
 				std::string	_path;
 				int			_inFD[2];

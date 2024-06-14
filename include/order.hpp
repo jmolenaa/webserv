@@ -17,6 +17,9 @@
 # include "fdHandler.hpp"
 # include "defines.hpp"
 # include "status.hpp"
+# include "dish.hpp"
+
+class Dish;
 
 class Order : public FdHandler
 {
@@ -54,6 +57,8 @@ class Order : public FdHandler
 		std::string _contentType;
 		std::string	_body;
 
+		Dish*		_dish;
+
 		void	_extractHeader();
 		void	_parseHeader();
 		void 	_extractMethod();
@@ -61,8 +66,10 @@ class Order : public FdHandler
 		void	_extractHost();
 		void	_extractBody();
 		void	_printData();
-		
+		void	_prepDish();
+
 		std::string		_extractValue(std::string string, std::string key, char delim);
+
 };
 
 #endif
