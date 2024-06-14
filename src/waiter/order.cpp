@@ -38,6 +38,7 @@ Order::Order(void* waiterPointer, int fd, void* restaurantPointer)
 	: FdHandler(restaurantPointer), _wP(waiterPointer), _done(false)
 {
 	this->_inFD = fd;
+	this->_outFD = fd;
 
 	Waiter* waiter = (Waiter*)_wP;
 	Log::getInstance().print("Waiter " + std::to_string(waiter->getIn()) + " is taking order " + std::to_string(fd) + "\n");
@@ -53,15 +54,18 @@ void Order::input(int eventFD)
 {
 	if (eventFD != _inFD)
 		throw WebservException("Order fired bad input FD event\n");
+
+	Log::getInstance().print("Receiving input from fd " + std::to_string(eventFD));
 	if (this->_header.empty())
 		_extractHeader();
 	else
 		_extractBody();
 	if (this->_done)
 	{
+		_printData();
 		Restaurant* restaurant = (Restaurant*)this->resP;
 		restaurant->removeFdHander(_inFD);
-		Log::getInstance().print("\nGOT REQUEST:\n" + this->_header + this->_body);
+
 		Waiter* waiter = (Waiter*)_wP;
 		waiter->prepOrder(_outFD);
 	}

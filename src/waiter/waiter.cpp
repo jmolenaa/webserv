@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 17:17:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 18:24:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPointer), kitchen(kitch)
 {
 	Log::getInstance().print("Waiter is being hired");
+	
 	//create socket
 	this->_inFD = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_inFD < 0)
@@ -31,7 +32,6 @@ Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPoi
 	setsockopt(this->_inFD, SOL_SOCKET, SO_REUSEPORT, &optvalTrue, sizeof(optvalTrue));
 	sockaddr_in	waiterAddr{};
 	waiterAddr.sin_family = AF_INET;
-	Log::getInstance().print("Waiter is waiting at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())));
 	waiterAddr.sin_port = this->kitchen.begin()->getTable();
 	waiterAddr.sin_addr.s_addr = this->kitchen.begin()->getAddress();
 	if (bind(this->_inFD, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
@@ -43,7 +43,7 @@ Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPoi
 	Restaurant* restaurant = (Restaurant*)this->resP;
 	restaurant->addFdHandler(this->_inFD, this, EPOLLIN);
 
-	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working with " + std::to_string(this->kitchen.size()) + " Cooks in the kitchen");
+	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen");
 }
 
 Waiter::~Waiter()
@@ -58,31 +58,30 @@ Waiter::~Waiter()
 //accept the order
 void Waiter::input(int eventFD)
 {
-	if (eventFD == this->_inFD)
-	{
-		sockaddr_in orderAddr{};
-		socklen_t 	orderAddrLen = sizeof(orderAddr);
-		int orderFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
-		if (orderFD == -1)
-			throw WebservException("Failed to welcome a new order: " + std::string(std::strerror(errno)) + "\n");
-		
-		Order* order = new Order(this, orderFD, resP);
-		this->_orders[orderFD] = order;
-	}
-	else
-		throw WebservException("Waiter fired bad input FD event\n");
+	if (eventFD != this->_inFD)
+		throw WebservException("Waiter fired for bad input FD event\n");
+
+	sockaddr_in orderAddr{};
+	socklen_t 	orderAddrLen = sizeof(orderAddr);
+	int orderFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
+	if (orderFD == -1)
+		throw WebservException("Failed to take a new order: " + std::string(std::strerror(errno)) + "\n");
+
+	Order* order = new Order(this, orderFD, resP);
+	this->_orders[orderFD] = order;
 }
 
 void Waiter::prepOrder(int orderFD)
 {
 	if (_orders.find(orderFD) == _orders.end())
 		throw WebservException("Order not found in orders map???\n");
-
+	
+	Log::getInstance().print("Sending order " + std::to_string(orderFD) + " to the cook");
 	Order* order = _orders[orderFD];
+
 	const Cook* cook = kitchen.find(order->getHostname());
 	if (cook == nullptr)
 		cook = kitchen.begin();
-
 	std::string page = order->getPath();
 	Recipe recipe(cook->getRecipe(page));
 	while (!page.empty() && page != recipe.page) //double check this shit
@@ -94,6 +93,7 @@ void Waiter::prepOrder(int orderFD)
 			page = page.substr(0, end);
 		recipe = cook->getRecipe(page);
 	}
+	
 	_dishes[orderFD] = new Dish(*order, recipe, this->resP);
 }
 

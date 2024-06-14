@@ -73,7 +73,6 @@ void Concierge::addFd(int fd, uint32_t events)
 void Concierge::removeFd(int fd)
 {
     Log::getInstance().print("Concierge will stop monitoring fd " + std::to_string(fd) + "\n");
-	close(fd);
     if (epoll_ctl(_epollfd, EPOLL_CTL_DEL, fd, nullptr) == -1)
     {
         throw (WebservException("Failed to remove file descriptor from epoll"));

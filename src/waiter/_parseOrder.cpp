@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 13:47:28 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 17:44:17 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void Order::_extractHeader()
 	if (count < 0)
 	{
 		_done = true;
+		_header += "\r\nERR";
 		status.updateState(INTERNALERR);
 	}
 	else
@@ -34,10 +35,13 @@ void Order::_extractHeader()
 		}
 		pos += 4;
 		_header = _bufStr.substr(0, pos);
-		if (pos != _bufStr.size())
+		if (pos != _bufStr.size()) {
 			_body += _bufStr.substr(pos);
+		}
 		_bufStr = "";
 		_parseHeader();
+		if (_contentLength == 0)
+			_done = true;
 	}
 }
 

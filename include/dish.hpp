@@ -51,7 +51,7 @@ class Dish : public FdHandler
 		ssize_t			_sendSize;
 		size_t			_sendPos;
 
-		void	_doMethod(method m);
+		void	_doMethod();
 		void	_readyDish();
 		void	_serveDish();
 		void	_generateHeader();

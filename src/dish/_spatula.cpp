@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 16:41:07 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 18:12:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@
 #include "restaurant.hpp"
 #include "webservException.hpp"
 
-void Dish::_doMethod(method m)
+void Dish::_doMethod()
 {
+	method m = _order.getMethod();
+	if ((m & _recipe.allowedMethods) == 0)
+		return(_order.status.updateState(METHODNOTALLOWED));
 	switch (m)
 	{
 		case (GET):
@@ -32,25 +35,6 @@ void Dish::_doMethod(method m)
 		default:
 			_order.status.updateState(METHODNOTALLOWED);
 			return;
-	}
-}
-
-/**
- * @todo needs to go through epoll
- * read BUF_LIMIT at a time until done.
-*/
-void Dish::_readyDish()
-{
-	_body = "\r\n";
-	if (_inFD == -1)
-	{
-		_order.status.updateState(INTERNALERR);
-		_body = "500 Internal Server Error";
-	}
-	else
-	{
-		Restaurant* restaurant = (Restaurant*)_order.resP;
-		restaurant->addFdHandler(_inFD, this, EPOLLIN);
 	}
 }
 
