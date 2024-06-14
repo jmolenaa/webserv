@@ -34,9 +34,13 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Order::Order(void* waiterPointer, int fd, void* restaurantPointer) : FdHandler(restaurantPointer), _wP(waiterPointer), _done(false)
+Order::Order(void* waiterPointer, int fd, void* restaurantPointer) 
+	: FdHandler(restaurantPointer), _wP(waiterPointer), _done(false)
 {
 	this->_inFD = fd;
+
+	Waiter* waiter = (Waiter*)_wP;
+	Log::getInstance().print("Waiter " + std::to_string(waiter->getIn()) + " is taking order " + std::to_string(fd) + "\n");
 	
 	Restaurant* restaurant = (Restaurant*)this->resP;
 	restaurant->addFdHandler(_inFD, this, EPOLLIN);
@@ -74,6 +78,13 @@ void Order::output(int eventFD)
 	// Waiter* wait = (Waiter*)waiter;
 	// wait->finishOrder(this->_orderFD);
 	// return (_status.getState());
+}
+
+void Order::orderDone()
+{
+	Waiter* waiter = (Waiter*)_wP;
+	close(_inFD);
+	waiter->finishOrder(_inFD);
 }
 
 //Returns the method GET, POST, DELETE

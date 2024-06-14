@@ -6,13 +6,15 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 14:13:47 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 16:41:07 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 
 #include "dish.hpp"
+#include "restaurant.hpp"
+#include "webservException.hpp"
 
 void Dish::_doMethod(method m)
 {
@@ -37,30 +39,19 @@ void Dish::_doMethod(method m)
  * @todo needs to go through epoll
  * read BUF_LIMIT at a time until done.
 */
-void Dish::_dishToBody()
+void Dish::_readyDish()
 {
 	_body = "\r\n";
 	if (_inFD == -1)
 	{
-		_body += "INTERNAL ERROR";
 		_order.status.updateState(INTERNALERR);
+		_body = "500 Internal Server Error";
 	}
-	
-	char 	buffer[BUF_LIMIT] = "";
-	ssize_t	count = read(_inFD, buffer, BUF_LIMIT - 1);
-	while (count)
+	else
 	{
-		buffer[count] = '\0';
-		if (count < 0)
-		{
-			_order.status.updateState(INTERNALERR);
-			break;
-		}
-		std::string append(buffer);
-		_body += append.substr(0, count);
-		count = read(_inFD, buffer, BUF_LIMIT - 1);
+		Restaurant* restaurant = (Restaurant*)_order.resP;
+		restaurant->addFdHandler(_inFD, this, EPOLLIN);
 	}
-	close(_inFD);
 }
 
 void	Dish::_generateHeader()

@@ -1,29 +1,22 @@
-//epoll stuff goes here
-
-
-#ifndef EPOLL_HPP
-#define EPOLL_HPP
+#ifndef CONCIERGE_HPP
+#define CONCIERGE_HPP
 
 # include "defines.hpp"					//CLI_LIMIT
 # include "webservException.hpp" 		//exception
 
 # include <sys/epoll.h> 				//epoll
 # include <unistd.h> 					//close
-# include <vector>
-# include <iostream>
 
-//# include "server.hpp"
-
-class Epoll
+class Concierge
 {
 	public:
-		Epoll();										//create epoll instance
-		~Epoll();										//close epollfd
+		Concierge();										//create epoll instance
+		~Concierge();										//close epollfd
 
 		void	addFd(int fd, uint32_t events); 			//addition of sockets
 		void	modifyFd(int fd, uint32_t events);			//modification of sockets
 		void	removeFd(int fd);							//removal of sockets
-		void	wait_events(int timeout, epoll_event *events);
+		void	wait(int timeout, epoll_event *events);
 		int 	getNumEvents(); 
 		int		getEpollFd();
 		epoll_event *getEvents();

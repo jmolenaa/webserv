@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 14:18:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/14 17:17:53 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ Waiter::~Waiter()
 {
 	for (auto order : _orders)
 		delete (order.second);
+
+	for (auto dish : _dishes)
+		delete (dish.second);
 }
 
 //accept the order
@@ -92,11 +95,6 @@ void Waiter::prepOrder(int orderFD)
 		recipe = cook->getRecipe(page);
 	}
 	_dishes[orderFD] = new Dish(*order, recipe, this->resP);
-
-	//move this to Dish output
-	send(order->getOut(), _dishes[orderFD]->tmpGetResponse().c_str(), _dishes[orderFD]->tmpGetResponse().size(), 0);
-	close(orderFD);
-	finishOrder(orderFD);
 }
 
 void Waiter::output(int eventFD)
@@ -107,6 +105,8 @@ void Waiter::output(int eventFD)
 
 void Waiter::finishOrder(int orderFD)
 {
+	Restaurant* restaurant = (Restaurant*)resP;
+	restaurant->removeFdHander(orderFD);
 	if (this->_orders.find(orderFD) != this->_orders.end())
 	{
 		this->_orders.erase(orderFD);

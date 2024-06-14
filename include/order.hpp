@@ -29,6 +29,7 @@ class Order : public FdHandler
 		void		input(int eventFD) override;
 		void		output(int eventFD) override;
 		
+		void		orderDone();
 		method	   	getMethod() const;
 		std::string getPath() const;
 		uint    	getTable() const;
@@ -37,7 +38,6 @@ class Order : public FdHandler
 		std::string getHostname() const;
 		std::string getBody() const;
 		std::string getOrder() const; //check maxBodySize in dafault recipe unless overwritten
-
 		Status		status;
 	private:
 		void*		_wP;

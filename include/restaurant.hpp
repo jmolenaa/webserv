@@ -16,7 +16,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "epoll.hpp"
+#include "concierge.hpp"
 #include "waiter.hpp"
 
 class Restaurant
@@ -32,7 +32,7 @@ class Restaurant
 		void	removeFdHander(int fd);
 
 	private:
-		Epoll	_epoll;
+		Concierge	_epoll;
 	
 		std::vector<Waiter*>	_waiters;
 

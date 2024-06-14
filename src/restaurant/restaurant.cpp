@@ -17,7 +17,7 @@
 Restaurant::Restaurant(std::string const& filename)
 {
 	Log::getInstance().print("Constructing Restaurant instance");
-	Log::getInstance().print("Parsing '" + filename + "'...jk");
+	Log::getInstance().print("Parsing '" + filename);
 
 	Menu	menu(filename);
 
@@ -39,7 +39,7 @@ void Restaurant::run()
 
     while (true)
 	{
-        _epoll.wait_events(-1, events);
+        _epoll.wait(-1, events);
 		for (int i = 0; i < _epoll.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
@@ -79,5 +79,4 @@ void Restaurant::removeFdHander(int fd)
 	_Out.erase(fd);
 	_In.erase(fd);
 	_epoll.removeFd(fd);
-	// close(fd);
 }

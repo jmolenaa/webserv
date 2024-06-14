@@ -71,6 +71,9 @@ void Dish::CGI::_freeEnv()
      delete[] _env;
 }
 
+/**
+ * @todo time out CGIs, add fd to epoll
+ */
 int Dish::CGI::execute()
 {
 	pipe(_inFD);

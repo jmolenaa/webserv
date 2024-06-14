@@ -45,9 +45,15 @@ class Dish : public FdHandler
 		Recipe&			_recipe;
 		std::string		_header;
 		std::string		_body;
+		char			_buffer[BUF_LIMIT];
+
+		std::string		_sendMessage;
+		ssize_t			_sendSize;
+		size_t			_sendPos;
 
 		void	_doMethod(method m);
-		void	_dishToBody();
+		void	_readyDish();
+		void	_serveDish();
 		void	_generateHeader();
 
 		void		_get();
