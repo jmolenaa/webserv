@@ -25,26 +25,27 @@ Dish::Dish(Order& order, Recipe& recipe, void* restuarantPointer)
 	if (_order.getPath().find_last_of('/') == std::string::npos)
 		_order.status.updateState(BAD);
 	else
-		_doMethod();
+		_doMethod(); //fix this so contents of html files get written to the read end of a pipe possibly using dup2
 	if (order.status.getState() != OK || _inFD < 0)
 	{
 		close(_inFD);
 		std::string errfile = _recipe.errorPaths[order.status.getState()];
+		//fix this so error file gets written to the read end of a pipe, possibly need to dup2
 		_inFD = open(errfile.c_str(), O_RDONLY);
-		if (_inFD < 0)
-		{
-			_order.status.updateState(INTERNALERR);
-			_body = "500 Internal Server Error";
-			_serveDish();
-		}
+	}
+	if (_inFD < 0)
+	{
+		_order.status.updateState(INTERNALERR);
+		_body = "500 Internal Server Error";
+		_serveDish();
 	}
 	else
 	{
 		Log::getInstance().print("Readying dish " + std::to_string(_inFD) + " for order " + std::to_string(_order.getIn()));
-		
+
+		//update to add the correct fd to epoll, namely that it's the read / write end of a pipe, and not an open file
 		Restaurant* restaurant = (Restaurant*)_order.resP;
 		restaurant->addFdHandler(_inFD, this, EPOLLIN);
-		//BUGGGGINNNNGGGG OUUUUUUUUUUTTTTTT
 	
 		Log::getInstance().print("TESTING");
 		char testbuffer[BUF_LIMIT];
@@ -84,8 +85,8 @@ void	Dish::input(int eventFD)
 void	Dish::_serveDish()
 {
 	Restaurant* restaurant = (Restaurant*)_order.resP;
-	// restaurant->removeFdHander(_inFD);
-	// close(_inFD);
+	restaurant->removeFdHander(_inFD);
+	close(_inFD);
 	_generateHeader();
 	_sendMessage = _header + _body;
 	_sendSize = _sendMessage.size();

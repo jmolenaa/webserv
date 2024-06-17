@@ -46,7 +46,7 @@ class Dish : public FdHandler
 		std::string		_header;
 		std::string		_body;
 		char			_buffer[BUF_LIMIT];
-
+		int				_pipeFDs[2];
 		std::string		_sendMessage;
 		ssize_t			_sendSize;
 		size_t			_sendPos;
