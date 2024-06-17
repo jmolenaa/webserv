@@ -65,10 +65,14 @@ void Restaurant::addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType)
 {
 	if (eventType & EPOLLIN)
 	{
+		if (_In.find(fd) != _In.end())
+			throw WebservException("FD " + std::to_string(fd) + " already exists");
 		_In[fd] = fdhandler;
 	}
 	if (eventType & EPOLLOUT)
 	{
+		if (_Out.find(fd) != _Out.end())
+			throw WebservException("FD " + std::to_string(fd) + " already exists");
 		_Out[fd] = fdhandler;
 	}
 	_epoll.addFd(fd, eventType);
