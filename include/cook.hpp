@@ -20,7 +20,7 @@
 class Cook {
 	public:
 		Cook();
-		Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
+		// Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook);
 		Cook(const Cook& other);
 		Cook& 		operator=(const Cook& other);
 		

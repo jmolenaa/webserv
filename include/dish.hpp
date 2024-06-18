@@ -10,18 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RESPONSE_HPP
-# define RESPONSE_HPP
+#ifndef DISH_HPP
+# define DISH_HPP
 
 # include <fcntl.h>
 
-# include "epoll.hpp"
-# include "order.hpp"
+# include "defines.hpp"
 # include "status.hpp"
 # include "recipe.hpp"
-# include "defines.hpp"
+# include "fdHandler.hpp"
+# include "order.hpp"
 
-class Dish
+class Order;
+
+class Dish : public FdHandler
 {
 	typedef enum
 	{
@@ -31,30 +33,34 @@ class Dish
 	}	filetype;
 
 	public:
-		Dish(Epoll& epoll, Order& order, Recipe& recipe);
+		Dish(Status& status, Order const& order, Recipe recipe, void* restaurantPointer, void* customerPointer);
 		Dish() = delete;
-		~Dish() = default;
+		~Dish();
 
-		std::string		getMeal();
-	
+		void		input(int eventFD) override;
+		void		output(int eventFD) override;
+
+		std::string	getDish();
+		void		doMethod();
+
 	private:
-		Epoll&			_epoll;
-		Order&			_order;
-		Status			_status;
+		Status&			_status;
+		Order const&	_order;
 		Recipe			_recipe;
-		int				_dishFD;
 		std::string		_header;
 		std::string		_body;
+		char			_buffer[BUF_LIMIT];
+		int				_pipeFDs[2];
+		void*			_customerPointer;
 
-		void	_doMethod(method m);
-		void	_dishToBody();
-		void	_generateHeader();
+		void	_doPipe();
+		void	_trashDish();
 
-		void		_get();
-		filetype	_extractFileType();
-
+		void	_doError();
+		void	_get();
 		void	_post();
 		void	_delete();
+		void	_generateHeader();
 
 		class CGI
 		{
@@ -65,7 +71,7 @@ class Dish
 				int	execute();
 			
 			private:
-				Dish&		_parent;
+				Dish&		_dish;
 				std::string _query;
 				std::string	_path;
 				int			_inFD[2];

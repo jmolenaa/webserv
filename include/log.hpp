@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 13:04:50 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/27 12:32:38 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 12:27:00 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ class Log
 		{
 			if (_logEnabled)
 				std::cout << "Log: " << message << std::endl;
+		};
+
+		void	printErr(const std::string& message)
+		{
+			if (_logEnabled)
+			std::cerr << "Log: " << message << std::endl;
 		};
 };
 

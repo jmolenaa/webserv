@@ -26,52 +26,67 @@
  * if the dish is not read in full successfully, or if a keep-alive is NOT being used (a Connection: close header is present in an HTTP 1.1 dish, or a Connection: keep-alive header is not present in an HTTP 1.0 dish), then close the socket.
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
-Order::Order(std::string order) : _order(order)
-{
-	_extractHeader();
-	_extractMethod();
-	_extractPath();
-	_extractContent();
-	_extractHost();
-	// _printData();
+
+Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false) {
+		Log::getInstance().print("Customer " + std::to_string(_orderFD) + " has been seated.\n");
 }
 
+//taking the order
+bool Order::makeOrder()
+{
+	if (_done)
+		return (_done);
+	if (this->_header.empty())
+		_extractHeader();
+	else
+		_extractBody();
+	return (_done);
+}
+
+//Returns the method GET, POST, DELETE
 method Order::getMethod() const
 {
 	return _method;
 }
 
+//Returns the request path
 std::string Order::getPath() const
 {
-	return _page;
+	return _path;
 }
 
-std::string Order::getCookName() const
-{
-	return _hostname;
-}
-
+//returns the Port number
 uint Order::getTable() const
 {
 	return _table;
 }
 
-std::string Order::getOrder() const
+//returns the hostname
+std::string Order::getHostname() const
 {
-	return _order;
+	return _hostname;
 }
 
+//returns CONTENT_LENGTH
 uint Order::getLength() const
 {
 	return _contentLength;
 }
 
+//returns CONTENT_TYPE
 std::string Order::getType() const
 {
 	return _contentType;
 }
 
+//returns the body of the request only
 std::string Order::getBody() const
 {
 	return _body;
+}
+
+//returns the full request message
+std::string Order::getOrder() const
+{
+	return _header + _body;
 }

@@ -1,41 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   waiter.hpp                                         :+:    :+:            */
+/*   customer.hpp                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 16:50:53 by dliu          ########   odam.nl         */
+/*   Created: 2024/06/18 13:45:16 by dliu          #+#    #+#                 */
+/*   Updated: 2024/06/18 17:01:41 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WAITER_HPP
-# define WAITER_HPP
-
-# include <sys/socket.h>
-# include <netinet/in.h>
+#ifndef CUSTOMER_HPP
+# define CUSTOMER_HPP
 
 # include "defines.hpp"
 # include "fdHandler.hpp"
-# include "status.hpp"
-# include "customer.hpp"
-# include "cook.hpp"
+# include "order.hpp"
+# include "dish.hpp"
 
-class Waiter : public FdHandler
+class Customer : public FdHandler
 {
 	public:
-		Waiter(Kitchen kitch, void* rest);
-		Waiter() = delete;
-		~Waiter();
+		Customer(int fd, void* restaurantPointer, void* waiterPointer);
+		Customer() = delete;
+		Customer(Customer& other) = delete;
+		~Customer();
 
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
-
-		const Kitchen	kitchen;
+	
+		void	eat();
 
 	private:
-		std::unordered_map<int, Customer*> _customers;
+		void*	_wP;
+		Status	_status;
+		Order	_order;
+		Dish*	_dish;
+
+		std::string _food;
+		ssize_t		_bitesLeft;
+		ssize_t		_pos;
+
+		void	_getDish();
+		void	_leave();
 };
+
+typedef std::function<void(Customer&)> callbackMethod;
 
 #endif

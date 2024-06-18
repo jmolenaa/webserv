@@ -6,12 +6,14 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 15:04:20 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 17:09:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dish.hpp"
-#include "sstream"
+#include <unistd.h>
+
+#include "order.hpp"
 
 /**
  * @todo autoindex stuff
@@ -26,8 +28,10 @@ void Dish::_get()
 		std::string type = page.substr(pos + 1);
 		if (type != "html")
 			return (_status.updateState(UNSUPPORTED));
-	
-		_dishFD = open(page.c_str(), O_RDONLY);
+		
+		_inFD = open(page.c_str(), O_RDONLY);
+		if (_inFD < 0)
+			_doError();
 	}
 	else
 	{
@@ -39,11 +43,14 @@ void Dish::_get()
 		// else
 		// {
 			std::string index = page + _recipe.index;
-			_dishFD = open(index.c_str(), O_RDONLY);
+			_inFD = open(index.c_str(), O_RDONLY);
 		// }
 	}
-	if (_dishFD < 0)
+	if (_inFD < 0)
 		return (_status.updateState(NOTFOUND));
+
+	_doPipe();
+	input(_inFD);
 }
 
 void Dish::_post()
@@ -54,7 +61,7 @@ void Dish::_post()
 	else
 	{	
 		CGI cgi(*this);
-		_dishFD = cgi.execute();
+		_inFD = cgi.execute();
 	}
 }
 
@@ -65,6 +72,6 @@ void Dish::_delete()
     else
 	{
 		CGI cgi(*this);
-		_dishFD = cgi.execute();
+		_inFD = cgi.execute();
 	}
 }

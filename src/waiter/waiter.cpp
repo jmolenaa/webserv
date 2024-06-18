@@ -6,55 +6,76 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 15:08:59 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 18:18:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstring>
+
 #include "waiter.hpp"
+#include "webservException.hpp"
 #include "log.hpp"
+#include "restaurant.hpp"
 
-Waiter::Waiter(Epoll& epoll, Kitchen kitchen)
-	: _epoll(epoll), _kitchen(kitchen)
+//Creates server. Removed setup functions since they are never reused.
+Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPointer), kitchen(kitch)
 {
-	Log::getInstance().print("Waiter has been hired");
-
-	_createSocket();
-	_bindToAddress();
-    _epoll.addFd(_waiterFd, EPOLLIN);
-
-	if (listen(_waiterFd, SOMAXCONN) == -1)
+	Log::getInstance().print("Waiter is being hired");
+	
+	//create socket
+	this->_inFD = socket(AF_INET, SOCK_STREAM, 0);
+	if (this->_inFD < 0)
+		throw WebservException("Failed to create socket because: " + std::string(std::strerror(errno)) + "\n");
+	//bind to address
+	int	optvalTrue = 1;
+	setsockopt(this->_inFD, SOL_SOCKET, SO_REUSEADDR, &optvalTrue, sizeof(optvalTrue));
+	setsockopt(this->_inFD, SOL_SOCKET, SO_REUSEPORT, &optvalTrue, sizeof(optvalTrue));
+	sockaddr_in	waiterAddr{};
+	waiterAddr.sin_family = AF_INET;
+	waiterAddr.sin_port = this->kitchen.begin()->getTable();
+	waiterAddr.sin_addr.s_addr = this->kitchen.begin()->getAddress();
+	if (bind(this->_inFD, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
+		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
+	//listen on socket
+	if (listen(this->_inFD, SOMAXCONN) == -1)
 		throw WebservException("Waiter could not listen because: " + std::string(std::strerror(errno)) + "\n");
+	//add to epoll and map
+	Restaurant* restaurant = (Restaurant*)this->resP;
+	restaurant->addFdHandler(this->_inFD, this, EPOLLIN);
+
+	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen");
 }
 
+//kick out any remaining customers
 Waiter::~Waiter()
 {
-    if (_waiterFd > 0)
-        close(_waiterFd);
+	for (auto customer : _customers)
+		delete (customer.second);
 }
 
-/**
- * @todo epoll needs to keep checking FDs until they are done reading / have been closed
- * Consider making a class for reading and writing
- * 
- * Places where reading/writing will take place:
- * Read the request from client
- * Read the file from root
- * CGIs read and write through pipes
- * Write the response to the client
-*/
-void Waiter::work()
+//Seat the new customer
+void Waiter::input(int eventFD)
 {
-	Log::getInstance().print("Waiter is working with " + std::to_string(_kitchen.size()) + " Cooks in the kitchen");
-    epoll_event events[CLI_LIMIT];
-    while (true)
-	{
-        _epoll.wait_events(-1, events);
-		for (int i = 0; i < _epoll.getNumEvents(); i++)
-		{
-			if (events[i].data.fd == _waiterFd)
-				_welcomeCustomer();
-			else
-				_takeOrder(events[i].data.fd);
-		}
-    }
+	if (eventFD != this->_inFD)
+		throw WebservException("Waiter + " + std::to_string(this->_inFD) + " input freakout.\n");
+
+	sockaddr_in orderAddr{};
+	socklen_t 	orderAddrLen = sizeof(orderAddr);
+	int customerFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
+	if (customerFD == -1)
+		throw WebservException("Failed to seat the Customer: " + std::string(std::strerror(errno)) + "\n");
+
+	Customer* customer = new Customer(customerFD, resP, this);
+	this->_customers[customerFD] = customer;
+}
+
+//Say goodbye to the customer
+void Waiter::output(int customerFD)
+{
+	Log::getInstance().print("Saying goodbye to customer " + std::to_string(customerFD));
+	if (this->_customers.find(customerFD) == this->_customers.end()) {
+		throw WebservException("Customer " + std::to_string(customerFD) + " does not exist.\n");
+	}
+	this->_customers.erase(customerFD);
+	delete (this->_customers[customerFD]);
 }

@@ -6,30 +6,57 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/12 15:03:44 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 18:27:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "order.hpp"
-#include "log.hpp"
 
-std::string Order::_extractValue(std::string string, std::string key, char delim)
-{
-	size_t start = string.find(key);
-	if (start == std::string::npos)
-		return ("");
-	start += key.length();
-	size_t end = string.find_first_of(delim, start);
-	return(string.substr(start, end - start));
-}
+#include <unistd.h>
+#include "log.hpp"
+#include "defines.hpp"
 
 void Order::_extractHeader()
 {
-	uint pos = _order.find("\r\n\r\n");
-	if (pos == (unsigned int)std::string::npos)
-		_header = _order;
+	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
+	if (count < 0)
+	{
+		_done = true;
+		_header += "\r\nERR";
+		_status.updateState(INTERNALERR);
+	}
 	else
-		_header = _order.substr(0, pos);
+	{
+		_buffer[count] = '\0';
+		_bufStr += std::string(_buffer);
+		size_t pos = _bufStr.find("\r\n\r\n");
+		if (pos == std::string::npos) {
+			return;
+		}
+		pos += 4;
+		_header = _bufStr.substr(0, pos);
+		if (pos != _bufStr.size()) {
+			_body += _bufStr.substr(pos);
+		}
+		_bufStr = "";
+		_parseHeader();
+		if (_contentLength == 0)
+			_done = true;
+	}
+}
+
+void Order::_parseHeader()
+{
+	_extractMethod();
+	_extractPath();
+	_extractHost();
+
+    _contentLength = 0;
+	std::string tmp = _extractValue(_header, "Content-Length: ", '\n');
+	if (!tmp.empty())
+		_contentLength = std::stoi(tmp);
+	if (_contentLength)
+		_contentType = _extractValue(_header, "Content-Type: ", '\n');
 }
 
 void Order::_extractMethod()
@@ -63,10 +90,10 @@ void Order::_extractPath()
 	if (path_start != std::string::npos)
 	{
 		size_t path_end = _header.find_first_of(' ', path_start);
-		_page = _header.substr(path_start, path_end - path_start);
+		_path = _header.substr(path_start, path_end - path_start);
 		return;
 	}
-	_page = "";
+	_path = "";
 }
 
 void Order::_extractHost()
@@ -79,21 +106,24 @@ void Order::_extractHost()
 		_table = std::stoi(tmp);
 }
 
-void Order::_extractContent()
+void Order::_extractBody()
 {
-    _contentLength = 0;
-	std::string tmp = _extractValue(_order, "Content-Length: ", '\n');
-	if (!tmp.empty())
-		_contentLength = std::stoi(tmp);
-	
-	if (_contentLength)
+	if (_body.size() >= _contentLength)
 	{
-		_contentType = _extractValue(_order, "Content-Type: ", '\n');
-		size_t pos = _order.find("\r\n\r\n");
-		if (pos == std::string::npos)
-			_body = "";
-		else
-			_body = _order.substr(pos + 4,_contentLength);
+		_done = true;
+		return ;
+	}
+	
+	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
+	if (count < 0)
+	{
+		_done = true;
+		_status.updateState(INTERNALERR);		
+	}
+	else
+	{
+		_buffer[count] = '\0';
+		_body += std::string(_buffer);
 	}
 }
 
@@ -117,7 +147,7 @@ void Order::_printData()
 			default:
 				data += "'NONE'";
 		}
-		data += "\n	Path: '" + _page + "'"
+		data += "\n	Path: '" + _path + "'"
 			+ "\n	Host: '" + _hostname + "'"
 			+ "\n	Table: '" + std::to_string(_table) + "'"
 			+ "\n	Length: '" + std::to_string(_contentLength) + "'"
@@ -127,4 +157,14 @@ void Order::_printData()
 		
 		Log::getInstance().print(data);
 	}
+}
+
+std::string Order::_extractValue(std::string string, std::string key, char delim)
+{
+	size_t start = string.find(key);
+	if (start == std::string::npos)
+		return ("");
+	start += key.length();
+	size_t end = string.find_first_of(delim, start);
+	return(string.substr(start, end - start));
 }

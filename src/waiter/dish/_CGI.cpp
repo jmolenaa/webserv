@@ -6,21 +6,23 @@
 
 #include "log.hpp"
 #include "dish.hpp"
+#include "webservException.hpp"
+#include "order.hpp"
 
-Dish::CGI::CGI(Dish& parent) : _parent(parent)
+Dish::CGI::CGI(Dish& parent) : _dish(parent)
 {
 	try
 	{
-		size_t	qpos = _parent._order.getPath().find('?');
+		size_t	qpos = _dish._order.getPath().find('?');
 		if (qpos == std::string::npos)
 		{
-			_path = _parent._order.getPath().substr(1);
-			_query = _parent._order.getBody();
+			_path = _dish._order.getPath().substr(1);
+			_query = _dish._order.getBody();
 		}
 		else
 		{
-			_path = _parent._order.getPath().substr(1, qpos);
-			_query = _parent._order.getPath().substr(qpos + 1);
+			_path = _dish._order.getPath().substr(1, qpos);
+			_query = _dish._order.getPath().substr(qpos + 1);
 		}
 		_setEnv();
 	}
@@ -31,7 +33,7 @@ Dish::CGI::CGI(Dish& parent) : _parent(parent)
 
 void Dish::CGI::_setEnv()
 {
-	switch (_parent._order.getMethod())
+	switch (_dish._order.getMethod())
 	{
 		case GET:
 			_vec.push_back("REQUEST_METHOD=GET");
@@ -45,12 +47,12 @@ void Dish::CGI::_setEnv()
 		default:
 			throw WebservException("Something real bad went down");
 	}
-	_vec.push_back("CONTENT_TYPE=" + _parent._order.getType());
-	_vec.push_back("CONTENT_LENGTH=" + std::to_string(_parent._order.getLength()));
+	_vec.push_back("CONTENT_TYPE=" + _dish._order.getType());
+	_vec.push_back("CONTENT_LENGTH=" + std::to_string(_dish._order.getLength()));
 	_vec.push_back("QUERY_STRING=" + _query);
 	_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	_vec.push_back("SCRIPT_NAME=" + _path);
-	_vec.push_back("UPLOAD_DIR=" + _parent._recipe.uploadDir);
+	_vec.push_back("UPLOAD_DIR=" + _dish._recipe.uploadDir);
 	_env = new char*[_vec.size()];
 
 	for (size_t i = 0; i < _vec.size(); i++)
@@ -69,6 +71,9 @@ void Dish::CGI::_freeEnv()
      delete[] _env;
 }
 
+/**
+ * @todo time out CGIs, add fd to epoll
+ */
 int Dish::CGI::execute()
 {
 	pipe(_inFD);
@@ -86,7 +91,7 @@ int Dish::CGI::execute()
 
 	close(_outFD[1]);
 	close(_inFD[0]);
-	write(_inFD[1], _parent._order.getOrder().c_str(), _parent._order.getOrder().size());
+	write(_inFD[1], _dish._order.getOrder().c_str(), _dish._order.getOrder().size());
 	close(_inFD[1]);
 	waitpid(_pid, NULL, 0);
 	_freeEnv();
@@ -100,7 +105,7 @@ void Dish::CGI::_execError(std::string what, std::string why)
 	close(_outFD[0]);
     close(_outFD[1]);
 	_freeEnv();
-	_parent._status.updateState(INTERNALERR);
+	_dish._status.updateState(INTERNALERR);
     throw WebservException(what + why + "\n");
 }
 
