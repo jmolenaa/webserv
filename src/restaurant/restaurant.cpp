@@ -20,6 +20,7 @@ Restaurant::Restaurant(std::string const& filename)
 	Log::getInstance().print("Parsing '" + filename);
 
 	Menu	menu(filename);
+	menu.parse();
 
 	for (Kitchen const& kitchen : menu.getKitchens()) {
 		this->_waiters.push_back(new Waiter(kitchen, this));

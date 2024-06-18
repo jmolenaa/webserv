@@ -14,12 +14,21 @@
 #include "webservException.hpp"
 #include "lexer.hpp"
 #include <unordered_map>
+#include "status.hpp"
 
 Menu::Menu(std::string const& filename) : _currentState(NO_STATE) , _currentCook(nullptr), _currentRecipe(nullptr){
+	initErrorCodes();
 	Lexer	lexer(filename);
-
 	this->setTokens(lexer.lex());
-	this->parse();
+}
+
+void Menu::initErrorCodes() {
+	Status	statusCodes;
+
+	for (size_t i = 0; i < COUNT; ++i) {
+		this->_errorCodesArray[i] = std::to_string(statusCodes.getStatNum());
+		statusCodes.updateState((status)(i + 1));
+	}
 }
 
 Menu::~Menu() {

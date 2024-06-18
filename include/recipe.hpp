@@ -36,7 +36,7 @@ struct Recipe
 	std::pair<status, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Recipe() :page("root"), root("root"), index("index.html"), uploadDir("root/orders/"), allowUploading(true),
+	Recipe() :page("root"), root("root"), index("index.html"), uploadDir("root/orders/"), allowUploading(false),
 		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
