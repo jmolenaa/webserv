@@ -52,6 +52,7 @@ class Dish : public FdHandler
 		size_t			_sendPos;
 
 		void	_doMethod();
+		void	_doError();
 		void	_get();
 		void	_post();
 		void	_delete();
