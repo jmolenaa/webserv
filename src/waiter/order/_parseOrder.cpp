@@ -59,6 +59,7 @@ void Order::_parseHeader()
 		_contentType = _extractValue(_header, "Content-Type: ", '\n');
 }
 
+// TODO, what if whatever is requested contains GET, POST, DELETE
 void Order::_extractMethod()
 {
 	size_t	method_pos;
