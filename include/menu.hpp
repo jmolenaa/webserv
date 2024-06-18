@@ -90,6 +90,7 @@ public:
 	void			addToKitchen(Cook const& newCook);
 	void			printStuff();
 	static void		setAndValidateBoolValue(std::string const& stringValue, bool& valueToSet, std::string const& directive);
+	void			initErrorCodes();
 
 private:
 
@@ -98,7 +99,7 @@ private:
 	state							_currentState;
 	Cook*							_currentCook;
 	Recipe*							_currentRecipe;
-	std::array<std::string, COUNT>	_errorCodesArray = {"200", "301", "302", "400", "403", "404", "405", "411", "415", "500"};
+	std::array<std::string, COUNT>	_errorCodesArray;
 
 };
 

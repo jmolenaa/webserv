@@ -48,6 +48,9 @@ void Menu::locationDirective() {
 	// create a new recipe based on the default recipe then assign the location page to it
 	this->setCurrentRecipe(new Recipe(this->getCurrentCook()->getRecipe("root")));
 	this->getCurrentRecipe()->page = this->popFrontToken();
+	if (this->getCurrentRecipe()->page == "root") {
+		throw WebservException("Webserv: configuration file: location directive contains the 'root' route\n");
+	}
 }
 
 void Menu::indexDirective() {

@@ -1,0 +1,68 @@
+Short explanation of what the directives do
+
+ - "server" - sets up a new server block for which we cna change settings with different directives
+ - "server_name" - sets a name for the current server_block, default localhost
+ - "listen" - sets the host and port the server is listening on, default 0.0.0.0:8080
+ - "location" - sets up a new route through which request can go with it's own settings, default root
+ - "index" - sets a file to answer when the request is a directory, default index.html
+ - "error_page" - sets a different error_page for the specified code, default pages setup in constructor
+ - "autoindex" - sets directory listing on or off, default off
+ - "client_max_body_size" - sets the maximum size of the body of a request, default 100000000
+ - "return" - sets a redirection to another page with a specified redirection code, not on by default
+ - "root" - sets the root folder for which to start looking for the file requested, default root
+ - "allowed_methods" - sets which methods are allowed on the route, default all allowed
+ - "upload_dir" - sets the upload directory for files, default root/orders
+ - "allow_upload" - sets if uploads are allowed, default off
+ - "cgi_extension" - sets the cgi extension, default cgi
+ - "allow_cgi" - sets if cgi allowed, default off
+
+
+ Syntax required for the directives
+  - "server" - needs to be followed by a "{" and has to appear in it's own block, you can't nest servers
+
+  - "server_name" - has any name followed by a ;, can only appear in the server block
+
+  - "listen" - you can either specify only the host, only the port or both separated by a :. Host needs to have
+  				numbers and the port needs to be between 0 and 65535. Has to be followed by a ; and can only appear
+  				in the server block
+
+  - "location" - needs to be followed by a path (can be anything) and then a "{", the path cannot be root
+  				hsa to be in a server block
+
+  - index - has any name followed by a ";", can appear in a location or server block
+
+  - error_page - needs a valid error code and then the path to a page, needs to be followed by a ";"
+  				can appear in a location or server block
+
+  - autoindex - needs to be followed by either "on" or "off" and then a ";", can appear in location and server block
+
+  - client_max_body_size - needs to be followed by a number smaller than maximum size_t and then a ";"
+  							can appear in location and server block
+
+  - return - needs ot be followed by a valid status code starting with 3, then a page and then a ";"
+  			can appear in location and server block
+
+  - root - needs to be followed by a path and then a ";", can appear in location and server block
+
+  - allowed_methods - is followed by comma separated allowed methods, DELETE, POST or GET. Can also just input NONE,
+  					for no methods allowed. f.e. DELETE,POST. has to be followed by a ";", can appear in location and server block
+
+  - upload_dir - is followed by a path to the upload_dir then a ";", can appear in location and server block
+
+  - allow_upload - needs to be followed by either "on" or "off" and then a ";", can appear in location and server block
+
+  - cgi_extension - is followed by an extension for the cgi and then a ";", can appear in location and server block
+
+  - allow_cgi - needs to be followed by either "on" or "off" and then a ";", can appear in location and server block
+
+  Other rules
+  After a location block we can only open another location block or close the server, so if you want to set
+  default settings for the default root do it before any location block. f.e. this is not allowed
+
+  server {
+  	...
+  	location {
+  		...
+	}
+  	index no.html; <---- this is an error, should be before the location block
+  }
