@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 22:14:27 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 18:18:01 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,43 +46,36 @@ Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPoi
 	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen");
 }
 
+//kick out any remaining customers
 Waiter::~Waiter()
 {
-	for (auto order : _orders)
-		delete (order.second);
+	for (auto customer : _customers)
+		delete (customer.second);
 }
 
-//accept the order
+//Seat the new customer
 void Waiter::input(int eventFD)
 {
 	if (eventFD != this->_inFD)
-		throw WebservException("Waiter fired for bad input FD event\n");
+		throw WebservException("Waiter + " + std::to_string(this->_inFD) + " input freakout.\n");
 
 	sockaddr_in orderAddr{};
 	socklen_t 	orderAddrLen = sizeof(orderAddr);
-	int orderFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
-	if (orderFD == -1)
-		throw WebservException("Failed to take a new order: " + std::string(std::strerror(errno)) + "\n");
+	int customerFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
+	if (customerFD == -1)
+		throw WebservException("Failed to seat the Customer: " + std::string(std::strerror(errno)) + "\n");
 
-	Order* order = new Order(this, orderFD, resP);
-	this->_orders[orderFD] = order;
+	Customer* customer = new Customer(customerFD, resP, this);
+	this->_customers[customerFD] = customer;
 }
 
-void Waiter::output(int eventFD)
+//Say goodbye to the customer
+void Waiter::output(int customerFD)
 {
-	if (eventFD != _outFD)
-		throw WebservException("Waiter fired bad output FD event: " + std::to_string(eventFD) + "\n");
-}
-
-void Waiter::finishOrder(int orderFD)
-{
-	Log::getInstance().print("Finishing order " + std::to_string(orderFD));
-	Restaurant* restaurant = (Restaurant*)resP;
-	restaurant->removeFdHander(orderFD);
-	if (this->_orders.find(orderFD) != this->_orders.end())
-	{
-		this->_orders.erase(orderFD);
-		delete (this->_orders[orderFD]);
+	Log::getInstance().print("Saying goodbye to customer " + std::to_string(customerFD));
+	if (this->_customers.find(customerFD) == this->_customers.end()) {
+		throw WebservException("Customer " + std::to_string(customerFD) + " does not exist.\n");
 	}
-	throw WebservException("Order does not exist and could not be erased\n");
+	this->_customers.erase(customerFD);
+	delete (this->_customers[customerFD]);
 }

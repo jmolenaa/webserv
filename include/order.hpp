@@ -14,25 +14,18 @@
 # define ORDER_HPP
 
 # include <string>
-# include "fdHandler.hpp"
 # include "defines.hpp"
 # include "status.hpp"
-# include "dish.hpp"
 
-class Dish;
-
-class Order : public FdHandler
+class Order
 {
 	public:
-		Order(void* waiterPointer, int fd, void* restaurantPointer);
+		Order(Status& status, int fd);
 		Order() = delete;
 		Order(Order& other) = delete;
-		~Order();
+		~Order() = default;
 
-		void		input(int eventFD) override;
-		void		output(int eventFD) override;
-		
-		void		orderDone();
+		bool		makeOrder();
 		method	   	getMethod() const;
 		std::string getPath() const;
 		uint    	getTable() const;
@@ -41,9 +34,11 @@ class Order : public FdHandler
 		std::string getHostname() const;
 		std::string getBody() const;
 		std::string getOrder() const; //check maxBodySize in dafault recipe unless overwritten
-		Status		status;
+
 	private:
-		void*		_wP;
+		Status&		_status;
+		int			_orderFD;
+
 		bool		_done;
 		char		_buffer[BUF_LIMIT - 1];
 		std::string	_bufStr;
@@ -56,8 +51,6 @@ class Order : public FdHandler
 		uint		_contentLength;
 		std::string _contentType;
 		std::string	_body;
-
-		Dish*		_dish;
 
 		void	_extractHeader();
 		void	_parseHeader();

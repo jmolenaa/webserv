@@ -105,7 +105,7 @@ void Dish::CGI::_execError(std::string what, std::string why)
 	close(_outFD[0]);
     close(_outFD[1]);
 	_freeEnv();
-	_dish._order.status.updateState(INTERNALERR);
+	_dish._status.updateState(INTERNALERR);
     throw WebservException(what + why + "\n");
 }
 

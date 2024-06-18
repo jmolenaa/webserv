@@ -11,14 +11,7 @@
 /* ************************************************************************** */
 
 #include "order.hpp"
-#include <unistd.h>
-
 #include "log.hpp"
-#include "restaurant.hpp"
-#include "cook.hpp"
-#include "waiter.hpp"
-#include "dish.hpp"
-#include "webservException.hpp"
 
 /** 
  * read from the socket until you encounter the 0x0D 0x0A sequence of bytes denoting the end of the dish line, which contains the HTTP version, Status Code, and Reason text.
@@ -34,69 +27,20 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Order::Order(void* waiterPointer, int fd, void* restaurantPointer) 
-	: FdHandler(restaurantPointer), _wP(waiterPointer), _done(false)
-{
-	this->_inFD = fd;
-	this->_outFD = fd;
-
-	Waiter* waiter = (Waiter*)_wP;
-	Log::getInstance().print("Waiter " + std::to_string(waiter->getIn()) + " is taking order " + std::to_string(fd) + "\n");
-	
-	Restaurant* restaurant = (Restaurant*)this->resP;
-	restaurant->addFdHandler(_inFD, this, EPOLLIN);
-}
-
-Order::~Order() {
-	delete _dish;
+Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false) {
+		Log::getInstance().print("Customer " + std::to_string(_orderFD) + " has been seated.\n");
 }
 
 //taking the order
-void Order::input(int eventFD)
+bool Order::makeOrder()
 {
-	if (eventFD != _inFD)
-		throw WebservException("Order fired bad input FD event\n");
-
-	Log::getInstance().print("Receiving input from fd " + std::to_string(eventFD));
+	if (_done)
+		return (_done);
 	if (this->_header.empty())
 		_extractHeader();
 	else
 		_extractBody();
-	if (this->_done)
-	{
-		_printData();
-		// Restaurant* restaurant = (Restaurant*)this->resP;
-		// restaurant->removeFdHander(this->_inFD);
-		_prepDish();
-	}
-}
-
-//find the correct recipe / location
-void Order::_prepDish()
-{
-	Waiter* waiter = (Waiter*)_wP;
-	const Cook* cook = waiter->kitchen.find(_hostname);
-	if (cook == nullptr)
-		cook = waiter->kitchen.begin();
-	std::string page = _path;
-	Recipe recipe(cook->getRecipe(page));
-	while (!page.empty() && page != recipe.page) //double check this shit
-	{
-		size_t end = page.find_last_of('/');
-		if (end == std::string::npos)
-			break;
-		else
-			page = page.substr(0, end);
-		recipe = cook->getRecipe(page);
-	}
-	_dish = new Dish(*this, recipe, this->resP);
-}
-
-void Order::orderDone()
-{
-	Waiter* waiter = (Waiter*)_wP;
-	close(_inFD);
-	waiter->finishOrder(_inFD);
+	return (_done);
 }
 
 //Returns the method GET, POST, DELETE
@@ -145,11 +89,4 @@ std::string Order::getBody() const
 std::string Order::getOrder() const
 {
 	return _header + _body;
-}
-
-//Shouldn't happen
-void Order::output(int eventFD)
-{
-	if (eventFD != this->_outFD)
-		throw WebservException("Bad output FD event on Order\n");
 }

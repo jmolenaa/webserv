@@ -33,31 +33,34 @@ class Dish : public FdHandler
 	}	filetype;
 
 	public:
-		Dish(Order& order, Recipe& recipe, void* restaurantPointer);
+		Dish(Status& status, Order const& order, Recipe recipe, void* restaurantPointer, void* customerPointer);
 		Dish() = delete;
 		~Dish();
 
 		void		input(int eventFD) override;
 		void		output(int eventFD) override;
 
+		std::string	getDish();
+		void		doMethod();
+
 	private:
-		Order&			_order;
-		Recipe&			_recipe;
+		Status&			_status;
+		Order const&	_order;
+		Recipe			_recipe;
 		std::string		_header;
 		std::string		_body;
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];
-		std::string		_sendMessage;
-		ssize_t			_sendSize;
-		size_t			_sendPos;
+		void*			_customerPointer;
 
-		void	_doMethod();
+		void	_doPipe();
+		void	_trashDish();
+
 		void	_doError();
 		void	_get();
 		void	_post();
 		void	_delete();
 		void	_generateHeader();
-		void	_serveDish();
 
 		class CGI
 		{

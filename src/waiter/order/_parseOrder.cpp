@@ -6,24 +6,24 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 17:44:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 18:27:52 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-
 #include "order.hpp"
-#include "waiter.hpp"
+
+#include <unistd.h>
 #include "log.hpp"
+#include "defines.hpp"
 
 void Order::_extractHeader()
 {
-	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
 		_done = true;
 		_header += "\r\nERR";
-		status.updateState(INTERNALERR);
+		_status.updateState(INTERNALERR);
 	}
 	else
 	{
@@ -114,11 +114,11 @@ void Order::_extractBody()
 		return ;
 	}
 	
-	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
 		_done = true;
-		status.updateState(INTERNALERR);		
+		_status.updateState(INTERNALERR);		
 	}
 	else
 	{

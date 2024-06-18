@@ -6,7 +6,7 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/06/14 17:15:13 by dliu          ########   odam.nl          #
+#    Updated: 2024/06/18 16:56:24 by dliu          ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ DEPS := $(OBJS:%.o=%.d)
 
 # if condition to create obj directories when compiling for the first time
 ifndef $(shell find $(OBJ_DIR) -maxdepth 1 -name $(OBJ_DIR))
-	DIR = obj obj/restaurant obj/cook obj/concierge obj/dish obj/waiter obj/status obj/exceptions obj/config
+	DIR = obj obj/exceptions obj/restaurant obj/config obj/cook obj/concierge obj/status obj/waiter obj/waiter/dish obj/waiter/order
 endif
 
 
@@ -78,7 +78,7 @@ fclean: clean
 	@echo "${RED}Removing ${NAME}${END}"
 	@rm -rf $(NAME)
 
-re: clean all
+re: fclean all
 
 # should probably fclean first before compiling with debug symbols
 debug:

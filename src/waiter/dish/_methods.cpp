@@ -6,12 +6,13 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/14 14:14:17 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 17:09:09 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dish.hpp"
-#include "sstream"
+#include <unistd.h>
+
 #include "order.hpp"
 
 /**
@@ -26,9 +27,11 @@ void Dish::_get()
 	{
 		std::string type = page.substr(pos + 1);
 		if (type != "html")
-			return (_order.status.updateState(UNSUPPORTED));
-	
+			return (_status.updateState(UNSUPPORTED));
+		
 		_inFD = open(page.c_str(), O_RDONLY);
+		if (_inFD < 0)
+			_doError();
 	}
 	else
 	{
@@ -44,14 +47,17 @@ void Dish::_get()
 		// }
 	}
 	if (_inFD < 0)
-		return (_order.status.updateState(NOTFOUND));
+		return (_status.updateState(NOTFOUND));
+
+	_doPipe();
+	input(_inFD);
 }
 
 void Dish::_post()
 {
 	if (_order.getPath().find("/cgi-bin/post.cgi") != 0
 		&& _order.getPath().find("/cgi-bin/upload.cgi") != 0)
-		return (_order.status.updateState(FORBIDDEN));
+		return (_status.updateState(FORBIDDEN));
 	else
 	{	
 		CGI cgi(*this);
@@ -62,7 +68,7 @@ void Dish::_post()
 void Dish::_delete()
 {
     if (_order.getPath().find("/cgi-bin/delete.cgi") != 0)
-        return (_order.status.updateState(FORBIDDEN));
+        return (_status.updateState(FORBIDDEN));
     else
 	{
 		CGI cgi(*this);
