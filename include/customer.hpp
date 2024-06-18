@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/18 13:45:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 17:01:41 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/18 19:17:15 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,5 @@ class Customer : public FdHandler
 		void	_getDish();
 		void	_leave();
 };
-
-typedef std::function<void(Customer&)> callbackMethod;
 
 #endif

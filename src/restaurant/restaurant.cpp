@@ -51,16 +51,20 @@ void Restaurant::run()
 				// _epoll.modifyFd(eventFD, events[i].events);
 				continue;
 			}
-			if (events[i].events & EPOLLOUT
+			else if (events[i].events & EPOLLOUT
 				&& _Out.find(eventFD) != _Out.end())
 			{
 				_Out[eventFD]->output(eventFD);
 				// events[i].events &= ~EPOLLOUT;
 				// _epoll.modifyFd(eventFD, events[i].events);
 				continue;
+
 			}
-			Log::getInstance().print("Removing unknown event...\n");
-			_epoll.removeFd(eventFD);
+			else{
+				Log::getInstance().print("Removing unknown event...\n");
+				_epoll.removeFd(eventFD);
+				//close(eventFD);
+			}
 		}
     }
 }
