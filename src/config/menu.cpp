@@ -20,7 +20,6 @@ Menu::Menu(std::string const& filename) : _currentState(NO_STATE) , _currentCook
 	initErrorCodes();
 	Lexer	lexer(filename);
 	this->setTokens(lexer.lex());
-	this->parse();
 }
 
 void Menu::initErrorCodes() {

@@ -45,6 +45,4 @@ class Customer : public FdHandler
 		void	_leave();
 };
 
-typedef std::function<void(Customer&)> callbackMethod;
-
 #endif

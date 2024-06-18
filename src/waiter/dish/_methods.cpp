@@ -21,14 +21,14 @@
  * 
  */
 
-static bool	isDirectory(std::string const& path) {
-	struct stat	fileInfo;
-	stat(path.c_str(), &fileInfo);
-	if (S_ISDIR(fileInfo.st_mode)) {
-		return true;
-	}
-	return false;
-}
+//static bool	isDirectory(std::string const& path) {
+//	struct stat	fileInfo;
+//	stat(path.c_str(), &fileInfo);
+//	if (S_ISDIR(fileInfo.st_mode)) {
+//		return true;
+//	}
+//	return false;
+//}
 
 void Dish::_get()
 {
