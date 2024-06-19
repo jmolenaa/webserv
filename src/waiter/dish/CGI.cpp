@@ -11,7 +11,7 @@
 #include "restaurant.hpp"
 #include "customer.hpp"
 
-CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0)
+CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _env(nullptr)
 {
 	try
 	{
@@ -37,7 +37,7 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0)
 
 CGI::~CGI()
 {
-	for (size_t i = 0; i < _vec.size(); ++i)
+	for (size_t i = 0; _env && _env[i]; ++i)
         delete[] _env[i];
  
     delete[] _env;
@@ -67,14 +67,15 @@ void CGI::_setEnv()
 	_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	_vec.push_back("SCRIPT_NAME=" + _path);
 	_vec.push_back("UPLOAD_DIR=" + _dish.recipe.uploadDir);
-	_env = new char*[_vec.size()];
+	_env = new char*[_vec.size() + 1];
 
-	// for (size_t i = 0; i < _vec.size(); i++)
-	// {
-	// 	_env[i] = new char[_vec[i].length() + 1];
-	// 	std::strcpy(_env[i], _vec[i].c_str());
-	// 	Log::getInstance().print(std::string(_env[i]));
-	// }
+	 for (size_t i = 0; i < _vec.size(); i++)
+	 {
+	 	_env[i] = new char[_vec[i].length() + 1];
+	 	std::strcpy(_env[i], _vec[i].c_str());
+	 	Log::getInstance().print(std::string(_env[i]));
+	 }
+	 _env[_vec.size()] = nullptr;
 }
 
 /**
@@ -130,7 +131,8 @@ void CGI::_execChild()
 
 	char* path = const_cast<char*>(_path.c_str());
 	char* argv[] = {path, path, nullptr};
-	Log::getInstance().printErr("Executing CGI for path " + _path + "\n");
+	Log::getInstance().printErr("Executing CGI for path " + _path);
+//	std::cout << _env[0] << "\n";
     if (execve(path, argv, _env) < 0)
        _closePipes("execve failed: ", std::string(std::strerror(errno)));
 	exit(EXIT_FAILURE);
@@ -167,6 +169,7 @@ void	CGI::input(int eventFD)
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
 		_buffer[count] = '\0';
 		_dish.body += std::string(_buffer);
+		Log::getInstance().print("body " + _dish.body);
 	}
 }
 
@@ -196,6 +199,7 @@ void	CGI::output(int eventFD)
 	else
 	{
 		Log::getInstance().print("Adding ingredients to CGI " + std::to_string(count) + " ingredients");
+		Log::getInstance().print("message " + _message.substr(_pos));
 		_pos += count;
 	}
 }

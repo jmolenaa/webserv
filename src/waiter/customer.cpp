@@ -51,7 +51,7 @@ Customer::~Customer()
 		delete 	_dish;
 	close(_inFD);
 	close(_outFD);
-	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has left.\n");
+	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has left.\n----------------------------\n");
 }
 
 //taking the order
