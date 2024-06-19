@@ -20,20 +20,14 @@
 # include "recipe.hpp"
 # include "fdHandler.hpp"
 # include "order.hpp"
+# include "CGI.hpp"
 
-class Order;
+class Customer;
 
 class Dish : public FdHandler
 {
-	typedef enum
-	{
-		NONE,
-		HTML,
-		FOLDER
-	}	filetype;
-
 	public:
-		Dish(Status& status, Order const& order, Recipe recipe, void* restaurantPointer, void* customerPointer);
+		Dish(Status& status, Order const& order, Recipe recipe, Customer& cust);
 		Dish() = delete;
 		~Dish();
 
@@ -42,51 +36,28 @@ class Dish : public FdHandler
 
 		std::string	getDish();
 		void		doMethod();
+		void		doError();
+
+		Status&			status;
+		Order const&	order;
+		Recipe			recipe;
+		Customer&		customer;
+
+		std::string		header;
+		std::string		body;
 
 	private:
-		Status&			_status;
-		Order const&	_order;
-		Recipe			_recipe;
-		std::string		_header;
-		std::string		_body;
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];
-		void*			_customerPointer;
+		CGI*			_CGI;
 
 		void	_doPipe();
 		void	_trashDish();
 
-		void	_doError();
 		void	_get();
 		void	_post();
 		void	_delete();
 		void	_generateHeader();
-
-		class CGI
-		{
-			public: 
-				explicit CGI(Dish& parent);
-				CGI() = delete;
-				
-				int	execute();
-			
-			private:
-				Dish&		_dish;
-				std::string _query;
-				std::string	_path;
-				int			_inFD[2];
-				int			_outFD[2];
-				pid_t		_pid;
-
-				char**						_env;
-				std::vector<std::string>	_vec;
-				void		_vectorToEnv(const std::vector<std::string>& vec);	
-				void		_freeEnv();
-				
-				void 		_execChild();
-				void		_setEnv();
-				void		_execError(std::string what, std::string why);
-		};
 };
 
 #endif

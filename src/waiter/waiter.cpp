@@ -6,19 +6,21 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 18:18:01 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 13:12:40 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstring>
-
 #include "waiter.hpp"
+
+#include <cstring>
 #include "webservException.hpp"
 #include "log.hpp"
 #include "restaurant.hpp"
+#include "cook.hpp"
+#include "customer.hpp"
 
 //Creates server. Removed setup functions since they are never reused.
-Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPointer), kitchen(kitch)
+Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest), kitchen(kitch)
 {
 	Log::getInstance().print("Waiter is being hired");
 	
@@ -39,9 +41,9 @@ Waiter::Waiter(Kitchen kitch, void* restaurantPointer) : FdHandler(restaurantPoi
 	//listen on socket
 	if (listen(this->_inFD, SOMAXCONN) == -1)
 		throw WebservException("Waiter could not listen because: " + std::string(std::strerror(errno)) + "\n");
+	
 	//add to epoll and map
-	Restaurant* restaurant = (Restaurant*)this->resP;
-	restaurant->addFdHandler(this->_inFD, this, EPOLLIN);
+	restaurant.addFdHandler(this->_inFD, this, EPOLLIN);
 
 	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen");
 }
@@ -65,7 +67,7 @@ void Waiter::input(int eventFD)
 	if (customerFD == -1)
 		throw WebservException("Failed to seat the Customer: " + std::string(std::strerror(errno)) + "\n");
 
-	Customer* customer = new Customer(customerFD, resP, this);
+	Customer* customer = new Customer(customerFD, restaurant, *this);
 	this->_customers[customerFD] = customer;
 }
 

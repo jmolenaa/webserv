@@ -17,7 +17,7 @@
 #include <unordered_map>
 
 #include "concierge.hpp"
-#include "waiter.hpp"
+#include "fdHandler.hpp"
 
 class Restaurant
 {
@@ -28,19 +28,16 @@ class Restaurant
 		~Restaurant();
 		
 		void	run();
-		void	addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType);
-		void	removeFdHander(int fd);
+
+		void	addFdHandler(int fd, FdHandler* handler, uint32_t eventType);
+		void	removeFdHandler(int fd);
 
 	private:
-		Concierge	_epoll;
-	
-		std::vector<Waiter*>	_waiters;
-
+		Concierge					_concierge;
+		std::vector<FdHandler*>		_waiters;
+		
 		std::unordered_map<int, FdHandler*>	_In;
 		std::unordered_map<int, FdHandler*>	_Out;
-
-		void	_handleInput(int eventFD);
-		void	_handleOutput(int eventFD);
 };
 
 #endif

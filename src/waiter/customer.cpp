@@ -14,11 +14,11 @@
 #include <unistd.h>
 #include <cstring>
 
-#include "log.hpp"
 #include "webservException.hpp"
+#include "concierge.hpp"
 #include "restaurant.hpp"
+#include "log.hpp"
 #include "cook.hpp"
-#include "waiter.hpp"
 
 /** 
  * read from the socket until you encounter the 0x0D 0x0A sequence of bytes denoting the end of the dish line, which contains the HTTP version, Status Code, and Reason text.
@@ -34,15 +34,14 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Customer::Customer(int fd, void* restaurantPointer, void* waiterPointer) : FdHandler(restaurantPointer), _wP(waiterPointer), _order(_status, fd)
+Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd)
 {
 	this->_inFD = fd;
 	this->_outFD = fd;
 
 	_pos = 0;
 	_bitesLeft = 0;
-	Restaurant* restaurant = (Restaurant*)this->resP;
-	restaurant->addFdHandler(_inFD, this, EPOLLIN);
+	restaurant.addFdHandler(_inFD, this, EPOLLIN);
 }
 
 Customer::~Customer()
@@ -67,13 +66,11 @@ void Customer::input(int eventFD)
 
 void Customer::_getDish()
 {
-	Restaurant* restaurant = (Restaurant*)this->resP;
-	restaurant->removeFdHander(_inFD);
+	restaurant.removeFdHandler(_inFD);
 
-	Waiter* waiter = (Waiter*)_wP;
-	const Cook* cook = waiter->kitchen.find(_order.getHostname());
+	const Cook* cook = _waiter.kitchen.find(_order.getHostname());
 	if (cook == nullptr)
-		cook = waiter->kitchen.begin();
+		cook = _waiter.kitchen.begin();
 
 	std::string page = _order.getPath();
 	Recipe recipe(cook->getRecipe(page));
@@ -86,7 +83,7 @@ void Customer::_getDish()
 			page = page.substr(0, end);
 		recipe = cook->getRecipe(page);
 	}
-	_dish = new Dish(this->_status, this->_order, recipe, this->resP, this);
+	_dish = new Dish(this->_status, this->_order, recipe, *this);
 	_dish->doMethod();
 }
 
@@ -98,11 +95,9 @@ void Customer::eat()
 
 	//prepare to send to client
 	Log::getInstance().print("Eating dish " + std::to_string(_inFD));
-	Restaurant* restaurant = (Restaurant*)resP;
-	restaurant->addFdHandler(_outFD, this, EPOLLOUT);
+	restaurant.addFdHandler(_outFD, this, EPOLLOUT);
 	output(_outFD);
 }
-
 
 void Customer::output(int eventFD)
 {
@@ -128,86 +123,8 @@ void Customer::output(int eventFD)
 
 void Customer::_leave()
 {
-	Restaurant* restaurant = (Restaurant*)this->resP;
-	restaurant->removeFdHander(_outFD);
+	restaurant.removeFdHandler(_outFD);
 	close(_outFD);
 
-	Waiter* waiter = (Waiter*)_wP;
-	waiter->output(_outFD);
+	_waiter.output(_outFD);
 }
-
-//find the correct recipe / location
-// void Customer::_prepDish()
-// {
-// 	Waiter* waiter = (Waiter*)_wP;
-// 	const Cook* cook = waiter->kitchen.find(_hostname);
-// 	if (cook == nullptr)
-// 		cook = waiter->kitchen.begin();
-// 	std::string page = _path;
-// 	Recipe recipe(cook->getRecipe(page));
-// 	while (!page.empty() && page != recipe.page) //double check this shit
-// 	{
-// 		size_t end = page.find_last_of('/');
-// 		if (end == std::string::npos)
-// 			break;
-// 		else
-// 			page = page.substr(0, end);
-// 		recipe = cook->getRecipe(page);
-// 	}
-// 	_dish = new Dish(*this, recipe, this->resP);
-// }
-
-// void Customer::orderDone()
-// {
-// 	Waiter* waiter = (Waiter*)_wP;
-// 	close(_inFD);
-// 	waiter->finishCustomer(_inFD);
-// }
-
-// //Returns the method GET, POST, DELETE
-// method Customer::getMethod() const
-// {
-// 	return _method;
-// }
-
-// //Returns the request path
-// std::string Customer::getPath() const
-// {
-// 	return _path;
-// }
-
-// //returns the Port number
-// uint Customer::getTable() const
-// {
-// 	return _table;
-// }
-
-// //returns the hostname
-// std::string Customer::getHostname() const
-// {
-// 	return _hostname;
-// }
-
-// //returns CONTENT_LENGTH
-// uint Customer::getLength() const
-// {
-// 	return _contentLength;
-// }
-
-// //returns CONTENT_TYPE
-// std::string Customer::getType() const
-// {
-// 	return _contentType;
-// }
-
-// //returns the body of the request only
-// std::string Customer::getBody() const
-// {
-// 	return _body;
-// }
-
-// //returns the full request message
-// std::string Customer::getCustomer() const
-// {
-// 	return _header + _body;
-// }

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/18 13:45:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 19:17:15 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/19 13:10:24 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 
 # include "defines.hpp"
 # include "fdHandler.hpp"
+# include "waiter.hpp"
 # include "order.hpp"
 # include "dish.hpp"
 
 class Customer : public FdHandler
 {
 	public:
-		Customer(int fd, void* restaurantPointer, void* waiterPointer);
+		Customer(int fd, Restaurant& rest, Waiter& wait);
 		Customer() = delete;
 		Customer(Customer& other) = delete;
 		~Customer();
@@ -32,7 +33,7 @@ class Customer : public FdHandler
 		void	eat();
 
 	private:
-		void*	_wP;
+		Waiter&	_waiter;
 		Status	_status;
 		Order	_order;
 		Dish*	_dish;

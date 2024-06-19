@@ -14,25 +14,22 @@
 # define FDHANDLER_HPP
 
 #include <string>
+class Restaurant;
 
 class FdHandler
 {
 	public:
-		void*	resP;
-
-		FdHandler(void* restaurantPointer);
-		virtual ~FdHandler();
+		FdHandler(Restaurant& rest) : restaurant(rest), _inFD(-1), _outFD(-1) {};
+		virtual ~FdHandler() = default;
 
 		virtual void input(int eventFD) = 0;
 		virtual void output(int eventFD) = 0;
 
-		int	getIn();
-		int getOut();
-	
+		Restaurant&	restaurant;
+
 	protected:
 		int	_inFD;
 		int _outFD;
-
 };
 
 #endif

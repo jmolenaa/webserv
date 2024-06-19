@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/11 18:14:58 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 13:52:46 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,6 @@ typedef enum {
 	DELETE = 4,
 	OTHER = 8
 } 	method;
-
-typedef enum
-{
-	NONE,
-	HTML,
-	FOLDER,
-	CGI
-}	filetype;
 
 /**
  * NB!!! If adding to this enum:

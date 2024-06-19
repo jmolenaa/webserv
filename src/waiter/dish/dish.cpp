@@ -15,31 +15,31 @@
 
 #include "dish.hpp"
 #include "order.hpp"
-#include "waiter.hpp"
-#include "restaurant.hpp"
-#include "webservException.hpp"
 #include "customer.hpp"
 
-Dish::Dish(Status& status, Order const& order, Recipe recipe, void* restuarantPointer, void* customerPointer)
-	: FdHandler(restuarantPointer), _status(status), _order(order), _recipe(recipe), _customerPointer(customerPointer)
+Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
+	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust)
 {
-	if (_order.getPath().find_last_of('/') == std::string::npos)
-		_status.updateState(BAD);
+	_CGI = nullptr;
+	if (order.getPath().find_last_of('/') == std::string::npos) {
+		status.updateState(BAD);
+	}
 }
 
 Dish::~Dish()
 {
 	_trashDish();
+	delete _CGI;
 }
 
 void Dish::doMethod()
 {
-	if (_status.getState() != OK) {
-		_doError();
+	if (this->status.getState() != OK) {
+		doError();
 	}
-	method m = _order.getMethod();
-	if ((m & _recipe.allowedMethods) == 0)
-		return(_status.updateState(METHODNOTALLOWED));
+	method m = this->order.getMethod();
+	if ((m & this->recipe.allowedMethods) == 0)
+		return(this->status.updateState(METHODNOTALLOWED));
 	switch (m)
 	{
 		case (GET):
@@ -52,11 +52,11 @@ void Dish::doMethod()
 			_delete();
 			break;
 		default:
-			_status.updateState(METHODNOTALLOWED);
+			this->status.updateState(METHODNOTALLOWED);
 			return;
 	}
-	if (_status.getState() != OK) {
-		_doError();
+	if (this->status.getState() != OK) {
+		doError();
 	}
 }
 
@@ -66,25 +66,24 @@ void	Dish::input(int eventFD)
 	ssize_t	count = read(_inFD, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
-		Log::getInstance().printErr("SOMETHING WHENT WRONG IN DISH INPUT\n");
+		Log::getInstance().printErr("Read error in dish input!\n");
 
-		if (_status.getState() != OK) {
-			_status.updateState(COUNT);
+		if (this->status.getState() != OK) {
+			this->status.updateState(COUNT);
 		}
 		else {	
-			_status.updateState(INTERNALERR);
+			this->status.updateState(INTERNALERR);
 		}
-		_doError();
+		doError();
 	}
 	else if (count == 0)
 	{
-		Log::getInstance().print("Finished adding ingredientes from " + std::to_string(_inFD) + "!\n");
+		Log::getInstance().print("Finished adding ingredients from " + std::to_string(_inFD) + "!\n");
 
-		// close(_inFD);
-		// close(_pipeFDs[1]);
+		close(_inFD);
+		close(_pipeFDs[1]);
 
-		Customer* myCustomer = (Customer*)_customerPointer;
-		myCustomer->eat();
+		this->customer.eat();
 	}
 	else
 	{
@@ -99,26 +98,26 @@ void	Dish::output(int eventFD)
 	ssize_t count = read(_pipeFDs[0], _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
-		Log::getInstance().printErr("SOMETHING WHENT WRONG\n");
-		if (_status.getState() != OK) {
-			_status.updateState(COUNT);
+		Log::getInstance().printErr("Read error in Dish output!\n");
+		if (this->status.getState() != OK) {
+			this->status.updateState(COUNT);
 		}
 		else {	
-			_status.updateState(INTERNALERR);
+			this->status.updateState(INTERNALERR);
 		}
-		_doError();
+		doError();
 	}
 	else
 	{
 		Log::getInstance().print("Dish is cooking " + std::to_string(count) + " ingredients");
 		_buffer[count] = '\0';
-		_body += std::string(_buffer);
+		body += std::string(_buffer);
 	}
 }
 
 std::string	Dish::getDish()
 {
 	_generateHeader();
-	return (_header + _body);
+	return (header + body);
 }
 

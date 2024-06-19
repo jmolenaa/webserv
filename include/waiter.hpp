@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 13:07:45 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 16:50:53 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 13:11:42 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@
 
 # include "defines.hpp"
 # include "fdHandler.hpp"
-# include "status.hpp"
-# include "customer.hpp"
 # include "cook.hpp"
 
 class Waiter : public FdHandler
 {
 	public:
-		Waiter(Kitchen kitch, void* rest);
+		Waiter(Kitchen kitch, Restaurant& rest);
 		Waiter() = delete;
 		~Waiter();
 
@@ -33,9 +31,9 @@ class Waiter : public FdHandler
 		void	output(int eventFD) override;
 
 		const Kitchen	kitchen;
-
+	
 	private:
-		std::unordered_map<int, Customer*> _customers;
+		std::unordered_map<int, FdHandler*> _customers;
 };
 
 #endif

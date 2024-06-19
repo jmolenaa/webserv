@@ -10,9 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "restaurant.hpp"
 #include "log.hpp"
+#include "restaurant.hpp"
 #include "menu.hpp"
+#include "cook.hpp"
 
 Restaurant::Restaurant(std::string const& filename)
 {
@@ -23,14 +24,23 @@ Restaurant::Restaurant(std::string const& filename)
 	menu.parse();
 
 	for (Kitchen const& kitchen : menu.getKitchens()) {
-		this->_waiters.push_back(new Waiter(kitchen, this));
+		this->_waiters.push_back(new Waiter(kitchen, *this));
 	}
 }
 
 Restaurant::~Restaurant()
 {
-	for (auto waiter : _waiters)
+	for (auto waiter : _waiters) {
 		delete waiter;
+	}
+	for (auto in : _In)	{
+		delete in.second;
+	}
+	for (auto out : _Out) {
+		delete out.second;
+	}
+	_In.clear();
+	_Out.clear();
 }
 
 void Restaurant::run()
@@ -40,8 +50,8 @@ void Restaurant::run()
 
     while (true)
 	{
-        _epoll.wait(-1, events);
-		for (int i = 0; i < _epoll.getNumEvents(); i++)
+        _concierge.wait(-1, events);
+		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
 			if (events[i].events & EPOLLIN
@@ -63,7 +73,7 @@ void Restaurant::run()
 			}
 			else{
 				Log::getInstance().print("Removing unknown event...\n");
-				_epoll.removeFd(eventFD);
+				_concierge.removeFd(eventFD);
 				//close(eventFD);
 			}
 		}
@@ -84,12 +94,12 @@ void Restaurant::addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType)
 			throw WebservException("FD " + std::to_string(fd) + " already exists");
 		_Out[fd] = fdhandler;
 	}
-	_epoll.addFd(fd, eventType);
+	_concierge.addFd(fd, eventType);
 }
 
-void Restaurant::removeFdHander(int fd)
+void Restaurant::removeFdHandler(int fd)
 {
 	_Out.erase(fd);
 	_In.erase(fd);
-	_epoll.removeFd(fd);
+	_concierge.removeFd(fd);
 }
