@@ -29,7 +29,6 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0)
 			_message = _dish.order.getOrder();
 		}
 		_setEnv();
-		Log::getInstance().print("Starting up CGI for path " + _path);
 	}
 	catch (...) {
 		throw WebservException("Critical Error: " + std::string(std::strerror(errno)) + "\n");
@@ -130,8 +129,8 @@ void CGI::_execChild()
 	_closePipes("", "");
 
 	char* path = const_cast<char*>(_path.c_str());
-	std::cerr << path << std::endl;
 	char* argv[] = {path, path, nullptr};
+	Log::getInstance().printErr("Executing CGI for path " + _path + "\n");
     if (execve(path, argv, _env) < 0)
        _closePipes("execve failed: ", std::string(std::strerror(errno)));
 	exit(EXIT_FAILURE);
