@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/19 13:12:40 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 14:45:49 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest), kitchen(kitch
 	//add to epoll and map
 	restaurant.addFdHandler(this->_inFD, this, EPOLLIN);
 
-	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen");
+	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen\n");
 }
 
 //kick out any remaining customers
@@ -78,6 +78,6 @@ void Waiter::output(int customerFD)
 	if (this->_customers.find(customerFD) == this->_customers.end()) {
 		throw WebservException("Customer " + std::to_string(customerFD) + " does not exist.\n");
 	}
-	this->_customers.erase(customerFD);
 	delete (this->_customers[customerFD]);
+	this->_customers.erase(customerFD);
 }

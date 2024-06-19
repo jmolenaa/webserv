@@ -34,7 +34,7 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd)
+Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd), _dish(nullptr)
 {
 	this->_inFD = fd;
 	this->_outFD = fd;
@@ -42,11 +42,16 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _w
 	_pos = 0;
 	_bitesLeft = 0;
 	restaurant.addFdHandler(_inFD, this, EPOLLIN);
+	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has been seated.");
 }
 
 Customer::~Customer()
 {
-	delete 	_dish;
+	if (_dish)
+		delete 	_dish;
+	close(_inFD);
+	close(_outFD);
+	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has left.\n");
 }
 
 //taking the order
@@ -55,10 +60,10 @@ void Customer::input(int eventFD)
 	if (eventFD != _inFD) {
 		throw WebservException("Bad input FD event in customer\n");
 	}
-	Log::getInstance().print("Customer receiving input from fd " + std::to_string(eventFD));
+	Log::getInstance().print("Customer " + std::to_string(eventFD) + " is placing an order");
 	bool doneMakingOrder = _order.makeOrder();
 	if (!doneMakingOrder) {
-		Log::getInstance().print("Not receiveved order yet\n");
+		Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
 		return;
 	}
 	_getDish();
@@ -92,9 +97,10 @@ void Customer::eat()
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
 	delete _dish;
+	_dish = nullptr;
 
 	//prepare to send to client
-	Log::getInstance().print("Eating dish " + std::to_string(_inFD));
+	Log::getInstance().print("Serving to customer " + std::to_string(_inFD));
 	restaurant.addFdHandler(_outFD, this, EPOLLOUT);
 	output(_outFD);
 }
@@ -103,10 +109,8 @@ void Customer::output(int eventFD)
 {
 	if (eventFD != this->_outFD)
 		throw WebservException("Bad output FD event on Customer\n");
-	
-	if (_bitesLeft <= 0) {
-		return (_leave());
-	}
+
+	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating");
 
 	const char* response = _food.c_str();
 	response += _pos;
@@ -119,6 +123,11 @@ void Customer::output(int eventFD)
 		return (_leave());
 	}
 	_bitesLeft -= sent;
+		
+	if (_bitesLeft <= 0) {
+		return (_leave());
+	}
+
 }
 
 void Customer::_leave()

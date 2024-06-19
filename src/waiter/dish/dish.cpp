@@ -78,16 +78,16 @@ void	Dish::input(int eventFD)
 	}
 	else if (count == 0)
 	{
-		Log::getInstance().print("Finished adding ingredients from " + std::to_string(_inFD) + "!\n");
+		Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(_inFD) + "!\n");
 
 		close(_inFD);
 		close(_pipeFDs[1]);
 
-		this->customer.eat();
+		customer.eat();
 	}
 	else
 	{
-		Log::getInstance().print(std::to_string(count) + " ingredients are being added!");
+		Log::getInstance().print(std::to_string(count) + " ingredients are being piped to dish " + std::to_string(_inFD) + "!");
 		write(_pipeFDs[1], _buffer, count);
 	}
 }
@@ -109,7 +109,7 @@ void	Dish::output(int eventFD)
 	}
 	else
 	{
-		Log::getInstance().print("Dish is cooking " + std::to_string(count) + " ingredients");
+		Log::getInstance().print("Dish " + std::to_string(_inFD) + " is being cooked with " + std::to_string(count) + " ingredients");
 		_buffer[count] = '\0';
 		body += std::string(_buffer);
 	}

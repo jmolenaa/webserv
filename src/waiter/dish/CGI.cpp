@@ -29,6 +29,7 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0)
 			_message = _dish.order.getOrder();
 		}
 		_setEnv();
+		Log::getInstance().print("Starting up CGI for path " + _path);
 	}
 	catch (...) {
 		throw WebservException("Critical Error: " + std::string(std::strerror(errno)) + "\n");
@@ -44,6 +45,7 @@ CGI::~CGI()
 	_closePipes("", "");
 }
 
+//this probably needs to be updated
 void CGI::_setEnv()
 {
 	switch (_dish.order.getMethod())
@@ -68,12 +70,12 @@ void CGI::_setEnv()
 	_vec.push_back("UPLOAD_DIR=" + _dish.recipe.uploadDir);
 	_env = new char*[_vec.size()];
 
-	for (size_t i = 0; i < _vec.size(); i++)
-	{
-		_env[i] = new char[_vec[i].length() + 1];
-		std::strcpy(_env[i], _vec[i].c_str());
-		Log::getInstance().print(std::string(_env[i]));
-	}
+	// for (size_t i = 0; i < _vec.size(); i++)
+	// {
+	// 	_env[i] = new char[_vec[i].length() + 1];
+	// 	std::strcpy(_env[i], _vec[i].c_str());
+	// 	Log::getInstance().print(std::string(_env[i]));
+	// }
 }
 
 /**
@@ -127,10 +129,12 @@ void CGI::_execChild()
     
 	_closePipes("", "");
 
-    char* path = const_cast<char*>(_path.c_str());
+	char* path = const_cast<char*>(_path.c_str());
+	std::cerr << path << std::endl;
 	char* argv[] = {path, path, nullptr};
     if (execve(path, argv, _env) < 0)
        _closePipes("execve failed: ", std::string(std::strerror(errno)));
+	exit(EXIT_FAILURE);
 }
 
 void	CGI::input(int eventFD)

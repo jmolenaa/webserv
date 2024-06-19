@@ -27,16 +27,14 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false) {
-		Log::getInstance().print("Customer " + std::to_string(_orderFD) + " has been seated.\n");
-}
+Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false) {}
 
 //taking the order
 bool Order::makeOrder()
 {
 	if (_done)
 		return (_done);
-	if (this->_header.empty())
+	if (_header.empty())
 		_extractHeader();
 	else
 		_extractBody();

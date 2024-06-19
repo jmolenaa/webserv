@@ -47,10 +47,8 @@ void Concierge::addFd(int fd, uint32_t events)
     epoll_event event{};
     event.events = events;
     event.data.fd = fd;
-    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1)
-    {
-		Log::getInstance().print("THrowing A TANTRUM");
-        throw WebservException("Could not add fd to epoll: " + std::string(std::strerror(errno)));
+    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, fd, &event) == -1) {
+        throw WebservException("Could not add fd " + std::to_string(fd) + " to epoll: " + std::string(std::strerror(errno)));
     }
 }
 
@@ -62,7 +60,7 @@ void Concierge::modifyFd(int fd, uint32_t events)
     event.data.fd = fd;
     if (epoll_ctl(_epollfd, EPOLL_CTL_MOD, fd, &event) == -1)
     {
-        throw (WebservException("Failed to modify file descriptor in epoll"));
+        throw (WebservException("Failed to modify fd " + std::to_string(fd) + "  in epoll"));
     }
 }
 
@@ -70,7 +68,7 @@ void Concierge::removeFd(int fd)
 {
     Log::getInstance().print("Concierge will stop monitoring fd " + std::to_string(fd));
     if (epoll_ctl(_epollfd, EPOLL_CTL_DEL, fd, nullptr) == -1) {
-       Log::getInstance().printErr("Could not remove fd from epoll: " + std::string(std::strerror(errno)));
+       Log::getInstance().printErr("Could not remove fd " + std::to_string(fd) + " from epoll: " + std::string(std::strerror(errno)));
     }
 }
 

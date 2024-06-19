@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/27 16:20:46 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/18 18:27:52 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 15:08:20 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void Order::_extractHeader()
 	if (count < 0)
 	{
 		_done = true;
-		_header += "\r\nERR";
+		_header += "\r\n\r\n";
 		_status.updateState(INTERNALERR);
 	}
 	else
@@ -33,6 +33,7 @@ void Order::_extractHeader()
 		if (pos == std::string::npos) {
 			return;
 		}
+		
 		pos += 4;
 		_header = _bufStr.substr(0, pos);
 		if (pos != _bufStr.size()) {
@@ -40,8 +41,11 @@ void Order::_extractHeader()
 		}
 		_bufStr = "";
 		_parseHeader();
-		if (_contentLength == 0)
+		if (_contentLength == 0 || _contentLength == _body.size())
+		{
 			_done = true;
+			_printData();
+		}
 	}
 }
 
@@ -109,12 +113,7 @@ void Order::_extractHost()
 
 void Order::_extractBody()
 {
-	if (_body.size() >= _contentLength)
-	{
-		_done = true;
-		return ;
-	}
-	
+	Log::getInstance().print("Getting body---------");
 	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
@@ -125,6 +124,11 @@ void Order::_extractBody()
 	{
 		_buffer[count] = '\0';
 		_body += std::string(_buffer);
+		if (_body.size() >= _contentLength)
+		{
+			_done = true;
+			_printData();
+		}
 	}
 }
 

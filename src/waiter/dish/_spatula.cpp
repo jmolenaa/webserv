@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/19 13:58:23 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/19 14:33:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	Dish::_doPipe()
 
 void	Dish::_trashDish()
 {
-	Log::getInstance().print("Destroying dish");
 	body = "";
 	close(_inFD);
 	restaurant.removeFdHandler(_pipeFDs[0]);
 	restaurant.removeFdHandler(_pipeFDs[1]);
 	close(_pipeFDs[0]);
 	close(_pipeFDs[1]);
+	Log::getInstance().print("Dish " + std::to_string(_inFD) + " destroyed");
 }
 
 void	Dish::doError()
