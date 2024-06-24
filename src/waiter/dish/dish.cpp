@@ -18,7 +18,7 @@
 #include "customer.hpp"
 
 Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
-	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust)
+	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust), done(false)
 {
 	_CGI = nullptr;
 	if (order.getPath().find_last_of('/') == std::string::npos) {
@@ -58,6 +58,8 @@ void Dish::doMethod()
 	if (this->status.getState() != OK) {
 		doError();
 	}
+	if (done)
+		customer.eat();
 }
 
 void	Dish::input(int eventFD)
@@ -83,7 +85,8 @@ void	Dish::input(int eventFD)
 		close(_inFD);
 		close(_pipeFDs[1]);
 
-		customer.eat();
+		done = true;
+		return;
 	}
 	else
 	{

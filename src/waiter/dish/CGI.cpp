@@ -111,6 +111,8 @@ void CGI::_closePipes(std::string what, std::string why)
 	close(_CGIInputPipe[1]);
 	close(_CGIOutputPipe[0]);
     close(_CGIOutputPipe[1]);
+	close(_inFD);
+	close(_outFD);
 	if (!what.empty())
 	{
 		Log::getInstance().printErr(what + why);
@@ -153,21 +155,22 @@ void	CGI::input(int eventFD)
 		_closePipes("Read error in CGI input!", std::string(std::strerror(errno)));
 		return ;
 	}
-	else if (count == 0)
+	else if (count < BUF_LIMIT - 1)
 	{
+		_buffer[count] = '\0';
+		_dish.body += std::string(_buffer);
 		Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
-
+		
 		close(_inFD);
 		_closePipes("", "");
-
-		_dish.customer.eat();
+		_dish.done = true;
+		return;
 	}
 	else
 	{
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
 		_buffer[count] = '\0';
 		_dish.body += std::string(_buffer);
-		Log::getInstance().print("body " + _dish.body);
 	}
 }
 
@@ -176,8 +179,9 @@ void	CGI::output(int eventFD)
 	if (eventFD != _outFD)
        _closePipes("Bad FD triggered in CGI output ", std::to_string(eventFD));
 
-	Log::getInstance().print("Adding " + std::to_string(_message.size() - _pos) + " ingredients to CGI");
-	ssize_t	count = write(_outFD, _message.substr(_pos, BUF_LIMIT).c_str(), BUF_LIMIT);
+	Log::getInstance().print("Adding ingredients from position " + std::to_string(_pos));
+	std::string msg = _message.substr(_pos, BUF_LIMIT - 1);
+	ssize_t count = write(_outFD, msg.c_str(), msg.size());
 	if (count < 0)
 	{
 		if (_dish.status.getState() != OK) {

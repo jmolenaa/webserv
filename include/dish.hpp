@@ -45,7 +45,8 @@ class Dish : public FdHandler
 
 		std::string		header;
 		std::string		body;
-
+		bool			done;
+	
 	private:
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];
