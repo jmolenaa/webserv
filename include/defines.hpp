@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/19 13:52:46 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/24 13:21:03 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef enum {
  * NB!!! If adding to this enum:
  * remember to update _errorPaths in Recipe constructor
  * and status/status.cpp constructor
- * also add it in menu.hpp to the _errorCodesArray in the proper spot (is in the private variables part, at the bottom)
 */
 typedef enum
 {
@@ -48,7 +47,7 @@ typedef enum
 	NOTFOUND, //404
 	METHODNOTALLOWED, //405
 	LENGTHREQUIRED, //411
-	// TOOLARGE, //413
+	TOOLARGE, //413
 	UNSUPPORTED, //415
 	INTERNALERR, //500
 	COUNT

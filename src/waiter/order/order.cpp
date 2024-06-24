@@ -27,14 +27,16 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false) {}
+Order::Order(Status& stat, int fd) : _status(stat), _orderFD(fd), _done(false), _headerEnd(std::string::npos) {}
 
 //taking the order
 bool Order::makeOrder()
 {
-	if (_done)
+	if (_done) {
+		_printData();
 		return (_done);
-	if (_header.empty())
+	}
+	if (_headerEnd == std::string::npos)
 		_extractHeader();
 	else
 		_extractBody();
@@ -77,14 +79,13 @@ std::string Order::getType() const
 	return _contentType;
 }
 
-//returns the body of the request only
-std::string Order::getBody() const
+//returns the full request message
+std::string const& Order::getOrder() const
 {
-	return _body;
+	return _order;
 }
 
-//returns the full request message
-std::string Order::getOrder() const
+std::string Order::getBody() const
 {
-	return _header + _body;
+	return _order.substr(_headerEnd);
 }

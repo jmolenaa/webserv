@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:27:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/05/28 14:46:13 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/24 13:18:50 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ Status::Status() : _state(OK)
 	_status[LENGTHREQUIRED].first = "Length Required";
 	_status[LENGTHREQUIRED].second = 411;
 
-	// _status[TOOLARGE].first = "Payload Too Large";
-	// _status[TOOLARGE].second = 413;
+	_status[TOOLARGE].first = "Payload Too Large";
+	_status[TOOLARGE].second = 413;
 
 	_status[UNSUPPORTED].first = "Unsupported Media Type";
 	_status[UNSUPPORTED].second = 415;

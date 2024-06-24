@@ -32,25 +32,25 @@ class Order
 		uint	    getLength() const;
 		std::string	getType() const;
 		std::string getHostname() const;
+		std::string const& getOrder() const; //check maxBodySize in dafault recipe unless overwritten
 		std::string getBody() const;
-		std::string getOrder() const; //check maxBodySize in dafault recipe unless overwritten
 
 	private:
 		Status&		_status;
 		int			_orderFD;
 
 		bool		_done;
+		size_t		_headerEnd;
 		char		_buffer[BUF_LIMIT - 1];
 		std::string	_bufStr;
 		
-		std::string _header;
+		std::string _order;
 		method		_method;
 		std::string _path;
 		std::string	_hostname;
 		uint		_table;
 		uint		_contentLength;
 		std::string _contentType;
-		std::string	_body;
 
 		void	_extractHeader();
 		void	_parseHeader();

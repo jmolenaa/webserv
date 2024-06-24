@@ -11,7 +11,7 @@
 #include "restaurant.hpp"
 #include "customer.hpp"
 
-CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _env(nullptr)
+CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _message(_dish.order.getOrder()), _env(nullptr)
 {
 	try
 	{
@@ -19,14 +19,13 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _
 		if (qpos == std::string::npos)
 		{
 			_path = _dish.order.getPath().substr(1);
-			_query = "";
-			_message = _dish.order.getOrder();
+			if (_dish.order.getMethod() == POST)
+				_query = _dish.order.getBody();
 		}
 		else
 		{
 			_path = _dish.order.getPath().substr(1, qpos);
 			_query = _dish.order.getPath().substr(qpos + 1);
-			_message = _dish.order.getOrder();
 		}
 		_setEnv();
 	}
@@ -88,8 +87,8 @@ void CGI::execute()
 	this->_inFD = _CGIOutputPipe[0];
 	this->_outFD = _CGIInputPipe[1];
 
-	_dish.customer.restaurant.addFdHandler(_inFD, this, EPOLLIN);
-	_dish.customer.restaurant.addFdHandler(_outFD, this, EPOLLOUT);
+	restaurant.addFdHandler(_inFD, this, EPOLLIN);
+	restaurant.addFdHandler(_outFD, this, EPOLLOUT);
 
 	_pid = fork();
     if (_pid < 0)
@@ -132,7 +131,6 @@ void CGI::_execChild()
 	char* path = const_cast<char*>(_path.c_str());
 	char* argv[] = {path, path, nullptr};
 	Log::getInstance().printErr("Executing CGI for path " + _path);
-//	std::cout << _env[0] << "\n";
     if (execve(path, argv, _env) < 0)
        _closePipes("execve failed: ", std::string(std::strerror(errno)));
 	exit(EXIT_FAILURE);
@@ -178,7 +176,8 @@ void	CGI::output(int eventFD)
 	if (eventFD != _outFD)
        _closePipes("Bad FD triggered in CGI output ", std::to_string(eventFD));
 
-	ssize_t	count = write(_outFD, _message.substr(_pos).c_str(), _message.size() - _pos);
+	Log::getInstance().print("Adding " + std::to_string(_message.size() - _pos) + " ingredients to CGI");
+	ssize_t	count = write(_outFD, _message.substr(_pos, BUF_LIMIT).c_str(), BUF_LIMIT);
 	if (count < 0)
 	{
 		if (_dish.status.getState() != OK) {
@@ -190,16 +189,15 @@ void	CGI::output(int eventFD)
 		_closePipes("Write error in Dish output!", std::string(std::strerror(errno)));
 		return ;
 	}
-	else if (count == 0)
-	{
-		close(_outFD);
-		waitpid(_pid, NULL, 0);
-		input(_inFD);
-	}
 	else
 	{
-		Log::getInstance().print("Adding ingredients to CGI " + std::to_string(count) + " ingredients");
-		Log::getInstance().print("message " + _message.substr(_pos));
 		_pos += count;
+		if (_pos >= _message.size())
+		{
+			restaurant.removeFdHandler(_outFD);
+			close(_outFD);
+			waitpid(_pid, NULL, 0); //add timeout and error catching somewhere here
+			input(_inFD);
+		}
 	}
 }

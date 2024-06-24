@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/19 13:35:39 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/19 13:54:58 by dliu          ########   odam.nl         */
+/*   Updated: 2024/06/24 12:47:14 by dliu          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ class CGI : public FdHandler
 		int			_CGIOutputPipe[2];
 		pid_t		_pid;
 		
-		ssize_t		_pos;
-		std::string _message;
-		char		_buffer[BUF_LIMIT];
+		size_t				_pos;
+		std::string const& 	_message;
+		char				_buffer[BUF_LIMIT];
 
 		char**						_env;
 		std::vector<std::string>	_vec;

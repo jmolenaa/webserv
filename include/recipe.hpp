@@ -48,6 +48,7 @@ struct Recipe
 		"root/status/404.html",
 		"root/status/405.html",
 		"root/status/411.html",
+		"root/status/413.html",
 		"root/status/415.html",
 		"root/status/500.html"
 	}) {Log::getInstance().print("Recipe prepared for page: " + page);}
