@@ -58,8 +58,8 @@ void Dish::doMethod()
 	if (this->status.getState() != OK) {
 		doError();
 	}
-	if (done)
-		customer.eat();
+//	if (done)
+//		customer.eat();
 }
 
 void	Dish::input(int eventFD)
@@ -83,10 +83,11 @@ void	Dish::input(int eventFD)
 		Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(_inFD) + "!\n");
 
 		close(_inFD);
-		close(_pipeFDs[1]);
+//		close(_pipeFDs[1]);
 
-		done = true;
-		return;
+//		done = true;
+//		return;
+		this->customer.eat();
 	}
 	else
 	{
