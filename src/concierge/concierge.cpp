@@ -24,6 +24,7 @@ EPOLLONESHOT: Ensures that one and only one thread is woken when an event occurs
 #include "concierge.hpp"
 #include <iostream>
 #include "log.hpp"
+#include <fcntl.h>
 
 Concierge::Concierge()
 {
@@ -89,6 +90,21 @@ int Concierge::getNumEvents()
         throw (WebservException("Can not get numEvents"));
     }
     return _numEvents;
+}
+
+int Concierge::set_non_blocking(int fd)
+{
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (flags == -1) {
+        std::cerr << "fcntl F_GETFL error" << std::endl;
+        return -1;
+    }
+    flags |= O_NONBLOCK;
+    if (fcntl(fd, F_SETFL, flags) == -1) {
+        std::cerr << "fcntl F_SETFL error" << std::endl;
+        return -1;
+    }
+    return 0;
 }
 
 // int Concierge::getEpollFd()

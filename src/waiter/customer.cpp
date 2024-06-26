@@ -41,7 +41,8 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _w
 
 	_pos = 0;
 	_bitesLeft = 0;
-	restaurant.addFdHandler(_inFD, this, EPOLLIN);
+	_startTime = std::chrono::high_resolution_clock::now();
+	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP); //Yixin added EPOLLHUP here
 	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has been seated.");
 }
 
@@ -49,21 +50,37 @@ Customer::~Customer()
 {
 	if (_dish)
 		delete 	_dish;
-	close(_inFD);
-	close(_outFD);
+	if (_inFD)
+		close(_inFD);
+	if (_outFD)
+		close(_outFD);
 	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has left.\n----------------------------\n");
 }
 
 //taking the order
 void Customer::input(int eventFD)
 {
+	std::chrono::time_point<std::chrono::high_resolution_clock> stop;
 	if (eventFD != _inFD) {
 		throw WebservException("Bad input FD event in customer\n");
 	}
 	Log::getInstance().print("Customer " + std::to_string(eventFD) + " is placing an order");
 	bool doneMakingOrder = _order.makeOrder();
 	if (!doneMakingOrder) {
-		Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
+		stop = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - _startTime);
+		std::cout<<duration.count()<<std::endl;
+		if (duration.count() > 6000000)
+		{
+			if (eventFD)
+			{
+				restaurant.removeFdHandler(eventFD);
+				close(eventFD);
+			}
+			return ;
+		}
+		else
+			Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
 		return;
 	}
 	_getDish();

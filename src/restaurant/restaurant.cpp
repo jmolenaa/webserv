@@ -14,6 +14,16 @@
 #include "restaurant.hpp"
 #include "menu.hpp"
 #include "cook.hpp"
+#include <csignal>
+
+void signal_handler(int signal_num) 
+{ 
+    std::cout << "The interrupt signal is (" << signal_num 
+         << "). \n"; 
+  
+    // It terminates the  program 
+    exit(signal_num); 
+} 
 
 Restaurant::Restaurant(std::string const& filename)
 {
@@ -22,7 +32,6 @@ Restaurant::Restaurant(std::string const& filename)
 
 	Menu	menu(filename);
 	menu.parse();
-
 	for (Kitchen const& kitchen : menu.getKitchens()) {
 		this->_waiters.push_back(new Waiter(kitchen, *this));
 	}
@@ -47,7 +56,6 @@ void Restaurant::run()
 {
     epoll_event events[CLI_LIMIT];
 	int			eventFD;
-
     while (true)
 	{
         _concierge.wait(-1, events);
@@ -57,19 +65,33 @@ void Restaurant::run()
 			if (events[i].events & EPOLLIN
 				&& _In.find(eventFD) != _In.end())
 			{
+				// if (_concierge.set_non_blocking(eventFD) == -1) 
+				// {
+				// 		close(eventFD);
+				// 		continue;
+				// }
 				_In[eventFD]->input(eventFD);
-				// events[i].events &= ~EPOLLIN;
-				// _epoll.modifyFd(eventFD, events[i].events);
+				// if (events[i].events & EPOLLHUP) 
+				// {
+				// 	// Handle hang-up
+				// 	int client_fd = events[i].data.fd;
+				// 	std::cout << "Hang-up detected, closing connection" << std::endl;
+				// 	close(client_fd);
+             	// }
+				//std::cout<<"epollin"<<std::endl;
+				//events[i].events = EPOLLOUT;
+				//_concierge.modifyFd(eventFD, events[i].events);
 				continue;
 			}
 			else if (events[i].events & EPOLLOUT
 				&& _Out.find(eventFD) != _Out.end())
 			{
 				_Out[eventFD]->output(eventFD);
+				// std::cout<<"epollout"<<std::endl;
 				// events[i].events &= ~EPOLLOUT;
 				// _epoll.modifyFd(eventFD, events[i].events);
-				continue;
 
+				continue;
 			}
 			else{
 				Log::getInstance().print("Removing unknown event...\n");

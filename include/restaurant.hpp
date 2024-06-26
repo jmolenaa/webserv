@@ -19,6 +19,7 @@
 #include "concierge.hpp"
 #include "fdHandler.hpp"
 
+
 class Restaurant
 {
 	public:
@@ -36,8 +37,8 @@ class Restaurant
 		Concierge					_concierge;
 		std::vector<FdHandler*>		_waiters;
 		
-		std::unordered_map<int, FdHandler*>	_In;
-		std::unordered_map<int, FdHandler*>	_Out;
+		std::unordered_map<int, FdHandler*>							_In;
+		std::unordered_map<int, FdHandler*>							_Out;
 };
 
 #endif

@@ -19,7 +19,8 @@ class Concierge
 		void	wait(int timeout, epoll_event *events);
 		int 	getNumEvents(); 
 		int		getEpollFd();
-		epoll_event *getEvents();
+		int set_non_blocking(int fd);
+		//epoll_event *getEvents();
 		
 	private:
 		int 		_epollfd;
