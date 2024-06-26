@@ -87,7 +87,7 @@ void CGI::execute()
 	this->_inFD = _CGIOutputPipe[0];
 	this->_outFD = _CGIInputPipe[1];
 
-	restaurant.addFdHandler(_inFD, this, EPOLLIN);
+	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR );
 	restaurant.addFdHandler(_outFD, this, EPOLLOUT);
 
 	_pid = fork();

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/24 12:25:55 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 12:59:20 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/26 16:38:14 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	Dish::_doPipe()
 	if (success < 0) {
 		status.updateState(INTERNALERR);
 	}
-	restaurant.addFdHandler(_pipeFDs[0], this, EPOLLIN);
+	restaurant.addFdHandler(_pipeFDs[0], this, EPOLLIN | EPOLLHUP | EPOLLERR );
 	restaurant.addFdHandler(_pipeFDs[1], this, EPOLLOUT);	
 }
 

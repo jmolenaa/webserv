@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 12:59:16 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/26 16:57:30 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest), kitchen(kitch
 	waiterAddr.sin_family = AF_INET;
 	waiterAddr.sin_port = this->kitchen.begin()->getTable();
 	waiterAddr.sin_addr.s_addr = this->kitchen.begin()->getAddress();
+	// Set server socket to non-blocking
+	fcntl(this->_inFD, F_SETFL, O_NONBLOCK);
 	if (bind(this->_inFD, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
 		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
 	//listen on socket
 	if (listen(this->_inFD, SOMAXCONN) == -1)
 		throw WebservException("Waiter could not listen because: " + std::string(std::strerror(errno)) + "\n");
-	
 	//add to epoll and map
-	restaurant.addFdHandler(this->_inFD, this, EPOLLIN);
+	restaurant.addFdHandler(this->_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR );
 
 	Log::getInstance().print("Waiter " + std::to_string(_inFD) + " is working at table " + std::to_string(ntohs(this->kitchen.begin()->getTable())) + " with " + std::to_string(this->kitchen.size()) + " cooks in the kitchen\n");
 }
