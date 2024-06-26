@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   concierge.cpp                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: yizhang <yizhang@student.codam.nl>           +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/06/26 18:05:12 by yizhang       #+#    #+#                 */
+/*   Updated: 2024/06/26 18:05:39 by yizhang       ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 /* 
 epoll_events is a data type used in Linux programming.
 It's used to describe which events the application is interested in 
@@ -116,5 +128,3 @@ int Concierge::set_non_blocking(int fd)
 //     return _epollfd;
 // }
 
-//need epoll function for newconnection 
-//need epoll funciton for request

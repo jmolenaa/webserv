@@ -61,9 +61,8 @@ Customer::~Customer()
 void Customer::input(int eventFD)
 {
 	std::chrono::time_point<std::chrono::high_resolution_clock> start;
-
-	start = std::chrono::high_resolution_clock::now();
 	std::chrono::time_point<std::chrono::high_resolution_clock> stop;
+	start = std::chrono::high_resolution_clock::now();
 	if (eventFD != _inFD) {
 		throw WebservException("Bad input FD event in customer\n");
 	}
@@ -73,7 +72,7 @@ void Customer::input(int eventFD)
 		stop = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 		std::cout<<duration.count()<<std::endl;
-		if (duration.count() >= 4)
+		if (duration.count() >= 5)
 		{
 			if (eventFD)
 			{
