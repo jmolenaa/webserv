@@ -59,21 +59,11 @@ void Restaurant::run()
 				&& _In.find(eventFD) != _In.end())
 			{
 				_In[eventFD]->input(eventFD);
-				if (events[i].events & EPOLLHUP || events[i].events & EPOLLERR || events[i].events & EPOLLRDHUP)
-				{
-					exit(1);
-					continue;
-				}
-				continue;
 			}
 			else if (events[i].events & EPOLLOUT
 				&& _Out.find(eventFD) != _Out.end())
 			{
 				_Out[eventFD]->output(eventFD);
-				// std::cout<<"epollout"<<std::endl;
-				// events[i].events &= ~EPOLLOUT;
-				// _epoll.modifyFd(eventFD, events[i].events);
-
 				continue;
 			}
 			else{
