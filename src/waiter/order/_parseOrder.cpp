@@ -25,6 +25,9 @@ void Order::_extractHeader()
 		_order += "\r\n\r\n";
 		_status.updateState(INTERNALERR);
 	}
+	else if (count == 0) {
+		sleep(1);
+	}
 	else
 	{
 		_bufStr.append(_buffer, count);
@@ -126,6 +129,9 @@ void Order::_extractBody()
 		_done = true;
 		_status.updateState(INTERNALERR);		
 	}
+	else if (count == 0) {
+		sleep(1);
+	}
 	else
 	{
 		_order.append(_buffer, count);
@@ -167,7 +173,7 @@ void Order::_printData()
 		
 		Log::getInstance().print(data);
 //		Log::getInstance().print("Full header:\n" + this->);
-		Log::getInstance().print("Full body:\n" + this->_order);
+//		Log::getInstance().print("Full body:\n" + this->_order);
 	}
 }
 

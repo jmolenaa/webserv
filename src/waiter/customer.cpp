@@ -38,7 +38,6 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _w
 															_bitesLeft(0), _pos(0), _customerFd(fd)
 {
 	this->_inFD = _customerFd;
-//	this->_outFD = fd;
 
 	_startTime = std::chrono::high_resolution_clock::now();
 	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR ); //Yixin added EPOLLHUP here
@@ -57,8 +56,6 @@ Customer::~Customer()
 		this->_outFD = -1;
 	}
 	close(_customerFd);
-//	close(_inFD);
-//	close(_outFD);
 	Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has left.\n----------------------------\n");
 }
 
@@ -77,17 +74,17 @@ void Customer::input(int eventFD)
 		stop = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 		std::cout<<duration.count()<<std::endl;
-		if (duration.count() >= 5)
-		{
-			if (eventFD)
-			{
-				restaurant.removeFdHandler(eventFD);
-				close(eventFD);
-			}
-			return ;
-		}	
-		else		
-			Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
+//		if (duration.count() >= 5)
+//		{
+//			if (eventFD)
+//			{
+//				restaurant.removeFdHandler(eventFD);
+//				close(eventFD);
+//			}
+		return ;
+//		}
+//		else
+//			Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
 		return;
 	}
 	restaurant.removeFdHandler(_inFD);
@@ -121,9 +118,8 @@ void Customer::eat()
 {
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
-	std::cout << _bitesLeft;
-	std::cout <<"\nTHIS IS HERERE)@)(*$*(#&(%&)(#&%)(&#)%&'" << _food << "\n";
 
+	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
 	//prepare to send to client
 	this->_outFD = this->_customerFd;
 	Log::getInstance().print("Serving to customer " + std::to_string(_outFD));
@@ -142,24 +138,17 @@ void Customer::output(int eventFD)
 	if (size > BUF_LIMIT)
 		size = BUF_LIMIT;
 	_pos += size;
-	std::cout << size << "\n";
+//	std::cout << size << "\n";
 	ssize_t sent = send(_outFD, response, size, 0);
-	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating " + std::to_string(size) + " ingredients\n");
+//	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating " + std::to_string(size) + " ingredients\n");
 	if (sent < 0) {
-		return (_leave());
+		Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has decided to leave half way due to: " + std::string(std::strerror(errno)));
+		return (_waiter.kickCustomer(this->_customerFd));
 	}
 	_bitesLeft -= sent;
-		
+
 	if (_bitesLeft <= 0) {
-		return (_leave());
+		Log::getInstance().print("That happens");
+		return (_waiter.kickCustomer(this->_customerFd));
 	}
-
-}
-
-void Customer::_leave()
-{
-//	restaurant.removeFdHandler(_outFD);
-//	this->_outFD = -1;
-	_waiter.kickCustomer(this->_customerFd);
-//	close(this->_customerFd);
 }

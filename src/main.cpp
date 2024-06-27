@@ -15,6 +15,7 @@
 #include <iostream>
 #include "log.hpp"
 #include "restaurant.hpp"
+#include <signal.h>
 
 // todo
 // make headers understandable, where we actually need them
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
 	if (argc == 2) {
 		filename = argv[1];
 	}
+	signal(SIGPIPE, SIG_IGN);
 	try {
 		Log::getInstance().enableLog(true); //comment out to disable logging.
 		

@@ -22,7 +22,7 @@
 
 # define PORT 8080
 # define CLI_LIMIT 10
-# define BUF_LIMIT 1000
+# define BUF_LIMIT 100000
 # define MAX_BODY_SIZE 100000000
 
 typedef enum {

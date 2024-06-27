@@ -19,7 +19,7 @@
 
 Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
 	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust), done(false),
-	_buffer(""), _pipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1)
+	_buffer(""), _pipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1), _doneReading(false), _fileSize(0)
 {
 	if (order.getPath().find_last_of('/') == std::string::npos) {
 		status.updateState(BAD);
@@ -77,11 +77,39 @@ void	Dish::input(int eventFD)
 		}
 		doError();
 	}
+	else if (count == 0) {
+		this->_removeHandler(this->_inFD);
+//		this->_removeHandler(this->_outFD);
+//		close(this->_outFD);
+//		this->_outFD = -1;
+		this->customer.eat();
+	}
 	else
 	{
 		Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " is being cooked with " + std::to_string(count) + " ingredients");
-//		_buffer[count] = '\0';
-		body.append(_buffer, count);// += std::string(_buffer);
+		body.append(_buffer, count);
+		if (body.size() == (size_t)this->_fileSize) {
+			Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " is ready to be eaten");
+			this->_removeHandler(this->_inFD);
+			this->customer.eat();
+		}
+	}
+}
+
+void Dish::_writeToPipe(ssize_t count) {
+	ssize_t  bitesWritten = write(this->_outFD, _buffer, count);
+	if (bitesWritten < 0) {
+		Log::getInstance().printErr("Write error in dish input!\n");
+		if (this->status.getState() != OK) {
+			this->status.updateState(COUNT);
+		}
+		else {
+			this->status.updateState(INTERNALERR);
+		}
+		doError();
+	}
+	else {
+		this->_fileSize += bitesWritten;
 	}
 }
 
@@ -92,7 +120,6 @@ void	Dish::output(int eventFD)
 	if (count < 0)
 	{
 		Log::getInstance().printErr("Read error in dish input!\n");
-
 		if (this->status.getState() != OK) {
 			this->status.updateState(COUNT);
 		}
@@ -104,19 +131,19 @@ void	Dish::output(int eventFD)
 	else if (count == 0)
 	{
 		Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(this->_fdOfFileToRead) + "!\n");
-
-//		close(_inFD);
-//		close(_pipeFDs[1]);
-
-		this->_removeHandlers();
-//		done = true;
-//		return;
-		this->customer.eat();
+		this->_doneReading = true;
+		_removeHandler(this->_outFD);
+//		_removeWithoutClosing(this->_outFD);
 	}
 	else
 	{
 		Log::getInstance().print(std::to_string(count) + " ingredients are being piped to dish " + std::to_string(this->_fdOfFileToRead) + "!");
-		write(this->_outFD, _buffer, count);
+		_writeToPipe(count);
+//		write(this->_outFD, _buffer, count);
+//		if (count < BUF_LIMIT - 1) {
+//			_finishWriting();
+//			Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(this->_fdOfFileToRead) + "!\n");
+//		}
 	}
 }
 

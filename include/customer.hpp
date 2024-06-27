@@ -45,7 +45,6 @@ class Customer : public FdHandler
 		int															_customerFd;
 
 		void	_getDish();
-		void	_leave();
 };
 
 #endif

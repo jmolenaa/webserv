@@ -52,11 +52,15 @@ class Dish : public FdHandler
 		int				_pipeFDs[2];
 		CGI*			_CGI;
 		int				_fdOfFileToRead;
+		bool			_doneReading;
+		ssize_t			_fileSize;
 
 		void	_doPipe();
 		void	_trashDish();
-		void	_removeHandlers();
+		void	_removeHandler(int& handlerFd);
+		void	_finishWriting();
 
+		void	_writeToPipe(ssize_t count);
 		void	_get();
 		void	_post();
 		void	_delete();
