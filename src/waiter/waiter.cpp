@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 16:57:30 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/27 18:05:16 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,19 @@ Waiter::~Waiter()
 {
 	for (auto customer : _customers)
 		delete (customer.second);
+}
+
+//Using Range-Based For Loop
+void Waiter::timeCheck()
+{
+    for (const auto& pair : waiter._customers) {
+        int key = pair.first;
+        FdHandler* value = pair.second;
+        
+        // Process key and value
+        // Example: print key and check value
+        std::cout << "Key: " << key << ", Value: " << value << std::endl;
+    }
 }
 
 //Seat the new customer

@@ -50,6 +50,8 @@ void Restaurant::run()
 	int			eventFD;
     while (true)
 	{
+		//time check for each client;
+		_waiters.timeCheck();
         _concierge.wait(-1, events);
 		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{

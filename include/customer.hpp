@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/18 13:45:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 14:01:34 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/27 14:51:01 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Customer : public FdHandler
 		ssize_t														_bitesLeft;
 		ssize_t														_pos;
 		std::chrono::time_point<std::chrono::high_resolution_clock>	_startTime;
+		std::chrono::time_point<std::chrono::high_resolution_clock>	_endTime;
 		void	_getDish();
 		void	_leave();
 };

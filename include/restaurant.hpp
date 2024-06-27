@@ -32,7 +32,6 @@ class Restaurant
 
 		void	addFdHandler(int fd, FdHandler* handler, uint32_t eventType);
 		void	removeFdHandler(int fd);
-
 	private:
 		Concierge					_concierge;
 		std::vector<FdHandler*>		_waiters;
