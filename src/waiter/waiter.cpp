@@ -75,10 +75,14 @@ void Waiter::input(int eventFD)
 //Say goodbye to the customer
 void Waiter::output(int customerFD)
 {
-	Log::getInstance().print("Saying goodbye to customer " + std::to_string(customerFD));
-	if (this->_customers.find(customerFD) == this->_customers.end()) {
-		throw WebservException("Customer " + std::to_string(customerFD) + " does not exist.\n");
+	(void)customerFD;
+}
+
+void Waiter::kickCustomer(int customerFd) {
+	Log::getInstance().print("Saying goodbye to customer " + std::to_string(customerFd));
+	if (this->_customers.find(customerFd) == this->_customers.end()) {
+		throw WebservException("Customer " + std::to_string(customerFd) + " does not exist.\n");
 	}
-	delete (this->_customers[customerFD]);
-	this->_customers.erase(customerFD);
+	delete (this->_customers[customerFd]);
+	this->_customers.erase(customerFd);
 }

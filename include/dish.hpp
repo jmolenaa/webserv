@@ -51,9 +51,11 @@ class Dish : public FdHandler
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];
 		CGI*			_CGI;
+		int				_fdOfFileToRead;
 
 		void	_doPipe();
 		void	_trashDish();
+		void	_removeHandlers();
 
 		void	_get();
 		void	_post();

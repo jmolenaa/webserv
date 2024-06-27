@@ -27,13 +27,11 @@ void Order::_extractHeader()
 	}
 	else
 	{
-		_buffer[count] = '\0';
-		_bufStr += std::string(_buffer);
+		_bufStr.append(_buffer, count);
 		_headerEnd = _bufStr.find("\r\n\r\n");
 		if (_headerEnd == std::string::npos) {
 			return;
 		}
-			
 		_parseHeader();
 		if (_status.getState() != OK) {
 			_done = true;
@@ -54,7 +52,7 @@ void Order::_parseHeader()
 	std::string tmp = _extractValue(_order, "Content-Length: ", '\n');
 	if (!tmp.empty())
 		_contentLength = std::stoi(tmp);
-
+ //TODO ask about this if statement
 	if (_contentLength > MAX_BODY_SIZE)
 		return (_status.updateState(UNSUPPORTED));
 	if (_contentLength)
@@ -66,6 +64,7 @@ void Order::_parseHeader()
 	_bufStr.clear();
 
 	if (_contentLength == (_order.size() - _headerEnd))	{
+		_printData();
 		_done = true;
 	}
 }
@@ -129,8 +128,7 @@ void Order::_extractBody()
 	}
 	else
 	{
-		_buffer[count] = '\0';
-		_order += std::string(_buffer);
+		_order.append(_buffer, count);
 		if (_order.size() - _headerEnd >= _contentLength)
 		{
 			_done = true;
@@ -168,6 +166,8 @@ void Order::_printData()
 			+ "\n=====END OF ORDER=====\n";
 		
 		Log::getInstance().print(data);
+//		Log::getInstance().print("Full header:\n" + this->);
+		Log::getInstance().print("Full body:\n" + this->_order);
 	}
 }
 

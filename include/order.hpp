@@ -41,7 +41,7 @@ class Order
 
 		bool		_done;
 		size_t		_headerEnd;
-		char		_buffer[BUF_LIMIT - 1];
+		char		_buffer[BUF_LIMIT];
 		std::string	_bufStr;
 		
 		std::string _order;

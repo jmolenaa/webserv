@@ -34,13 +34,12 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd), _dish(nullptr)
+Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd), _dish(nullptr),
+															_bitesLeft(0), _pos(0), _customerFd(fd)
 {
-	this->_inFD = fd;
-	this->_outFD = fd;
+	this->_inFD = _customerFd;
+//	this->_outFD = fd;
 
-	_pos = 0;
-	_bitesLeft = 0;
 	_startTime = std::chrono::high_resolution_clock::now();
 	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR ); //Yixin added EPOLLHUP here
 	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has been seated.");
@@ -48,13 +47,19 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _w
 
 Customer::~Customer()
 {
-	if (_dish)
-		delete 	_dish;
-	if (_inFD)
-		close(_inFD);
-	if (_outFD)
-		close(_outFD);
-	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has left.\n----------------------------\n");
+	delete 	_dish;
+	if (this->_inFD != -1) {
+		this->restaurant.removeFdHandler(this->_inFD);
+		this->_inFD = -1;
+	}
+	if (this->_outFD != -1) {
+		this->restaurant.removeFdHandler(this->_outFD);
+		this->_outFD = -1;
+	}
+	close(_customerFd);
+//	close(_inFD);
+//	close(_outFD);
+	Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has left.\n----------------------------\n");
 }
 
 //taking the order
@@ -85,13 +90,13 @@ void Customer::input(int eventFD)
 			Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
 		return;
 	}
+	restaurant.removeFdHandler(_inFD);
+	_inFD = -1;
 	_getDish();
 }
 
 void Customer::_getDish()
 {
-	restaurant.removeFdHandler(_inFD);
-
 	const Cook* cook = _waiter.kitchen.find(_order.getHostname());
 	if (cook == nullptr)
 		cook = _waiter.kitchen.begin();
@@ -107,6 +112,7 @@ void Customer::_getDish()
 			page = page.substr(0, end);
 		recipe = cook->getRecipe(page);
 	}
+
 	_dish = new Dish(this->_status, this->_order, recipe, *this);
 	_dish->doMethod();
 }
@@ -115,13 +121,13 @@ void Customer::eat()
 {
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
-	delete _dish;
-	_dish = nullptr;
+	std::cout << _bitesLeft;
+	std::cout <<"\nTHIS IS HERERE)@)(*$*(#&(%&)(#&%)(&#)%&'" << _food << "\n";
 
 	//prepare to send to client
-	Log::getInstance().print("Serving to customer " + std::to_string(_inFD));
+	this->_outFD = this->_customerFd;
+	Log::getInstance().print("Serving to customer " + std::to_string(_outFD));
 	restaurant.addFdHandler(_outFD, this, EPOLLOUT);
-	output(_outFD);
 }
 
 void Customer::output(int eventFD)
@@ -129,15 +135,16 @@ void Customer::output(int eventFD)
 	if (eventFD != this->_outFD)
 		throw WebservException("Bad output FD event on Customer\n");
 
-	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating");
 
 	const char* response = _food.c_str();
 	response += _pos;
-	size_t	size = std::strlen(response);
+	size_t	size = _food.size() - _pos;
 	if (size > BUF_LIMIT)
 		size = BUF_LIMIT;
 	_pos += size;
+	std::cout << size << "\n";
 	ssize_t sent = send(_outFD, response, size, 0);
+	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating " + std::to_string(size) + " ingredients\n");
 	if (sent < 0) {
 		return (_leave());
 	}
@@ -151,8 +158,8 @@ void Customer::output(int eventFD)
 
 void Customer::_leave()
 {
-	restaurant.removeFdHandler(_outFD);
-	close(_outFD);
-
-	_waiter.output(_outFD);
+//	restaurant.removeFdHandler(_outFD);
+//	this->_outFD = -1;
+	_waiter.kickCustomer(this->_customerFd);
+//	close(this->_customerFd);
 }

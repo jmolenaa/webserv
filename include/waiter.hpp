@@ -31,6 +31,8 @@ class Waiter : public FdHandler
 		void	output(int eventFD) override;
 
 		const Kitchen	kitchen;
+
+		void	kickCustomer(int customerFd);
 	
 	private:
 		std::unordered_map<int, FdHandler*> _customers;

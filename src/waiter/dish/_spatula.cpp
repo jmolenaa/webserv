@@ -23,28 +23,45 @@ void	Dish::_doPipe()
 	if (success < 0) {
 		status.updateState(INTERNALERR);
 	}
-	restaurant.addFdHandler(_pipeFDs[0], this, EPOLLIN | EPOLLHUP | EPOLLERR );
-	restaurant.addFdHandler(_pipeFDs[1], this, EPOLLOUT);	
+	this->_inFD = _pipeFDs[0];
+	this->_outFD = _pipeFDs[1];
+	restaurant.addFdHandler(this->_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR);
+	restaurant.addFdHandler(this->_outFD, this, EPOLLOUT);
+}
+
+void Dish::_removeHandlers() {
+	if (this->_inFD != -1) {
+		restaurant.removeFdHandler(this->_inFD);
+		close(this->_inFD);
+		this->_inFD = -1;
+	}
+	if (this->_outFD != -1) {
+		restaurant.removeFdHandler(this->_outFD);
+		close(this->_outFD);
+		this->_outFD = -1;
+	}
 }
 
 void	Dish::_trashDish()
 {
 	body = "";
-	close(_inFD);
-	restaurant.removeFdHandler(_pipeFDs[0]);
-	restaurant.removeFdHandler(_pipeFDs[1]);
-	close(_pipeFDs[0]);
-	close(_pipeFDs[1]);
-	Log::getInstance().print("Dish " + std::to_string(_inFD) + " destroyed");
+	this->_removeHandlers();
+	Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " destroyed");
+	if (this->_fdOfFileToRead != -1) {
+		close(this->_fdOfFileToRead);
+	}
+//	restaurant.removeFdHandler(_pipeFDs[1]);
+//	close(_pipeFDs[0]);
+//	close(_pipeFDs[1]);
 }
 
 void	Dish::doError()
 {
 	_trashDish();
 
-	std::string errfile = recipe.errorPaths[status.getState()];
-	_inFD = open(errfile.c_str(), O_RDONLY);
-	if (_inFD < 0 || status.getState() == COUNT)
+	std::string errFile = recipe.errorPaths[status.getState()];
+	this->_fdOfFileToRead = open(errFile.c_str(), O_RDONLY);
+	if (this->_fdOfFileToRead < 0 || status.getState() == COUNT)
 	{
 		status.updateState(INTERNALERR);
 		body = "500 webserve encountered a critical internal error";
@@ -55,7 +72,7 @@ void	Dish::doError()
 	else 
 	{
 		_doPipe();
-		input(_inFD);
+//		input(this->_inFD);
 	}
 }
 

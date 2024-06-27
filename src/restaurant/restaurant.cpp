@@ -34,12 +34,12 @@ Restaurant::~Restaurant()
 	for (auto waiter : _waiters) {
 		delete waiter;
 	}
-	for (auto in : _In)	{
-		delete in.second;
-	}
-	for (auto out : _Out) {
-		delete out.second;
-	}
+//	for (auto in : _In)	{
+//		delete in.second;
+//	}
+//	for (auto out : _Out) {
+//		delete out.second;
+//	}
 	_In.clear();
 	_Out.clear();
 }

@@ -11,7 +11,8 @@
 #include "restaurant.hpp"
 #include "customer.hpp"
 
-CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _message(_dish.order.getOrder()), _env(nullptr)
+CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1}, _pid(-1),
+						_pos(0), _message(_dish.order.getOrder()), _buffer("") ,_env(nullptr)
 {
 	try
 	{
@@ -36,11 +37,19 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _pos(0), _
 
 CGI::~CGI()
 {
+	if (this->_inFD != -1) {
+		restaurant.removeFdHandler(this->_inFD);
+	}
+	if (this->_outFD != -1) {
+		restaurant.removeFdHandler(this->_outFD);
+	}
+	close(_CGIOutputPipe[0]);
+	close(_CGIOutputPipe[1]);
+	close(_CGIInputPipe[0]);
+	close(_CGIInputPipe[1]);
 	for (size_t i = 0; _env && _env[i]; ++i)
         delete[] _env[i];
- 
     delete[] _env;
-	_closePipes("", "");
 }
 
 //this probably needs to be updated
@@ -82,8 +91,12 @@ void CGI::_setEnv()
  */
 void CGI::execute()
 {
-	pipe(_CGIInputPipe);
-	pipe(_CGIOutputPipe);
+	if (pipe(_CGIInputPipe) == -1) {
+		this->_closePipes("CGI pipe function failed: ", std::string(std::strerror(errno)) + "\n");
+	}
+	if (pipe(_CGIOutputPipe) == -1) {
+		this->_closePipes("CGI pipe function failed: ", std::string(std::strerror(errno)) + "\n");
+	}
 	this->_inFD = _CGIOutputPipe[0];
 	this->_outFD = _CGIInputPipe[1];
 
@@ -93,16 +106,14 @@ void CGI::execute()
 	_pid = fork();
     if (_pid < 0)
 		_closePipes("Fork broke: ", std::string(std::strerror(errno)) + "\n");
-    
+
     if (_pid == 0)
 	{
        	_execChild();
-		_closePipes("This should NEVER happen.", std::string(std::strerror(errno)));
 	}
 
 	close(_CGIOutputPipe[1]);
 	close(_CGIInputPipe[0]);
-	output(_outFD);
 }
 
 void CGI::_closePipes(std::string what, std::string why)
@@ -111,8 +122,6 @@ void CGI::_closePipes(std::string what, std::string why)
 	close(_CGIInputPipe[1]);
 	close(_CGIOutputPipe[0]);
     close(_CGIOutputPipe[1]);
-	close(_inFD);
-	close(_outFD);
 	if (!what.empty())
 	{
 		Log::getInstance().printErr(what + why);
@@ -124,14 +133,14 @@ void CGI::_closePipes(std::string what, std::string why)
 void CGI::_execChild()
 {
 	if (dup2(_CGIOutputPipe[1], STDOUT_FILENO) < 0)
-		_closePipes("Couldn't dup2 output", std::string(std::strerror(errno)));
+		_closePipes("Couldn't dup2 output: ", std::string(std::strerror(errno)));
     if (dup2(_CGIInputPipe[0], STDIN_FILENO) < 0)
-		_closePipes("Couldn't dup2 input", std::string(std::strerror(errno)));
+		_closePipes("Couldn't dup2 input: ", std::string(std::strerror(errno)));
     
 	_closePipes("", "");
 
 	char* path = const_cast<char*>(_path.c_str());
-	char* argv[] = {path, path, nullptr};
+	char* argv[] = {path, nullptr};
 	Log::getInstance().printErr("Executing CGI for path " + _path);
     if (execve(path, argv, _env) < 0)
        _closePipes("execve failed: ", std::string(std::strerror(errno)));
@@ -157,20 +166,17 @@ void	CGI::input(int eventFD)
 	}
 	else if (count < BUF_LIMIT - 1)
 	{
-		_buffer[count] = '\0';
-		_dish.body += std::string(_buffer);
+		_dish.body.append(_buffer, count);
 		Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
-		
-		close(_inFD);
-		_closePipes("", "");
-		_dish.done = true;
-		return;
+		restaurant.removeFdHandler(this->_inFD);
+		this->_inFD = -1;
+		close(this->_CGIOutputPipe[0]);
+		this->_dish.customer.eat();
 	}
 	else
 	{
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
-		_buffer[count] = '\0';
-		_dish.body += std::string(_buffer);
+		_dish.body.append(_buffer, count);// += std::string(_buffer);
 	}
 }
 
@@ -198,10 +204,9 @@ void	CGI::output(int eventFD)
 		_pos += count;
 		if (_pos >= _message.size())
 		{
-			restaurant.removeFdHandler(_outFD);
-			close(_outFD);
-			waitpid(_pid, NULL, 0); //add timeout and error catching somewhere here
-			input(_inFD);
+			restaurant.removeFdHandler(this->_outFD);
+			this->_outFD = -1;
+			close(this->_CGIInputPipe[1]);
 		}
 	}
 }

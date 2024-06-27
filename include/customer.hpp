@@ -18,14 +18,15 @@
 # include "waiter.hpp"
 # include "order.hpp"
 # include "dish.hpp"
-#include <chrono>
+# include <chrono>
+
 class Customer : public FdHandler
 {
 	public:
 		Customer(int fd, Restaurant& rest, Waiter& wait);
 		Customer() = delete;
 		Customer(Customer& other) = delete;
-		~Customer();
+		~Customer() override;
 
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
@@ -41,6 +42,8 @@ class Customer : public FdHandler
 		ssize_t														_bitesLeft;
 		ssize_t														_pos;
 		std::chrono::time_point<std::chrono::high_resolution_clock>	_startTime;
+		int															_customerFd;
+
 		void	_getDish();
 		void	_leave();
 };

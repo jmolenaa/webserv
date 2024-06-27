@@ -18,9 +18,9 @@
 #include "customer.hpp"
 
 Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
-	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust), done(false)
+	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust), done(false),
+	_buffer(""), _pipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1)
 {
-	_CGI = nullptr;
 	if (order.getPath().find_last_of('/') == std::string::npos) {
 		status.updateState(BAD);
 	}
@@ -65,7 +65,30 @@ void Dish::doMethod()
 void	Dish::input(int eventFD)
 {
 	(void)eventFD;
-	ssize_t	count = read(_inFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(this->_inFD, _buffer, BUF_LIMIT - 1);
+	if (count < 0)
+	{
+		Log::getInstance().printErr("Read error in Dish output!\n");
+		if (this->status.getState() != OK) {
+			this->status.updateState(COUNT);
+		}
+		else {
+			this->status.updateState(INTERNALERR);
+		}
+		doError();
+	}
+	else
+	{
+		Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " is being cooked with " + std::to_string(count) + " ingredients");
+//		_buffer[count] = '\0';
+		body.append(_buffer, count);// += std::string(_buffer);
+	}
+}
+
+void	Dish::output(int eventFD)
+{
+	(void)eventFD;
+	ssize_t	count = read(this->_fdOfFileToRead, _buffer, BUF_LIMIT - 1);
 	if (count < 0)
 	{
 		Log::getInstance().printErr("Read error in dish input!\n");
@@ -73,49 +96,27 @@ void	Dish::input(int eventFD)
 		if (this->status.getState() != OK) {
 			this->status.updateState(COUNT);
 		}
-		else {	
+		else {
 			this->status.updateState(INTERNALERR);
 		}
 		doError();
 	}
 	else if (count == 0)
 	{
-		Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(_inFD) + "!\n");
+		Log::getInstance().print("Finished adding ingredients to dish " + std::to_string(this->_fdOfFileToRead) + "!\n");
 
-		close(_inFD);
+//		close(_inFD);
 //		close(_pipeFDs[1]);
 
+		this->_removeHandlers();
 //		done = true;
 //		return;
 		this->customer.eat();
 	}
 	else
 	{
-		Log::getInstance().print(std::to_string(count) + " ingredients are being piped to dish " + std::to_string(_inFD) + "!");
-		write(_pipeFDs[1], _buffer, count);
-	}
-}
-
-void	Dish::output(int eventFD)
-{
-	(void)eventFD;
-	ssize_t count = read(_pipeFDs[0], _buffer, BUF_LIMIT - 1);
-	if (count < 0)
-	{
-		Log::getInstance().printErr("Read error in Dish output!\n");
-		if (this->status.getState() != OK) {
-			this->status.updateState(COUNT);
-		}
-		else {	
-			this->status.updateState(INTERNALERR);
-		}
-		doError();
-	}
-	else
-	{
-		Log::getInstance().print("Dish " + std::to_string(_inFD) + " is being cooked with " + std::to_string(count) + " ingredients");
-		_buffer[count] = '\0';
-		body += std::string(_buffer);
+		Log::getInstance().print(std::to_string(count) + " ingredients are being piped to dish " + std::to_string(this->_fdOfFileToRead) + "!");
+		write(this->_outFD, _buffer, count);
 	}
 }
 
