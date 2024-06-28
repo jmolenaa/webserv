@@ -25,7 +25,7 @@ void Order::_extractHeader()
 		_order += "\r\n\r\n";
 		_status.updateState(INTERNALERR);
 	}
-	else if (count == 0) {
+	else if (count == 0) { //TODO change this
 		sleep(1);
 	}
 	else
@@ -129,7 +129,7 @@ void Order::_extractBody()
 		_done = true;
 		_status.updateState(INTERNALERR);		
 	}
-	else if (count == 0) {
+	else if (count == 0) { //TODO change this
 		sleep(1);
 	}
 	else

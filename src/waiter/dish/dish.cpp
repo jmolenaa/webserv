@@ -34,12 +34,11 @@ Dish::~Dish()
 
 void Dish::doMethod()
 {
-	if (this->status.getState() != OK) {
+	if (_thereIsAnInitialError()) {
 		doError();
+		return ;
 	}
 	method m = this->order.getMethod();
-	if ((m & this->recipe.allowedMethods) == 0)
-		return(this->status.updateState(METHODNOTALLOWED));
 	switch (m)
 	{
 		case (GET):
@@ -53,13 +52,10 @@ void Dish::doMethod()
 			break;
 		default:
 			this->status.updateState(METHODNOTALLOWED);
-			return;
 	}
 	if (this->status.getState() != OK) {
 		doError();
 	}
-//	if (done)
-//		customer.eat();
 }
 
 void	Dish::input(int eventFD)

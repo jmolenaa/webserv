@@ -21,7 +21,8 @@ void	Dish::_doPipe()
 {
 	int success = pipe(_pipeFDs);
 	if (success < 0) {
-		status.updateState(INTERNALERR);
+		status.updateState(COUNT);
+		return ;
 	}
 	this->_inFD = _pipeFDs[0];
 	this->_outFD = _pipeFDs[1];
@@ -45,29 +46,7 @@ void	Dish::_trashDish()
 	Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " destroyed");
 	if (this->_fdOfFileToRead != -1) {
 		close(this->_fdOfFileToRead);
-	}
-}
-
-void	Dish::doError()
-{
-	_trashDish();
-
-	std::string errFile = recipe.errorPaths[status.getState()];
-	this->_fdOfFileToRead = open(errFile.c_str(), O_RDONLY);
-	if (this->_fdOfFileToRead < 0 || status.getState() == COUNT)
-	{
-		if (this->_fdOfFileToRead != -1) {
-			close(this->_fdOfFileToRead);
-		}
-		status.updateState(INTERNALERR);
-		body = "500 webserve encountered a critical internal error";
-		_generateHeader();
-		std::string response = header + body;
-		customer.eat();
-	}
-	else 
-	{
-		_doPipe();
+		this->_fdOfFileToRead = -1;
 	}
 }
 

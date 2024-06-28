@@ -35,8 +35,6 @@ void Dish::_get()
 	std::string page = recipe.root + order.getPath();
 	if (!isDirectory(page)) {
 		this->_fdOfFileToRead = open(page.c_str(), O_RDONLY);
-		if (this->_fdOfFileToRead < 0)
-			doError();
 	}
 	else {
 		if (page[page.size() - 1] != '/') {
@@ -54,35 +52,12 @@ void Dish::_get()
 			this->_fdOfFileToRead = open(index.c_str(), O_RDONLY);
 		}
 	}
-//	size_t pos = page.find_last_of('.');
-//	if (pos != std::string::npos)
-//	{
-//		std::string type = page.substr(pos + 1);
-//		if (type != "html") {
-//			return (status.updateState(UNSUPPORTED));
-//		}
-//		_inFD = open(page.c_str(), O_RDONLY);
-//		if (_inFD < 0)
-//			doError();
-//	}
-//	else
-//	{
-//		//if !isDirectory()
-//		//return (_status.updateState(UNSUPPORTED));
-//
-//		// if (_recipe.autoindex)
-//		//do CGI stuff here to list directory contents
-//		// else
-//		// {
-//		std::string index = page + recipe.index;
-//		_inFD = open(index.c_str(), O_RDONLY);
-//		// }
-//	}
-//	if (_inFD < 0)
-//		return (status.updateState(NOTFOUND));
-
-	_doPipe();
-//	input(_inFD);
+	if (this->_fdOfFileToRead < 0) {
+		_handleOpenError(errno);
+	}
+	if (this->status.getState() == OK) {
+		_doPipe();
+	}
 }
 
 void Dish::_post()

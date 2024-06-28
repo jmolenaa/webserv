@@ -72,7 +72,7 @@ void Waiter::input(int eventFD)
 	this->_customers[customerFD] = customer;
 }
 
-//Say goodbye to the customer
+//Is pure virtual function so have to override, we don't use it though
 void Waiter::output(int customerFD)
 {
 	(void)customerFD;

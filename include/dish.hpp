@@ -55,11 +55,13 @@ class Dish : public FdHandler
 		bool			_doneReading;
 		ssize_t			_fileSize;
 
-		void	_doPipe();
+		void	_horribleError();
+		bool	_thereIsAnInitialError();
+		void	_handleOpenError(int errorCode);
+
 		void	_trashDish();
 		void	_removeHandler(int& handlerFd);
-		void	_finishWriting();
-
+		void	_doPipe();
 		void	_writeToPipe(ssize_t count);
 		void	_get();
 		void	_post();
