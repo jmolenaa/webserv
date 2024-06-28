@@ -29,7 +29,7 @@ class Dish : public FdHandler
 	public:
 		Dish(Status& status, Order const& order, Recipe recipe, Customer& cust);
 		Dish() = delete;
-		~Dish();
+		~Dish() override;
 
 		void		input(int eventFD) override;
 		void		output(int eventFD) override;
@@ -46,6 +46,7 @@ class Dish : public FdHandler
 		std::string		header;
 		std::string		body;
 		bool			done;
+		std::string		finalPage;
 	
 	private:
 		char			_buffer[BUF_LIMIT];

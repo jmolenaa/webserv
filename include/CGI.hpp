@@ -24,7 +24,7 @@ class CGI : public FdHandler
 	public: 
 		explicit CGI(Dish& parent);
 		CGI() = delete;
-		~CGI();
+		~CGI() override;
 		
 		void	execute();
 		

@@ -100,6 +100,8 @@ void Customer::_getDish()
 
 	std::string page = _order.getPath();
 	Recipe recipe(cook->getRecipe(page));
+	std::cout << "\n\n\nPAGE\n" << page << "\n";
+	std::cout << "Matched recipe\n" << recipe.page << "\n";
 	while (!page.empty() && page != recipe.page) //double check this shit
 	{
 		size_t end = page.find_last_of('/');
@@ -108,9 +110,11 @@ void Customer::_getDish()
 		else
 			page = page.substr(0, end);
 		recipe = cook->getRecipe(page);
+		std::cout << "\n\n\nPAGE\n" << page << "\n";
+		std::cout << "Matched recipe\n" << recipe.page << "\n";
 	}
-
 	_dish = new Dish(this->_status, this->_order, recipe, *this);
+	std::cout << "final page: " << _dish->finalPage << "\n";
 	_dish->doMethod();
 }
 
@@ -119,7 +123,7 @@ void Customer::eat()
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
 
-	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
+//	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
 	//prepare to send to client
 	this->_outFD = this->_customerFd;
 	Log::getInstance().print("Serving to customer " + std::to_string(_outFD));

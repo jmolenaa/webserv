@@ -24,6 +24,12 @@ Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
 	if (order.getPath().find_last_of('/') == std::string::npos) {
 		status.updateState(BAD);
 	}
+	if (recipe.overwrittenRoot) {
+		finalPage = recipe.root + order.getPath().substr(recipe.page.size());
+	}
+	else {
+		finalPage = recipe.root + order.getPath();
+	}
 }
 
 Dish::~Dish()

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   CGI.cpp                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/06/28 16:10:18 by jmolenaa      #+#    #+#                 */
+/*   Updated: 2024/06/28 16:10:18 by jmolenaa      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "dish.hpp"
 
 #include <unistd.h>
@@ -11,22 +23,21 @@
 #include "restaurant.hpp"
 #include "customer.hpp"
 
-CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1}, _pid(-1),
-						_pos(0), _message(_dish.order.getOrder()), _buffer("") ,_env(nullptr)
+CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _path(parent.finalPage), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1},
+						_pid(-1), _pos(0), _message(_dish.order.getOrder()), _buffer("") ,_env(nullptr)
 {
 	try
 	{
-		size_t	qpos = _dish.order.getPath().find('?');
+		size_t	qpos = this->_path.find('?');
 		if (qpos == std::string::npos)
 		{
-			_path = _dish.order.getPath().substr(1);
 			if (_dish.order.getMethod() == POST)
 				_query = _dish.order.getBody();
 		}
 		else
 		{
-			_path = _dish.order.getPath().substr(1, qpos);
-			_query = _dish.order.getPath().substr(qpos + 1);
+			this->_path = this->_path.substr(0, qpos);
+			_query = this->_path.substr(qpos + 1);
 		}
 		_setEnv();
 	}

@@ -16,15 +16,10 @@
 #include "sstream"
 #include <sys/stat.h>
 
-/**
- * @todo autoindex stuff
- * 
- */
-
 static bool	isDirectory(std::string const& path) {
 	struct stat	fileInfo;
-	stat(path.c_str(), &fileInfo);
-	if (S_ISDIR(fileInfo.st_mode)) {
+//	stat(path.c_str(), &fileInfo);
+	if (stat(path.c_str(), &fileInfo) != -1 && S_ISDIR(fileInfo.st_mode)) {
 		return true;
 	}
 	return false;
@@ -32,13 +27,13 @@ static bool	isDirectory(std::string const& path) {
 
 void Dish::_get()
 {
-	std::string page = recipe.root + order.getPath();
-	if (!isDirectory(page)) {
-		this->_fdOfFileToRead = open(page.c_str(), O_RDONLY);
+//	std::string this->finalPage = recipe.root + order.getPath();
+	if (!isDirectory(this->finalPage)) {
+		this->_fdOfFileToRead = open(this->finalPage.c_str(), O_RDONLY);
 	}
 	else {
-		if (page[page.size() - 1] != '/') {
-			page += "/";
+		if (this->finalPage[this->finalPage.size() - 1] != '/') {
+			this->finalPage += "/";
 		}
 		//do CGI stuff here to list directory contents
 		if (recipe.autoindex) {
@@ -48,7 +43,7 @@ void Dish::_get()
 		}
 		else {
 			std::cout << "not\n";
-			std::string index = page + recipe.index;
+			std::string index = this->finalPage + recipe.index;
 			this->_fdOfFileToRead = open(index.c_str(), O_RDONLY);
 		}
 	}
