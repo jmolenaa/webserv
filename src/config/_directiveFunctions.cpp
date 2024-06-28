@@ -103,6 +103,9 @@ void Menu::returnDirective() {
 void Menu::rootDirective() {
 	this->validateDirectiveSyntax("root", 2, ";");
 	this->getCurrentRecipe()->root = this->popFrontToken();
+	if (this->getCurrentRecipe()->page != "root") {
+		this->getCurrentRecipe()->overwrittenRoot = true;
+	}
 }
 
 void Menu::allowedMethodsDirective() {

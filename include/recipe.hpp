@@ -24,6 +24,7 @@ struct Recipe
 {
 	std::string	page;
 	std::string root;
+	bool		overwrittenRoot;
 	std::string	index;
 	std::string uploadDir;
 	bool		allowUploading;
@@ -36,7 +37,7 @@ struct Recipe
 	std::pair<status, std::string>	redir;
 	std::array<std::string, COUNT>	errorPaths;
 
-	Recipe() :page("root"), root("root"), index("index.html"), uploadDir("root/orders/"), allowUploading(false),
+	Recipe() :page("root"), root("root"), overwrittenRoot(false), index("index.html"), uploadDir("root/orders/"), allowUploading(false),
 		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
@@ -57,6 +58,7 @@ struct Recipe
 	{
 		this->page = other.page;
 		this->root = other.root;
+		this->overwrittenRoot = other.overwrittenRoot;
 		this->index = other.index;
 		this->uploadDir = other.uploadDir;
 		this->allowUploading = other.allowUploading;
@@ -77,6 +79,7 @@ struct Recipe
 			return (*this);
 		this->page = other.page;
 		this->root = other.root;
+		this->overwrittenRoot = other.overwrittenRoot;
 		this->index = other.index;
 		this->uploadDir = other.uploadDir;
 		this->allowUploading = other.allowUploading;
