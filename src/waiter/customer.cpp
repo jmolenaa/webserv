@@ -123,7 +123,7 @@ void Customer::eat()
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
 
-//	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
+	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
 	//prepare to send to client
 	this->_outFD = this->_customerFd;
 	Log::getInstance().print("Serving to customer " + std::to_string(_outFD));

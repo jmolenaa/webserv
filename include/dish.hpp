@@ -58,17 +58,19 @@ class Dish : public FdHandler
 
 		void	_horribleError();
 		bool	_thereIsAnInitialError();
-		void	_handleOpenError(int errorCode);
+		void	_handleFileError(int errorCode);
 
-		void	_trashDish();
-		void	_removeHandler(int& handlerFd);
-		void	_doPipe();
-		void	_writeToPipe(ssize_t count);
-		void	_get();
-		bool	_isCGIRequest() const;
-		void	_post();
-		void	_delete();
-		void	_generateHeader();
+		void		_trashDish();
+		void		_removeHandler(int& handlerFd);
+		void		_doPipe();
+		void		_writeToPipe(ssize_t count);
+		void		_get();
+		bool		_isCGIRequest() const;
+		void		_autoindex();
+		std::string	_generateDirectoryListing();
+		void		_post();
+		void		_delete();
+		void		_generateHeader();
 };
 
 #endif

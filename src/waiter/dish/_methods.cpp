@@ -51,11 +51,9 @@ void Dish::_get()
 		if (this->finalPage[this->finalPage.size() - 1] != '/') {
 			this->finalPage += "/";
 		}
-		//do CGI stuff here to list directory contents
 		if (recipe.autoindex) {
-			std::cout << "WE ARE AUTOINDEXIIIIING\n";
-//			CGI cgi(*this);
-//			dishFD = cgi.execute();
+			_autoindex();
+			return ;
 		}
 		else {
 			std::string index = this->finalPage + recipe.index;
@@ -63,7 +61,7 @@ void Dish::_get()
 		}
 	}
 	if (this->_fdOfFileToRead < 0) {
-		_handleOpenError(errno);
+		_handleFileError(errno);
 	}
 	if (this->status.getState() == OK) {
 		_doPipe();

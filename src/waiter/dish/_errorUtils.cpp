@@ -54,7 +54,7 @@ void	Dish::doError()
 	}
 }
 
-void Dish::_handleOpenError(int errorCode) {
+void Dish::_handleFileError(int errorCode) {
 	if (errorCode == EACCES) {
 		this->status.updateState(FORBIDDEN);
 	}
