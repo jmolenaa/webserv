@@ -28,7 +28,6 @@ bool Dish::_thereIsAnInitialError() {
 void Dish::_horribleError() {
 	status.updateState(INTERNALERR);
 	body = "500 webserve encountered a critical internal error";
-	_generateHeader();
 	customer.eat();
 }
 
