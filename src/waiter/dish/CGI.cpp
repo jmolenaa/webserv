@@ -24,7 +24,7 @@
 #include "customer.hpp"
 
 CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _path(parent.finalPage), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1},
-						_pid(-1), _pos(0), _message(_dish.order.getOrder()), _buffer("") ,_env(nullptr)
+						_pid(-1), _pos(0), _message(_dish.order.getOrder()), _buffer(""), _env(nullptr)
 {
 	try
 	{
@@ -36,8 +36,8 @@ CGI::CGI(Dish& parent) : FdHandler(parent.restaurant), _dish(parent), _path(pare
 		}
 		else
 		{
-			this->_path = this->_path.substr(0, qpos);
 			_query = this->_path.substr(qpos + 1);
+			this->_path = this->_path.substr(0, qpos);
 		}
 		_setEnv();
 	}

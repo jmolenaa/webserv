@@ -43,9 +43,9 @@ void	Dish::_trashDish()
 	body = "";
 	this->_removeHandler(this->_outFD);
 	this->_removeHandler(this->_inFD);
-	Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " destroyed");
 	if (this->_fdOfFileToRead != -1) {
 		close(this->_fdOfFileToRead);
+		Log::getInstance().print("Dish " + std::to_string(this->_fdOfFileToRead) + " destroyed");
 		this->_fdOfFileToRead = -1;
 	}
 }
