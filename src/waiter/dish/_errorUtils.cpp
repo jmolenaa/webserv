@@ -22,6 +22,10 @@ bool Dish::_thereIsAnInitialError() {
 		this->status.updateState(METHODNOTALLOWED);
 		return true;
 	}
+	if (this->order.getLength() > this->recipe.maxBodySize) {
+		this->status.updateState(TOOLARGE);
+		return true;
+	}
 	return false;
 }
 
