@@ -20,13 +20,17 @@ bool Dish::_thereIsAnInitialError() {
 	}
 	if ((this->order.getMethod() & this->recipe.allowedMethods) == 0) {
 		this->status.updateState(METHODNOTALLOWED);
-		return true;
 	}
 	if (this->order.getLength() > this->recipe.maxBodySize) {
 		this->status.updateState(TOOLARGE);
-		return true;
 	}
-	return false;
+	if (this->order.getLength() == 0 && !this->order.getBody().empty()) {
+		this->status.updateState(LENGTHREQUIRED);
+	}
+	else {
+		return false;
+	}
+	return true;
 }
 
 void Dish::_horribleError() {

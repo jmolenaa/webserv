@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/socket.h>
 #include "order.hpp"
 
 #include <unistd.h>
@@ -25,8 +26,9 @@ void Order::_extractHeader()
 		_order += "\r\n\r\n";
 		_status.updateState(INTERNALERR);
 	}
-	else if (count == 0) { //TODO change this
-		sleep(1);
+	else if (count == 0) {
+		this->_done = true;
+		this->_status.updateState(BAD);
 	}
 	else
 	{
@@ -42,11 +44,35 @@ void Order::_extractHeader()
 	}
 }
 
+void Order::_extractBody()
+{
+	Log::getInstance().print("Getting body---------");
+	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
+	if (count < 0)
+	{
+		_done = true;
+		_status.updateState(INTERNALERR);
+	}
+	else if (count == 0) {
+		this->_done = true;
+		this->_status.updateState(BAD);
+	}
+	else
+	{
+		_order.append(_buffer, count);
+		if (_order.size() - _headerEnd >= _contentLength)
+		{
+			_done = true;
+			_printData();
+		}
+	}
+}
+
 void Order::_parseHeader()
 {
 	_headerEnd += 4;
 	_order = _bufStr.substr(0, _headerEnd);
-	
+
 	_extractMethod();
 	_extractPath();
 	_extractHost();
@@ -81,7 +107,7 @@ void Order::_parseHeader()
 void Order::_extractMethod()
 {
 	size_t	method_pos;
-	
+
 	method_pos = _order.find("GET");
 	if (method_pos != std::string::npos)
 	{
@@ -127,29 +153,6 @@ void Order::_extractHost()
 		}
 		catch (std::exception& e) {
 			this->_status.updateState(BAD);
-		}
-	}
-}
-
-void Order::_extractBody()
-{
-	Log::getInstance().print("Getting body---------");
-	ssize_t count = read(_orderFD, _buffer, BUF_LIMIT - 1);
-	if (count < 0)
-	{
-		_done = true;
-		_status.updateState(INTERNALERR);		
-	}
-	else if (count == 0) { //TODO change this
-		sleep(1);
-	}
-	else
-	{
-		_order.append(_buffer, count);
-		if (_order.size() - _headerEnd >= _contentLength)
-		{
-			_done = true;
-			_printData();
 		}
 	}
 }
