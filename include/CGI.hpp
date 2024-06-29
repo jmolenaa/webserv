@@ -46,8 +46,7 @@ class CGI : public FdHandler
 		char**						_env;
 		std::vector<std::string>	_vec;
 
-		void		_vectorToEnv(const std::vector<std::string>& vec);	
-		void		_freeEnv();
+		bool		_thereIsAnInitialError();
 		void		_setEnv();
 		void 		_execChild();
 		void		_closePipes(std::string what, std::string why);

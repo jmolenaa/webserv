@@ -97,11 +97,33 @@ void CGI::_setEnv()
 	 _env[_vec.size()] = nullptr;
 }
 
-/**
- * @todo time out CGIs
- */
+bool CGI::_thereIsAnInitialError() {
+	if (this->_dish.status.getState() != OK) {
+		return true;
+	}
+	else if (this->_dish.recipe.allowCgi == false) {
+		this->_dish.status.updateState(FORBIDDEN);
+	}
+	else if (access(this->_path.c_str(), F_OK) == -1) {
+		this->_dish.status.updateState(NOTFOUND);
+	}
+	else if (access(this->_path.c_str(), X_OK) == -1) {
+		this->_dish.status.updateState(FORBIDDEN);
+	}
+	else if (!this->_dish.isRightCGIExtenion(this->_path)) {
+		this->_dish.status.updateState(FORBIDDEN);
+	}
+	else {
+		return false;
+	}
+	return true;
+}
+
 void CGI::execute()
 {
+	if (_thereIsAnInitialError()) {
+		return ;
+	}
 	if (pipe(_CGIInputPipe) == -1) {
 		this->_closePipes("CGI pipe function failed: ", std::string(std::strerror(errno)) + "\n");
 	}

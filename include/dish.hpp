@@ -37,6 +37,7 @@ class Dish : public FdHandler
 		std::string	getDish();
 		void		doMethod();
 		void		doError();
+		bool		isRightCGIExtenion(std::string const& executable) const;
 
 		Status&			status;
 		Order const&	order;
@@ -47,7 +48,7 @@ class Dish : public FdHandler
 		std::string		body;
 		bool			done;
 		std::string		finalPage;
-	
+
 	private:
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];

@@ -24,6 +24,13 @@ static bool	isDirectory(std::string const& path) {
 	return false;
 }
 
+bool Dish::isRightCGIExtenion(const std::string &executable) const {
+	if (executable.size() > 4 && executable.substr(executable.size() - 4) == "." + this->recipe.cgiExtension) {
+		return true;
+	}
+	return false;
+}
+
 bool Dish::_isCGIRequest() const {
 	size_t		qpos = this->finalPage.find('?');
 	std::string	pathNoQuery = this->finalPage;
@@ -31,7 +38,7 @@ bool Dish::_isCGIRequest() const {
 	if (qpos != std::string::npos) {
 		pathNoQuery = this->finalPage.substr(0, qpos);
 	}
-	if (pathNoQuery.size() > 4 && pathNoQuery.substr(pathNoQuery.size() - 4) == "." + this->recipe.cgiExtension) {
+	if (isRightCGIExtenion(pathNoQuery)) {
 		return true;
 	}
 	return false;
