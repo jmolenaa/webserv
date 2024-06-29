@@ -97,3 +97,8 @@ void Dish::_delete()
 		_CGI->execute();
 	}
 }
+
+void Dish::_redirect() {
+	this->status.updateState(this->recipe.redir.first);
+	header += "Location: " + this->recipe.redir.second + "\r\n";
+}

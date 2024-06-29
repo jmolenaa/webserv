@@ -65,6 +65,7 @@ class Dish : public FdHandler
 		void		_removeHandler(int& handlerFd);
 		void		_doPipe();
 		void		_writeToPipe(ssize_t count);
+		void		_redirect();
 		void		_get();
 		bool		_isCGIRequest() const;
 		void		_autoindex();

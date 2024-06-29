@@ -41,6 +41,7 @@ void Dish::_removeHandler(int& handlerFd) {
 void	Dish::_trashDish()
 {
 	body = "";
+	header = "";
 	this->_removeHandler(this->_outFD);
 	this->_removeHandler(this->_inFD);
 	if (this->_fdOfFileToRead != -1) {
@@ -53,8 +54,8 @@ void	Dish::_trashDish()
 //Make this happen on each send.
 void	Dish::_generateHeader()
 {
-	header += "HTTP/1.1 " + std::to_string(status.getStatNum()) + " " + status.getStatMessage() + "\r\n";
-	header += "Content-Type: text/html \r\n";
-	header += "Content-Length: " + std::to_string(body.size()) + "\r\n";
-	header += "Connection: Closed\r\n\r\n";
+	header.insert(0, "HTTP/1.1 " + std::to_string(status.getStatNum()) + " " + status.getStatMessage() + "\r\n");
+	header.append("Content-Type: text/html \r\n");
+	header.append("Content-Length: " + std::to_string(body.size()) + "\r\n\r\n");
+//	header.append("Connection: Closed\r\n\r\n");
 }

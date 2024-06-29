@@ -44,6 +44,11 @@ void Dish::doMethod()
 		doError();
 		return ;
 	}
+	if (this->recipe.redir.first != OK) {
+		this->_redirect();
+		this->customer.eat();
+		return ;
+	}
 	method m = this->order.getMethod();
 	switch (m)
 	{
