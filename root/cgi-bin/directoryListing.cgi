@@ -95,7 +95,4 @@ def generate_directory_listing_html(directory_path):
 
 
 # Script start
-path = sys.argv[1]
-if path[-1] != "/":
-    path += "/"
-generate_directory_listing_html(path)
+generate_directory_listing_html("root")
