@@ -17,6 +17,8 @@
 #include <csignal>
 #include <fcntl.h>
 
+extern volatile sig_atomic_t interrupted;
+
 Restaurant::Restaurant(std::string const& filename)
 {
 	Log::getInstance().print("Constructing Restaurant instance");
@@ -48,7 +50,7 @@ void Restaurant::run()
 {
     epoll_event events[CLI_LIMIT];
 	int			eventFD;
-    while (true)
+    while (!interrupted)
 	{
         _concierge.wait(-1, events);
 		for (int i = 0; i < _concierge.getNumEvents(); i++)

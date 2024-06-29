@@ -21,6 +21,13 @@
 // make headers understandable, where we actually need them
 // change localhost to default
 
+volatile sig_atomic_t interrupted = 0;
+
+void	sigIntHandler(int signal) {
+	(void)signal;
+	interrupted = 1;
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc > 2) {
@@ -33,6 +40,7 @@ int main(int argc, char *argv[])
 		filename = argv[1];
 	}
 	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, sigIntHandler);
 	try {
 		Log::getInstance().enableLog(true); //comment out to disable logging.
 		
