@@ -53,11 +53,17 @@ void Order::_parseHeader()
 
     _contentLength = 0;
 	std::string tmp = _extractValue(_order, "Content-Length: ", '\n');
-	if (!tmp.empty())
-		_contentLength = std::stoi(tmp);
- //TODO ask about this if statement
-	if (_contentLength > MAX_BODY_SIZE)
-		return (_status.updateState(UNSUPPORTED));
+	if (!tmp.empty()) {
+		try {
+			_contentLength = std::stoul(tmp);
+		}
+		catch (std::out_of_range& e) {
+			this->_status.updateState(TOOLARGE);
+		}
+		catch (std::exception& e) {
+			this->_status.updateState(BAD);
+		}
+	}
 	if (_contentLength)
 		_contentType = _extractValue(_order, "Content-Type: ", '\n');
 
@@ -72,7 +78,6 @@ void Order::_parseHeader()
 	}
 }
 
-// TODO, what if whatever is requested contains GET, POST, DELETE
 void Order::_extractMethod()
 {
 	size_t	method_pos;
@@ -116,8 +121,14 @@ void Order::_extractHost()
     _table = PORT;
 	std::string tmp = _extractValue(_order, "Host: ", '\n');
 	tmp = _extractValue(tmp, ":", '\n');
-	if (!tmp.empty())
-		_table = std::stoi(tmp);
+	if (!tmp.empty()) {
+		try {
+			_table = std::stoi(tmp);
+		}
+		catch (std::exception& e) {
+			this->_status.updateState(BAD);
+		}
+	}
 }
 
 void Order::_extractBody()
