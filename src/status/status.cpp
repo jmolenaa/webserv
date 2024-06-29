@@ -17,11 +17,17 @@ Status::Status() : _state(OK)
 	_status[OK].first = "OK";
 	_status[OK].second = 200;
 
-	_status[PERMANENTREDIRECT].first = "Permanent redirect";
-	_status[PERMANENTREDIRECT].second = 301;
+	_status[MOVEDPERMANENTLY].first = "Moved permanently";
+	_status[MOVEDPERMANENTLY].second = 301;
+
+	_status[FOUND].first = "Found";
+	_status[FOUND].second = 302;
 
 	_status[TEMPORARYREDIRECT].first = "Temporary redirect";
-	_status[TEMPORARYREDIRECT].second = 302;
+	_status[TEMPORARYREDIRECT].second = 307;
+
+	_status[PERMANENTREDIRECT].first = "Permanent redirect";
+	_status[PERMANENTREDIRECT].second = 308;
 
 	_status[BAD].first = "Bad Request";
 	_status[BAD].second = 400;

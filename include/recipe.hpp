@@ -44,6 +44,8 @@ struct Recipe
 		"root/index.html",
 		"root/status/301.html",
 		"root/status/302.html",
+		"root/status/307.html",
+		"root/status/308.html",
 		"root/status/400.html",
 		"root/status/403.html",
 		"root/status/404.html",
