@@ -19,13 +19,26 @@ class Restaurant;
 class FdHandler
 {
 	public:
-		FdHandler(Restaurant& rest) : restaurant(rest), _inFD(-1), _outFD(-1) {};
+
+		enum fdHandlerType {
+			WAITERTYPE,
+			CUSTOMERTYPE,
+			DISHTYPE,
+			CGITYPE
+		};
+
+		FdHandler(Restaurant& rest, fdHandlerType type) : restaurant(rest), type(type), _inFD(-1), _outFD(-1) {};
 		virtual ~FdHandler() = default;
 
 		virtual void input(int eventFD) = 0;
 		virtual void output(int eventFD) = 0;
 
+		virtual void handleCGIHangup() {};
+
 		Restaurant&	restaurant;
+
+
+		fdHandlerType	type;
 
 	protected:
 		int	_inFD;

@@ -18,7 +18,7 @@
 #include "customer.hpp"
 
 Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
-	: FdHandler(cust.restaurant), status(stat), order(ord), recipe(rec), customer(cust), done(false),
+	: FdHandler(cust.restaurant, DISHTYPE), status(stat), order(ord), recipe(rec), customer(cust), done(false),
 	_buffer(""), _pipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1), _doneReading(false), _fileSize(0)
 {
 	if (order.getPath().find_last_of('/') == std::string::npos) {

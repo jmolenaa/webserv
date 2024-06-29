@@ -34,7 +34,7 @@
  * This is covered by RFC 2616 (Section 4.4 and Section 8), and by RFC 7230 (Section 3.3.3 and Section 6), etc
 */
 
-Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest), _waiter(wait), _order(_status, fd), _dish(nullptr),
+Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest, CUSTOMERTYPE), _waiter(wait), _order(_status, fd), _dish(nullptr),
 															_bitesLeft(0), _pos(0), _customerFd(fd)
 {
 	this->_inFD = _customerFd;
@@ -138,7 +138,7 @@ void Customer::output(int eventFD)
 	_pos += size;
 	ssize_t sent = send(_outFD, response, size, 0);
 	if (sent < 0) {
-		Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has decided to leave half way due to: " + std::string(std::strerror(errno)));
+		Log::getInstance().printErr("Customer " + std::to_string(this->_customerFd) + " has decided to leave half way due to: " + std::string(std::strerror(errno)));
 		return (_waiter.kickCustomer(this->_customerFd));
 	}
 	else if (sent == 0) {

@@ -14,6 +14,7 @@
 #define LOG_HPP
 
 # include <iostream>
+# include "defines.hpp"
 
 class Log
 {
@@ -58,7 +59,7 @@ class Log
 		void	printErr(const std::string& message)
 		{
 			if (_logEnabled)
-			std::cerr << "Log: " << message << std::endl;
+			std::cerr << RED << "Log: " << message << RESET << std::endl;
 		};
 };
 

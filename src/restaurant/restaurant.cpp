@@ -46,6 +46,16 @@ Restaurant::~Restaurant()
 	_Out.clear();
 }
 
+bool Restaurant::isCGIFd(int fd) {
+	if (this->_Out.find(fd) != this->_Out.end() && this->_Out[fd]->type == FdHandler::CGITYPE) {
+		return true;
+	}
+	else if (this->_In.find(fd) != this->_In.end() && this->_In[fd]->type == FdHandler::CGITYPE) {
+		return true;
+	}
+	return false;
+}
+
 void Restaurant::run()
 {
     epoll_event events[CLI_LIMIT];
@@ -68,8 +78,16 @@ void Restaurant::run()
 				_Out[eventFD]->output(eventFD);
 				continue;
 			}
-			else{
-				Log::getInstance().print("Removing unknown event...\n");
+			else if (events[i].events & EPOLLHUP && this->isCGIFd(eventFD)) {
+				if (_Out.find(eventFD) != _Out.end()) {
+					_Out[eventFD]->handleCGIHangup();
+				}
+				else {
+					_In[eventFD]->handleCGIHangup();
+				}
+			}
+			else {
+				Log::getInstance().printErr("Removing unknown event...\n");
 				_concierge.removeFd(eventFD);
 				close(eventFD);
 			}

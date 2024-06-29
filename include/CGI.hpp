@@ -30,6 +30,7 @@ class CGI : public FdHandler
 		
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
+		void	handleCGIHangup() override;
 	
 	private:
 		Dish&		_dish;
@@ -49,7 +50,9 @@ class CGI : public FdHandler
 		bool		_thereIsAnInitialError();
 		void		_setEnv();
 		void 		_execChild();
-		void		_closePipes(std::string what, std::string why);
+		void		_closePipes();
+		void		_CGIError(std::string what, std::string why);
+		void		_removeHandler(int& handlerFd);
 };
 
 #endif

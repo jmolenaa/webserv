@@ -20,7 +20,7 @@
 #include "customer.hpp"
 
 //Creates server. Removed setup functions since they are never reused.
-Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest), kitchen(kitch)
+Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest, WAITERTYPE), kitchen(kitch)
 {
 	Log::getInstance().print("Waiter is being hired");
 	
@@ -67,7 +67,7 @@ void Waiter::input(int eventFD)
 	int customerFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
 	if (customerFD == -1) {
 		if (errno == EMFILE || errno == ENFILE) {
-			Log::getInstance().print("Server is currently busy handling other request and can't accept new clients");
+			Log::getInstance().printErr("Server is currently busy handling other request and can't accept new clients");
 			return ;
 		}
 		throw WebservException("Failed to seat the Customer: " + std::string(std::strerror(errno)) + "\n");
