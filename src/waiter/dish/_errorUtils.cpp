@@ -51,6 +51,7 @@ void	Dish::doError()
 	}
 	else
 	{
+		std::cout << "WE SHOULD BE IN HERE\n";
 		_doPipe();
 		if (status.getState() == COUNT) {
 			_horribleError();
@@ -64,5 +65,25 @@ void Dish::_handleFileError(int errorCode) {
 	}
 	else {
 		this->status.updateState(NOTFOUND);
+	}
+}
+
+void Dish::_handleOutputError() {
+	Log::getInstance().printErr("Write error in dish input!\n");
+	if (this->status.getState() != OK) {
+		this->status.updateState(COUNT);
+	}
+	else {
+		this->status.updateState(INTERNALERR);
+	}
+	doError();
+	// if the error we encountered isn't critical we attempt to read the error file
+	// this is only necessary for writing to the pipe, due to how epoll handles pipe events
+	// errors during writing to pipes, we want to setup a new one, but if that happens we, we close
+	// the previous ones and overwrite the fd with new ones, since an event on the file descriptor
+	// of the previous reading end might have bene triggered already we would go into input and block on read call
+	// this way we go back to output and try to write again
+	if (this->_fdOfFileToRead != -1) {
+		this->output(this->_fdOfFileToRead);
 	}
 }

@@ -52,7 +52,7 @@ void Restaurant::run()
 	int			eventFD;
     while (!interrupted)
 	{
-        _concierge.wait(-1, events);
+        _concierge.wait(1000, events);
 		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
