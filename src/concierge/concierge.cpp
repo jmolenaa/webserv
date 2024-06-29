@@ -88,11 +88,11 @@ void Concierge::removeFd(int fd)
 void Concierge::wait(int timeout, epoll_event *events)
 {
     _numEvents = epoll_wait(_epollfd, events, CLI_LIMIT, timeout);
-    Log::getInstance().print("Concierge is waiting on " + std::to_string(_numEvents) + " events");
     if (_numEvents < 0)
     {
-        throw (WebservException("Epoll wait error" + std::string(std::strerror(errno))));
+        throw (WebservException("Epoll wait error: " + std::string(std::strerror(errno)) + "\n"));
     }
+    Log::getInstance().print("Concierge is waiting on " + std::to_string(_numEvents) + " events");
 }
 
 int Concierge::getNumEvents()

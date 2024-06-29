@@ -60,6 +60,7 @@ class Dish : public FdHandler
 		void	_horribleError();
 		bool	_thereIsAnInitialError();
 		void	_handleFileError(int errorCode);
+		void	_handleOutputError();
 
 		void		_trashDish();
 		void		_removeHandler(int& handlerFd);

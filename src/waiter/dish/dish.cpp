@@ -105,7 +105,6 @@ void Dish::_writeToPipe(ssize_t count) {
 		_handleOutputError();
 	}
 	else {
-		i++;
 		this->_fileSize += bitesWritten;
 	}
 }
