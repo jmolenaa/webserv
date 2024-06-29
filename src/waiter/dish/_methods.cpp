@@ -11,9 +11,8 @@
 /* ************************************************************************** */
 
 #include "dish.hpp"
-#include <unistd.h>
+#include "customer.hpp"
 #include "order.hpp"
-#include "sstream"
 #include <sys/stat.h>
 
 static bool	isDirectory(std::string const& path) {
@@ -101,4 +100,5 @@ void Dish::_delete()
 void Dish::_redirect() {
 	this->status.updateState(this->recipe.redir.first);
 	header += "Location: " + this->recipe.redir.second + "\r\n";
+	this->customer.eat();
 }
