@@ -130,24 +130,20 @@ void Customer::output(int eventFD)
 	if (eventFD != this->_outFD)
 		throw WebservException("Bad output FD event on Customer\n");
 
-
 	const char* response = _food.c_str();
 	response += _pos;
 	size_t	size = _food.size() - _pos;
 	if (size > BUF_LIMIT)
 		size = BUF_LIMIT;
 	_pos += size;
-//	std::cout << size << "\n";
 	ssize_t sent = send(_outFD, response, size, 0);
-//	Log::getInstance().print("Customer " + std::to_string(_outFD) + " is eating " + std::to_string(size) + " ingredients\n");
 	if (sent < 0) {
 		Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has decided to leave half way due to: " + std::string(std::strerror(errno)));
 		return (_waiter.kickCustomer(this->_customerFd));
 	}
-	_bitesLeft -= sent;
-
-	if (_bitesLeft <= 0) {
-		Log::getInstance().print("That happens");
+	else if (sent == 0) {
+		Log::getInstance().print("Customer " + std::to_string(this->_customerFd) + " has eaten his meal and is ready to leave");
 		return (_waiter.kickCustomer(this->_customerFd));
 	}
+	_bitesLeft -= sent;
 }

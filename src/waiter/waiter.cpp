@@ -65,8 +65,13 @@ void Waiter::input(int eventFD)
 	sockaddr_in orderAddr{};
 	socklen_t 	orderAddrLen = sizeof(orderAddr);
 	int customerFD = accept(_inFD, reinterpret_cast<sockaddr *>(&orderAddr), &orderAddrLen);
-	if (customerFD == -1)
+	if (customerFD == -1) {
+		if (errno == EMFILE || errno == ENFILE) {
+			Log::getInstance().print("Server is currently busy handling other request and can't accept new clients");
+			return ;
+		}
 		throw WebservException("Failed to seat the Customer: " + std::string(std::strerror(errno)) + "\n");
+	}
 
 	Customer* customer = new Customer(customerFD, restaurant, *this);
 	this->_customers[customerFD] = customer;
