@@ -28,9 +28,9 @@ NAME = webserv
 INCLUDE = -I include
 CXX = c++
 ifdef DEBUG
-	CXXFLAGS := -Wall -Werror -Wextra -g -fsanitize=address
+	CXXFLAGS := -Wall -Werror -Wextra -fsanitize=address
 else
-	CXXFLAGS := -Wall -Werror -Wextra
+	CXXFLAGS := -Wall -Werror -Wextra -g
 endif
 
 
