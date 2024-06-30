@@ -3,6 +3,10 @@
 import os, time
 import sys
 
+while True:
+    time.sleep(1)
+    print("asd", flush=True)
+
 # make file current directory
 print("hello world")
 try:

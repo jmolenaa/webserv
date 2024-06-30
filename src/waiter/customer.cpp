@@ -40,6 +40,7 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest, CUS
 	this->_inFD = _customerFd;
 
 	_lastAction = std::chrono::high_resolution_clock::now();
+	_requestStart = _lastAction;
 	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR );
 	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has been seated.");
 }
@@ -149,9 +150,14 @@ t_time Customer::getLastAction() {
 	return this->_lastAction;
 }
 
+t_time Customer::getRequestStart() {
+	return this->_requestStart;
+}
+
 bool Customer::handleTimeout() {
 	this->_status.updateState(LOOPDETECTED);
 	this->resetTime();
+	this->resetStartTime();
 	if (this->_dish == nullptr) {
 		return false;
 	}
@@ -161,4 +167,8 @@ bool Customer::handleTimeout() {
 
 void Customer::resetTime() {
 	this->_lastAction = std::chrono::high_resolution_clock::now();
+}
+
+void Customer::resetStartTime() {
+	this->_requestStart = std::chrono::high_resolution_clock::now();
 }

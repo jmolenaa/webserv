@@ -62,6 +62,9 @@ static bool	timedOut(Customer* customer) {
 	if (std::chrono::duration_cast<std::chrono::seconds>(now - customer->getLastAction()).count() > TIMEOUT) {
 		return true;
 	}
+	if (std::chrono::duration_cast<std::chrono::seconds>(now - customer->getRequestStart()).count() > MAX_TIMEOUT) {
+		return true;
+	}
 	return false;
 }
 

@@ -47,7 +47,7 @@
 			function deleteFile()
 			{
                 const filePath = document.getElementById('filename').value;
-                const url = `http://localhost:7074/orders/${encodeURIComponent(filePath)}`;
+                const url = `http://localhost:7074/orders/files/${encodeURIComponent(filePath)}`;
 
                 fetch(url, {
                     method: 'DELETE',

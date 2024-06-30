@@ -36,7 +36,8 @@ class Customer : public FdHandler
 		t_time	getLastAction();
 		bool	handleTimeout();
 		void	resetTime();
-//		void	setLastAction(t_time newActionTime);
+		t_time	getRequestStart();
+		void	resetStartTime();
 
 	private:
 		Waiter&	_waiter;
@@ -49,6 +50,7 @@ class Customer : public FdHandler
 		ssize_t		_pos;
 		int			_customerFd;
 		t_time 		_lastAction;
+		t_time		_requestStart;
 
 		void		_getDish();
 };
