@@ -58,6 +58,11 @@ CGI::~CGI()
 	for (size_t i = 0; _env && _env[i]; ++i)
         delete[] _env[i];
     delete[] _env;
+
+	// Kill the child process if it's still running
+	if (waitpid(this->_pid, nullptr, WNOHANG) == 0) {
+		kill(this->_pid, SIGQUIT);
+	}
 }
 
 //this probably needs to be updated
@@ -193,28 +198,20 @@ void	CGI::input(int eventFD)
 		this->_CGIError("Bad FD triggered in CGI input ", std::to_string(eventFD));
 	}
 
-//	static int i;
 	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
-	if (count < 0)
-	{
-		std::cout << "ARE WE HERE?\n";
+	if (count < 0) {
 		this->_CGIError("Read error in CGI input!", std::string(std::strerror(errno)));
-		return ;
 	}
 	else if (count == 0)
 	{
-		std::cout << "OR HERE?\n" << "with count: " << count << "\n";
-//		_dish.body.append(_buffer, count);
 		Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
 		this->_removeHandler(this->_inFD);
 		this->_dish.customer.eat();
 	}
 	else
 	{
-//		i++;
-		std::cout << "OR JUST ADDING THIS?\n";
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
-		_dish.body.append(_buffer, count);// += std::string(_buffer);
+		_dish.body.append(_buffer, count);
 		if (_pos == _message.size()) {
 			Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
 			this->_removeHandler(this->_inFD);
@@ -232,25 +229,14 @@ void	CGI::output(int eventFD)
 	Log::getInstance().print("Adding ingredients from position " + std::to_string(_pos));
 	std::string msg = _message.substr(_pos, BUF_LIMIT - 1);
 	ssize_t count = write(_outFD, msg.c_str(), msg.size());
-	if (count < 0)
-	{
-		std::cout << "THIS EXPLODED?\n";
+	if (count < 0) {
 		this->_CGIError("Read error in CGI input!", std::string(std::strerror(errno)));
-		return ;
 	}
 	else if (count == 0) {
 		this->_removeHandler(this->_outFD);
 	}
-	else
-	{
-		std::cout << "THIS NOT?\n" << "with count: " << count << "\n";
+	else {
 		_pos += count;
-//		if (_pos >= _message.size())
-//		{
-//			restaurant.removeFdHandler(this->_outFD);
-//			this->_outFD = -1;
-//			close(this->_CGIInputPipe[1]);
-//		}
 	}
 }
 
@@ -263,7 +249,6 @@ void CGI::_removeHandler(int &handlerFd) {
 }
 
 void CGI::handleCGIHangup() {
-	std::cout << "ARE WE DOING THIS?\n";
 	int	exitStatus;
 	if (waitpid(this->_pid, &exitStatus, WNOHANG) == 0) {
 		return ;
