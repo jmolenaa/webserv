@@ -55,6 +55,7 @@ class CGI : public FdHandler
 		void		_closePipes();
 		void		_CGIError(std::string what, std::string why);
 		void		_removeHandler(int& handlerFd);
+		void		_tryChangeDir();
 };
 
 #endif

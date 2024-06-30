@@ -172,6 +172,25 @@ void CGI::_closePipes()
     safeClose(_CGIOutputPipe[1]);
 }
 
+void CGI::_tryChangeDir() {
+	std::string	parentDir;
+	size_t		pos;
+
+	pos = this->_path.find_last_of('/');
+	if (pos != std::string::npos) {
+		parentDir = this->_path.substr(0, pos);
+		if (chdir(parentDir.c_str()) == 0) {
+			return;
+		}
+		Log::getInstance().printErr("Couldn't change directory " + std::string(std::strerror(errno)));
+	}
+	else {
+		Log::getInstance().printErr("Something's horribly wrong with the path given.");
+	}
+	this->_closePipes();
+	exit(INTERNALERR);
+}
+
 void CGI::_execChild()
 {
 	if (dup2(_CGIOutputPipe[1], STDOUT_FILENO) < 0 || dup2(_CGIInputPipe[0], STDIN_FILENO) < 0) {
@@ -181,11 +200,13 @@ void CGI::_execChild()
 	}
 
 	_closePipes();
+	this->_tryChangeDir();
 
-	char* path = const_cast<char*>(_path.c_str());
-	char* argv[] = {path, nullptr};
+	std::string	path = this->_path.substr(this->_path.find_last_of('/') + 1);
+	char*		pathCStr = const_cast<char*>(path.c_str());
+	char*	argv[] = {pathCStr, nullptr};
 	Log::getInstance().printErr(std::string(RESET) + "Executing CGI for path " + _path);
-    if (execve(path, argv, _env) < 0) {
+    if (execve(argv[0], argv, _env) < 0) {
 		this->_closePipes();
 		Log::getInstance().printErr("execve failed: " + std::string(std::strerror(errno)));
 	}
