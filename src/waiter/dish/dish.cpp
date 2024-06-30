@@ -71,7 +71,7 @@ void Dish::doMethod()
 void	Dish::input(int eventFD)
 {
 	(void)eventFD;
-	ssize_t count = read(this->_inFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(this->_inFD, _buffer, BUF_LIMIT);
 	if (count < 0)
 	{
 		Log::getInstance().printErr("Read error in Dish output!\n");
@@ -112,7 +112,7 @@ void Dish::_writeToPipe(ssize_t count) {
 void	Dish::output(int eventFD)
 {
 	(void)eventFD;
-	ssize_t	count = read(this->_fdOfFileToRead, _buffer, BUF_LIMIT - 1);
+	ssize_t	count = read(this->_fdOfFileToRead, _buffer, BUF_LIMIT);
 	if (count < 0 ) {
 		_handleOutputError();
 	}

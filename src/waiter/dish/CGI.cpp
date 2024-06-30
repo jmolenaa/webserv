@@ -219,7 +219,7 @@ void	CGI::input(int eventFD)
 		this->_CGIError("Bad FD triggered in CGI input ", std::to_string(eventFD));
 	}
 
-	ssize_t count = read(_inFD, _buffer, BUF_LIMIT - 1);
+	ssize_t count = read(_inFD, _buffer, BUF_LIMIT);
 	if (count < 0) {
 		this->_CGIError("Read error in CGI input!", std::string(std::strerror(errno)));
 	}
@@ -248,7 +248,7 @@ void	CGI::output(int eventFD)
 	}
 
 	Log::getInstance().print("Adding ingredients from position " + std::to_string(_pos));
-	std::string msg = _message.substr(_pos, BUF_LIMIT - 1);
+	std::string msg = _message.substr(_pos, BUF_LIMIT);
 	ssize_t count = write(_outFD, msg.c_str(), msg.size());
 	if (count < 0) {
 		this->_CGIError("Read error in CGI output!", std::string(std::strerror(errno)));

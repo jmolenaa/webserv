@@ -19,7 +19,7 @@
 
 void Order::_extractHeader()
 {
-	ssize_t count = recv(_orderFD, _buffer, BUF_LIMIT - 1, 0);
+	ssize_t count = recv(_orderFD, _buffer, BUF_LIMIT, 0);
 	if (count < 0)
 	{
 		_done = true;
@@ -47,7 +47,7 @@ void Order::_extractHeader()
 void Order::_extractBody()
 {
 	Log::getInstance().print("Getting body---------");
-	ssize_t count = recv(_orderFD, _buffer, BUF_LIMIT - 1, 0);
+	ssize_t count = recv(_orderFD, _buffer, BUF_LIMIT, 0);
 	if (count < 0)
 	{
 		_done = true;

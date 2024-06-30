@@ -6,3 +6,4 @@ import os
 print("hello world")
 value = os.environ.get("QUERY_STRING")
 print(value)
+# file = open("test", "w")

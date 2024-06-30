@@ -4,7 +4,7 @@ import cgi
 import os
 
 # Set the directory where uploaded files will be stored
-upload_dir = "root/orders/"
+upload_dir = os.environ.get("UPLOAD_DIR")
 
 # Create a FieldStorage instance
 form = cgi.FieldStorage()
