@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
 
 import cgi, cgitb
+import sys
 
-form = cgi.FieldStorage()
+try:
+    form = cgi.FieldStorage()
+except Exception as e:
+    sys.exit(12)
 
-starter=form.getvalue("starter")
-main=form.getvalue("main")
-dessert=form.getvalue("dessert")
+try:
+    starter=form.getvalue("starter")
+    main=form.getvalue("main")
+    dessert=form.getvalue("dessert")
+except Exception as e:
+    sys.exit(12)
 
 print("<!DOCTYPE html>")
 print("<html>")

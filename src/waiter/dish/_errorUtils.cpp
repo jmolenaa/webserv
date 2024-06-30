@@ -13,7 +13,6 @@
 #include "dish.hpp"
 #include "customer.hpp"
 
-// TODO add max body size here
 bool Dish::_thereIsAnInitialError() {
 	if (this->status.getState() != OK) {
 		return true;

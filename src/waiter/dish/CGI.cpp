@@ -298,25 +298,3 @@ void CGI::handleCGIHangup() {
 		this->_dish.doError();
 	}
 }
-
-//pid_t CGI::getPid() const {
-//	return this->_pid;
-//}
-
-//void CGI::inspectChildExitCode() {
-//	int	exitStatus;
-//
-//	std::cout << waitpid(this->_pid, &exitStatus, WNOHANG) << " \n";
-//	if (WIFEXITED(exitStatus) && WEXITSTATUS(exitStatus) < COUNT) {
-//		this->_dish.status.updateState((status)WEXITSTATUS(exitStatus));
-//	}
-//	else {
-//		this->_dish.status.updateState(INTERNALERR);
-//	}
-//	this->_removeHandler(this->_inFD);
-//	this->_removeHandler(this->_outFD);
-//	this->_closePipes();
-//	if (this->_dish.status.getState() == OK && this->_dish.body.empty()) {
-//		this->_dish.body = "Script executed successfully\n";
-//	}
-//}
