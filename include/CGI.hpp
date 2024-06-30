@@ -31,6 +31,8 @@ class CGI : public FdHandler
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
 		void	handleCGIHangup() override;
+//		pid_t	getPid() const;
+//		void	inspectChildExitCode();
 	
 	private:
 		Dish&		_dish;

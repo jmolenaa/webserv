@@ -36,61 +36,50 @@
 <!--    <img src="image.jpg">-->
     <div>
         <h2>Cancellation Policy</h2>
-        <p>It's easy to cancel an order. Just enter the exact time (to the second) when your order was placed:</p>
-		<form id="deleteForm">
+        <p>It's easy to cancel an order. Just enter the filename</p>
+		<form id="deleteForm" onsubmit="return deleteFile();">
 		  <label for="filename">File Name:</label>
 		  <input type="text" id="filename" name="filename" required>
-		  <button type="button" onclick="deleteFile()">Delete</button>
+		  <button type="submit">Delete</button>
 		</form>
 		
 		<script>
-			// function uploadFile()
-			// {
-			// 	var fileInput = document.getElementById('file-upload');
-			// 	var file = fileInput.files[0];
-			// 	var formData = new FormData();
-			// 	formData.append('file', file);
-
-			// 	var xhr = new XMLHttpRequest();
-			// 	xhr.open('POST', 'upload.cgi', true);
-
-			// 	xhr.onreadystatechange = function()
-			// 	{
-			// 		if (xhr.readyState === 4)
-			// 		{
-			// 			if (xhr.status === 200)
-			// 			{
-			// 				alert("File uploaded successfully");
-			// 			}
-			// 			else
-			// 			{
-			// 				alert("Error uploading file: " + xhr.statusText);
-			// 			}
-			// 		}
-			// 	};
-   			// 	xhr.send(formData);
-  			// }
-
 			function deleteFile()
 			{
-				var filename = document.getElementById("filename").value;
-				var xhr = new XMLHttpRequest();
-				xhr.open("DELETE", "/orders/" + filename, true);
-				xhr.onreadystatechange = function()
-				{
-					if (xhr.readyState === 4)
-					{
-						if (xhr.status === 200)
-						{
-							alert("File deleted successfully");
-						}
-						else
-						{
-							alert("Error deleting file: " + xhr.statusText);
-						}
-					}
-				};
-				xhr.send();
+                const filePath = document.getElementById('filename').value;
+                const url = `http://localhost:7074/orders/${encodeURIComponent(filePath)}`;
+
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle different status codes
+                        if (response.status === 400) {
+                            throw new Error('Bad Request: Invalid file path.');
+                        } else if (response.status === 404) {
+                            throw new Error('Not Found: File does not exist.');
+                        } else if (response.status === 405) {
+                            throw new Error('Method not allowed');
+                        }else if (response.status === 500) {
+                            throw new Error('Internal Server Error: Failed to delete file.');
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    }
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('File deleted successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(error.message);
+                });
+                return false;
 			}
     </script>
 </body>

@@ -21,10 +21,10 @@ bool Dish::_thereIsAnInitialError() {
 	if ((this->order.getMethod() & this->recipe.allowedMethods) == 0) {
 		this->status.updateState(METHODNOTALLOWED);
 	}
-	if (this->order.getLength() > this->recipe.maxBodySize) {
+	else if (this->order.getLength() > this->recipe.maxBodySize) {
 		this->status.updateState(TOOLARGE);
 	}
-	if (this->order.getLength() == 0 && !this->order.getBody().empty()) {
+	else if (this->order.getLength() == 0 && !this->order.getBody().empty()) {
 		this->status.updateState(LENGTHREQUIRED);
 	}
 	else {
@@ -55,7 +55,6 @@ void	Dish::doError()
 	}
 	else
 	{
-		std::cout << "WE SHOULD BE IN HERE\n";
 		_doPipe();
 		if (status.getState() == COUNT) {
 			_horribleError();

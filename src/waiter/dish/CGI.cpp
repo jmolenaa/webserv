@@ -212,11 +212,11 @@ void	CGI::input(int eventFD)
 	{
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
 		_dish.body.append(_buffer, count);
-		if (_pos == _message.size()) {
-			Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
-			this->_removeHandler(this->_inFD);
-			this->_dish.customer.eat();
-		}
+//		if (_pos == _message.size()) {
+//			Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
+//			this->_removeHandler(this->_inFD);
+//			this->_dish.customer.eat();
+//		}
 	}
 }
 
@@ -230,7 +230,7 @@ void	CGI::output(int eventFD)
 	std::string msg = _message.substr(_pos, BUF_LIMIT - 1);
 	ssize_t count = write(_outFD, msg.c_str(), msg.size());
 	if (count < 0) {
-		this->_CGIError("Read error in CGI input!", std::string(std::strerror(errno)));
+		this->_CGIError("Read error in CGI output!", std::string(std::strerror(errno)));
 	}
 	else if (count == 0) {
 		this->_removeHandler(this->_outFD);
@@ -275,3 +275,25 @@ void CGI::handleCGIHangup() {
 		this->_dish.doError();
 	}
 }
+
+//pid_t CGI::getPid() const {
+//	return this->_pid;
+//}
+
+//void CGI::inspectChildExitCode() {
+//	int	exitStatus;
+//
+//	std::cout << waitpid(this->_pid, &exitStatus, WNOHANG) << " \n";
+//	if (WIFEXITED(exitStatus) && WEXITSTATUS(exitStatus) < COUNT) {
+//		this->_dish.status.updateState((status)WEXITSTATUS(exitStatus));
+//	}
+//	else {
+//		this->_dish.status.updateState(INTERNALERR);
+//	}
+//	this->_removeHandler(this->_inFD);
+//	this->_removeHandler(this->_outFD);
+//	this->_closePipes();
+//	if (this->_dish.status.getState() == OK && this->_dish.body.empty()) {
+//		this->_dish.body = "Script executed successfully\n";
+//	}
+//}

@@ -11,9 +11,11 @@
 /* ************************************************************************** */
 
 #include "dish.hpp"
+#include <unistd.h>
 #include "customer.hpp"
 #include "order.hpp"
 #include <sys/stat.h>
+#include <cstdio>
 
 static bool	isDirectory(std::string const& path) {
 	struct stat	fileInfo;
@@ -76,24 +78,25 @@ void Dish::_get()
 
 void Dish::_post()
 {
-	if (order.getPath().find("/cgi-bin/post.cgi") != 0
-		&& order.getPath().find("/cgi-bin/upload.cgi") != 0)
-		return (status.updateState(FORBIDDEN));
-	else
-	{	
-		_CGI = new CGI(*this);
-		_CGI->execute();
-	}
+	_CGI = new CGI(*this);
+	_CGI->execute();
 }
 
 void Dish::_delete()
 {
-    if (order.getPath().find("/cgi-bin/delete.cgi") != 0)
-        return (status.updateState(FORBIDDEN));
-    else
-	{
-		_CGI = new CGI(*this);
-		_CGI->execute();
+	if (std::remove(this->finalPage.c_str()) == 0) {
+		this->body = "File deleted succesfully\n";
+		this->customer.eat();
+		return ;
+	}
+	else if (access(this->finalPage.c_str(), F_OK) == -1) {
+		this->status.updateState(NOTFOUND);
+	}
+	else if (errno == EACCES) {
+		this->status.updateState(FORBIDDEN);
+	}
+	else {
+		this->status.updateState(INTERNALERR);
 	}
 }
 

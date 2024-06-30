@@ -38,7 +38,7 @@ struct Recipe
 	std::array<std::string, COUNT>	errorPaths;
 
 	Recipe() :page("root"), root("root"), overwrittenRoot(false), index("index.html"), uploadDir("root/orders/"), allowUploading(false),
-		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST | DELETE), maxBodySize(MAX_BODY_SIZE),
+		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",

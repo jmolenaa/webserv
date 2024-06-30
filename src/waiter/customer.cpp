@@ -115,6 +115,18 @@ void Customer::_getDish()
 
 void Customer::eat()
 {
+//	// Checking if CGI was running and if the child process actually happened
+//	// also checking if an error already occured
+//	if (this->_dish->getCGI() != nullptr && this->_dish->getCGI()->getPid() > 0
+//		&& this->_status.getState() == OK) {
+////		std::cout <<";;;;;;;\n";
+//		this->_dish->getCGI()->inspectChildExitCode();
+//		if (this->_status.getState() != OK) {
+//			this->_dish->doError();
+//			return ;
+//		}
+//	}
+
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
 
