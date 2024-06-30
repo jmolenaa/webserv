@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/04/17 14:19:49 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 16:57:30 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/27 18:05:16 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,31 @@ Waiter::~Waiter()
 {
 	for (auto customer : _customers)
 		delete (customer.second);
+}
+
+static bool	timedOut(Customer* customer) {
+	t_time	now = std::chrono::high_resolution_clock::now();
+
+	if (std::chrono::duration_cast<std::chrono::seconds>(now - customer->getLastAction()).count() > TIMEOUT) {
+		return true;
+	}
+	return false;
+}
+
+void Waiter::timeCheck()
+{
+	for (auto fdHandler : this->_customers) {
+		Customer*	customer = dynamic_cast<Customer*>(fdHandler.second);
+		if (customer == nullptr) {
+			continue ;
+		}
+		if (timedOut(customer)) {
+			Log::getInstance().printErr("Customer " + std::to_string(fdHandler.first) + " took too long");
+			if (customer->handleTimeout() == false) {
+				this->kickCustomer(fdHandler.first);
+			}
+		}
+	}
 }
 
 //Seat the new customer

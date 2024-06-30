@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import os, time
 
 # make file current directory
 print("hello world")

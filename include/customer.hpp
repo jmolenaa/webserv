@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/18 13:45:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/26 14:01:34 by yizhang       ########   odam.nl         */
+/*   Updated: 2024/06/27 14:51:01 by yizhang       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include "dish.hpp"
 # include <chrono>
 
+typedef std::chrono::time_point<std::chrono::high_resolution_clock> t_time;
+
 class Customer : public FdHandler
 {
 	public:
@@ -31,20 +33,24 @@ class Customer : public FdHandler
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
 		void	eat();
-		
+		t_time	getLastAction();
+		bool	handleTimeout();
+		void	resetTime();
+//		void	setLastAction(t_time newActionTime);
+
 	private:
 		Waiter&	_waiter;
 		Status	_status;
 		Order	_order;
 		Dish*	_dish;
 
-		std::string 												_food;
-		ssize_t														_bitesLeft;
-		ssize_t														_pos;
-		std::chrono::time_point<std::chrono::high_resolution_clock>	_startTime;
-		int															_customerFd;
+		std::string _food;
+		ssize_t		_bitesLeft;
+		ssize_t		_pos;
+		int			_customerFd;
+		t_time 		_lastAction;
 
-		void	_getDish();
+		void		_getDish();
 };
 
 #endif

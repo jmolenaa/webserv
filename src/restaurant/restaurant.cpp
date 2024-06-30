@@ -62,7 +62,9 @@ void Restaurant::run()
 	int			eventFD;
     while (!interrupted)
 	{
+		checkTimeoutsAndKickLingeringCustomers();
         _concierge.wait(1000, events);
+		//time check for each client;
 		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
@@ -117,4 +119,14 @@ void Restaurant::removeFdHandler(int fd)
 	_Out.erase(fd);
 	_In.erase(fd);
 	_concierge.removeFd(fd);
+}
+
+void Restaurant::checkTimeoutsAndKickLingeringCustomers() {
+	for (auto fdHandler : this->_waiters) {
+		Waiter*	waiter = dynamic_cast<Waiter*>(fdHandler);
+		if (waiter == nullptr) {
+			continue ;
+		}
+		waiter->timeCheck();
+	}
 }

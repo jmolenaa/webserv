@@ -52,6 +52,9 @@ Status::Status() : _state(OK)
 
 	_status[INTERNALERR].first = "Internal Server Error";
 	_status[INTERNALERR].second = 500;
+
+	_status[LOOPDETECTED].first = "Loop Detected";
+	_status[LOOPDETECTED].second = 508;
 }
 
 std::string& Status::getStatMessage()

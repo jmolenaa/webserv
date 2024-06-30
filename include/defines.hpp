@@ -24,6 +24,7 @@
 # define CLI_LIMIT 10
 # define BUF_LIMIT 1000
 # define MAX_BODY_SIZE 100000000
+# define TIMEOUT 60
 
 typedef enum {
 	GET = 1,
@@ -52,6 +53,7 @@ typedef enum
 	TOOLARGE, //413
 	UNSUPPORTED, //415
 	INTERNALERR, //500
+	LOOPDETECTED, // 508
 	COUNT
 } 	status;
 

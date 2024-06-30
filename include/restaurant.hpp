@@ -32,8 +32,8 @@ class Restaurant
 
 		void	addFdHandler(int fd, FdHandler* handler, uint32_t eventType);
 		void	removeFdHandler(int fd);
-
 		bool	isCGIFd(int fd);
+		void	checkTimeoutsAndKickLingeringCustomers();
 
 	private:
 		Concierge					_concierge;

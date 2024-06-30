@@ -215,6 +215,7 @@ void CGI::_execChild()
 
 void	CGI::input(int eventFD)
 {
+	this->_dish.customer.resetTime();
 	if (eventFD != _inFD) {
 		this->_CGIError("Bad FD triggered in CGI input ", std::to_string(eventFD));
 	}
@@ -243,6 +244,7 @@ void	CGI::input(int eventFD)
 
 void	CGI::output(int eventFD)
 {
+	this->_dish.customer.resetTime();
 	if (eventFD != _outFD) {
 		this->_CGIError("Bad FD triggered in CGI input ", std::to_string(eventFD));
 	}

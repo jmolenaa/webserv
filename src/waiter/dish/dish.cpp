@@ -71,6 +71,7 @@ void Dish::doMethod()
 void	Dish::input(int eventFD)
 {
 	(void)eventFD;
+	this->customer.resetTime();
 	ssize_t count = read(this->_inFD, _buffer, BUF_LIMIT);
 	if (count < 0)
 	{
@@ -112,6 +113,7 @@ void Dish::_writeToPipe(ssize_t count) {
 void	Dish::output(int eventFD)
 {
 	(void)eventFD;
+	this->customer.resetTime();
 	ssize_t	count = read(this->_fdOfFileToRead, _buffer, BUF_LIMIT);
 	if (count < 0 ) {
 		_handleOutputError();

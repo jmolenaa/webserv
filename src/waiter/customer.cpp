@@ -39,8 +39,8 @@ Customer::Customer(int fd, Restaurant& rest, Waiter& wait) : FdHandler(rest, CUS
 {
 	this->_inFD = _customerFd;
 
-	_startTime = std::chrono::high_resolution_clock::now();
-	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR ); //Yixin added EPOLLHUP here
+	_lastAction = std::chrono::high_resolution_clock::now();
+	restaurant.addFdHandler(_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR );
 	Log::getInstance().print("Customer " + std::to_string(_inFD) + " has been seated.");
 }
 
@@ -62,30 +62,14 @@ Customer::~Customer()
 //taking the order
 void Customer::input(int eventFD)
 {
-	std::chrono::time_point<std::chrono::high_resolution_clock> start;
-	std::chrono::time_point<std::chrono::high_resolution_clock> stop;
-	start = std::chrono::high_resolution_clock::now();
+	this->resetTime();
 	if (eventFD != _inFD) {
 		throw WebservException("Bad input FD event in customer\n");
 	}
 	Log::getInstance().print("Customer " + std::to_string(eventFD) + " is placing an order");
 	bool doneMakingOrder = _order.makeOrder();
 	if (!doneMakingOrder) {
-		stop = std::chrono::high_resolution_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-		std::cout<<duration.count()<<std::endl;
-//		if (duration.count() >= 5)
-//		{
-//			if (eventFD)
-//			{
-//				restaurant.removeFdHandler(eventFD);
-//				close(eventFD);
-//			}
 		return ;
-//		}
-//		else
-//			Log::getInstance().print("Customer " + std::to_string(eventFD) + " busy placing an order\n");
-		return;
 	}
 	restaurant.removeFdHandler(_inFD);
 	_inFD = -1;
@@ -139,6 +123,7 @@ void Customer::eat()
 
 void Customer::output(int eventFD)
 {
+	this->resetTime();
 	if (eventFD != this->_outFD)
 		throw WebservException("Bad output FD event on Customer\n");
 
@@ -158,4 +143,22 @@ void Customer::output(int eventFD)
 		return (_waiter.kickCustomer(this->_customerFd));
 	}
 	_bitesLeft -= sent;
+}
+
+t_time Customer::getLastAction() {
+	return this->_lastAction;
+}
+
+bool Customer::handleTimeout() {
+	this->_status.updateState(LOOPDETECTED);
+	this->resetTime();
+	if (this->_dish == nullptr) {
+		return false;
+	}
+	this->_dish->doError();
+	return true;
+}
+
+void Customer::resetTime() {
+	this->_lastAction = std::chrono::high_resolution_clock::now();
 }
