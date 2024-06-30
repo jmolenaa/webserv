@@ -88,6 +88,13 @@ void CGI::_setEnv()
 	_vec.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	_vec.push_back("SCRIPT_NAME=" + _path);
 	_vec.push_back("UPLOAD_DIR=" + _dish.recipe.uploadDir);
+	if (_dish.recipe.allowUploading) {
+		_vec.push_back("UPLOAD_ALLOWED=TRUE");
+	}
+	else {
+		_vec.push_back("UPLOAD_ALLOWED=FALSE");
+	}
+	_vec.push_back("PATH_INFO=" + _path);
 	_env = new char*[_vec.size() + 1];
 
 	 for (size_t i = 0; i < _vec.size(); i++)

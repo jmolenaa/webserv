@@ -8,10 +8,13 @@ import sys
 
 # Create a FieldStorage instance
 try:
+    if os.environ.get("UPLOAD_ALLOWED") == "FALSE":
+        exit(6)
     upload_dir = os.environ.get("UPLOAD_DIR")
     form = cgi.FieldStorage()
 except Exception as e:
     sys.exit(12)
+
 
 def print_html_response(title, message):
     print("<!DOCTYPE html>")
