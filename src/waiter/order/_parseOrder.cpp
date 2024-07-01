@@ -184,7 +184,7 @@ void Order::_printData()
 			+ "\n	ContentType: '" + _contentType + "'"
 			+ "\n	Body: '" + _order.substr(_headerEnd) + "'"
 			+ "\n=====END OF ORDER=====\n";
-		
+
 		Log::getInstance().print(data);
 	}
 }

@@ -31,6 +31,7 @@ struct Recipe
 	std::string	cgiExtension;
 	bool		allowCgi;
 	short		allowedMethods;
+	std::string uploadCgi;
 	size_t		maxBodySize;
 	bool		autoindex;
 	
@@ -38,7 +39,7 @@ struct Recipe
 	std::array<std::string, COUNT>	errorPaths;
 
 	Recipe() :page("root"), root("root"), overwrittenRoot(false), index("index.html"), uploadDir("root/orders/"), allowUploading(false),
-		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST), maxBodySize(MAX_BODY_SIZE),
+		cgiExtension("cgi"), allowCgi(false), allowedMethods(GET | POST), uploadCgi("root/upload.cgi"), maxBodySize(MAX_BODY_SIZE),
 		autoindex(false), redir(OK, ""),
 		errorPaths({
 		"root/index.html",
@@ -64,6 +65,7 @@ struct Recipe
 		this->overwrittenRoot = other.overwrittenRoot;
 		this->index = other.index;
 		this->uploadDir = other.uploadDir;
+		this->uploadCgi = other.uploadCgi;
 		this->allowUploading = other.allowUploading;
 		this->cgiExtension = other.cgiExtension;
 		this->allowCgi = other.allowCgi;
@@ -85,6 +87,7 @@ struct Recipe
 		this->overwrittenRoot = other.overwrittenRoot;
 		this->index = other.index;
 		this->uploadDir = other.uploadDir;
+		this->uploadCgi = other.uploadCgi;
 		this->allowUploading = other.allowUploading;
 		this->cgiExtension = other.cgiExtension;
 		this->allowCgi = other.allowCgi;

@@ -77,6 +77,7 @@ public:
 	void	cgiExtensionDirective();
 	void	allowCgiDirective();
 	void	closeBracketDirective();
+	void	uploadCgiDirective();
 
 	// helper functions for directives
 	int				getArrayIndex(std::string const& errorCode);

@@ -90,6 +90,7 @@ void	setupMap(directiveFunctions& runDirective) {
 	runDirective["allow_upload"] = &Menu::allowUploadDirective;
 	runDirective["cgi_extension"] = &Menu::cgiExtensionDirective;
 	runDirective["allow_cgi"] = &Menu::allowCgiDirective;
+	runDirective["upload_cgi"] = &Menu::uploadCgiDirective;
 	runDirective["}"] = &Menu::closeBracketDirective;
 }
 
