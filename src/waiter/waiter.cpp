@@ -39,7 +39,7 @@ Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest, WAITERTYPE), k
 	if (bind(this->_inFD, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
 		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
 	//listen on socket
-	if (listen(this->_inFD, SOMAXCONN) == -1)
+	if (listen(this->_inFD, CLI_LIMIT) == -1)
 		throw WebservException("Waiter could not listen because: " + std::string(std::strerror(errno)) + "\n");
 	//add to epoll and map
 	restaurant.addFdHandler(this->_inFD, this, EPOLLIN | EPOLLHUP | EPOLLERR );

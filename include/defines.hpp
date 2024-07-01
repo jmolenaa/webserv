@@ -21,9 +21,9 @@
 # define RESET "\x1b[0m"
 
 # define PORT 8080
-# define CLI_LIMIT 10
-# define BUF_LIMIT 1000
-# define MAX_BODY_SIZE 100000000
+# define CLI_LIMIT 100
+# define BUF_LIMIT 10000
+# define MAX_BODY_SIZE 1000000
 # define TIMEOUT 10
 # define MAX_TIMEOUT 60
 

@@ -111,7 +111,6 @@ void CGI::_setEnv()
 	 {
 	 	_env[i] = new char[_vec[i].length() + 1];
 	 	std::strcpy(_env[i], _vec[i].c_str());
-	 	Log::getInstance().print(std::string(_env[i]));
 	 }
 	 _env[_vec.size()] = nullptr;
 }
