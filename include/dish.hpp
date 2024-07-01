@@ -52,6 +52,7 @@ class Dish : public FdHandler
 	private:
 		char			_buffer[BUF_LIMIT];
 		int				_pipeFDs[2];
+		int 			_savePipeFDs[2];
 		CGI*			_CGI;
 		int				_fdOfFileToRead;
 		bool			_doneReading;

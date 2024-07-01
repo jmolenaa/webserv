@@ -78,14 +78,18 @@ void Dish::_handleOutputError() {
 	else {
 		this->status.updateState(INTERNALERR);
 	}
+	this->_savePipeFDs[0] = this->_inFD;
+	this->_savePipeFDs[1] = this->_outFD;
+	this->_inFD = -1;
+	this->_outFD = -1;
 	doError();
+	this->_removeHandler(this->_savePipeFDs[0]);
+	this->_removeHandler(this->_savePipeFDs[1]);
+
 	// if the error we encountered isn't critical we attempt to read the error file
 	// this is only necessary for writing to the pipe, due to how epoll handles pipe events
 	// errors during writing to pipes, we want to setup a new one, but if that happens we, we close
 	// the previous ones and overwrite the fd with new ones, since an event on the file descriptor
 	// of the previous reading end might have bene triggered already we would go into input and block on read call
 	// this way we go back to output and try to write again
-	if (this->_fdOfFileToRead != -1) {
-		this->output(this->_fdOfFileToRead);
-	}
 }

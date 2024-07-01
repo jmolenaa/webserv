@@ -30,10 +30,8 @@ class CGI : public FdHandler
 		
 		void	input(int eventFD) override;
 		void	output(int eventFD) override;
-		void	handleCGIHangup() override;
-//		pid_t	getPid() const;
-//		void	inspectChildExitCode();
-	
+		void	handleHangup() override;
+
 	private:
 		Dish&		_dish;
 		std::string _query;

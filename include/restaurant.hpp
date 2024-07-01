@@ -32,15 +32,15 @@ class Restaurant
 
 		void	addFdHandler(int fd, FdHandler* handler, uint32_t eventType);
 		void	removeFdHandler(int fd);
-		bool	isCGIFd(int fd);
+		bool	isFdType(int fd, FdHandler::fdHandlerType type);
 		void	checkTimeoutsAndKickLingeringCustomers();
 
 	private:
 		Concierge					_concierge;
 		std::vector<FdHandler*>		_waiters;
 		
-		std::unordered_map<int, FdHandler*>							_In;
-		std::unordered_map<int, FdHandler*>							_Out;
+		std::unordered_map<int, FdHandler*>		_fds;
+		std::unordered_map<int, FdHandler*>		_Out;
 };
 
 #endif

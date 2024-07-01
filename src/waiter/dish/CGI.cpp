@@ -278,7 +278,7 @@ void CGI::_removeHandler(int &handlerFd) {
 	}
 }
 
-void CGI::handleCGIHangup() {
+void CGI::handleHangup() {
 	int	exitStatus;
 	if (waitpid(this->_pid, &exitStatus, WNOHANG) == 0) {
 		return ;

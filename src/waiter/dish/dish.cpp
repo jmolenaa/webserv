@@ -19,7 +19,7 @@
 
 Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
 	: FdHandler(cust.restaurant, DISHTYPE), status(stat), order(ord), recipe(rec), customer(cust), done(false),
-	_buffer(""), _pipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1), _doneReading(false), _fileSize(0)
+	_buffer(""), _pipeFDs{-1, -1}, _savePipeFDs{-1, -1}, _CGI(nullptr), _fdOfFileToRead(-1), _doneReading(false), _fileSize(0)
 {
 	if (order.getPath().find_last_of('/') == std::string::npos) {
 		status.updateState(BAD);
@@ -32,9 +32,20 @@ Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
 	}
 }
 
+static void	safeClose(int& fd) {
+	if (fd != -1) {
+		close(fd);
+		fd = -1;
+	}
+}
+
 Dish::~Dish()
 {
 	_trashDish();
+	safeClose(_pipeFDs[0]);
+	safeClose(_pipeFDs[1]);
+	safeClose(_savePipeFDs[0]);
+	safeClose(_savePipeFDs[1]);
 	delete _CGI;
 }
 
@@ -115,7 +126,7 @@ void	Dish::output(int eventFD)
 	(void)eventFD;
 	this->customer.resetTime();
 	ssize_t	count = read(this->_fdOfFileToRead, _buffer, BUF_LIMIT);
-	if (count < 0 ) {
+	if (count < 0) {
 		_handleOutputError();
 	}
 	else if (count == 0)

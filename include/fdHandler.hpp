@@ -33,7 +33,7 @@ class FdHandler
 		virtual void input(int eventFD) = 0;
 		virtual void output(int eventFD) = 0;
 
-		virtual void handleCGIHangup() {};
+		virtual void handleHangup() {};
 
 		Restaurant&	restaurant;
 

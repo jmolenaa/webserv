@@ -42,15 +42,12 @@ Restaurant::~Restaurant()
 //	for (auto out : _Out) {
 //		delete out.second;
 //	}
-	_In.clear();
-	_Out.clear();
+//	_In.clear();
+	_fds.clear();
 }
 
-bool Restaurant::isCGIFd(int fd) {
-	if (this->_Out.find(fd) != this->_Out.end() && this->_Out[fd]->type == FdHandler::CGITYPE) {
-		return true;
-	}
-	else if (this->_In.find(fd) != this->_In.end() && this->_In[fd]->type == FdHandler::CGITYPE) {
+bool Restaurant::isFdType(int fd, FdHandler::fdHandlerType type) {
+	if (this->_fds.find(fd) != this->_fds.end() && this->_fds[fd]->type == type) {
 		return true;
 	}
 	return false;
@@ -64,29 +61,18 @@ void Restaurant::run()
 	{
 		checkTimeoutsAndKickLingeringCustomers();
         _concierge.wait(1000, events);
-		//time check for each client;
 		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
 			fcntl(eventFD, F_GETFL, 0);
-			if (events[i].events & EPOLLIN
-				&& _In.find(eventFD) != _In.end())
-			{
-				_In[eventFD]->input(eventFD);
+			if (events[i].events & EPOLLIN && _fds.find(eventFD) != _fds.end()) {
+				_fds[eventFD]->input(eventFD);
 			}
-			else if (events[i].events & EPOLLOUT
-				&& _Out.find(eventFD) != _Out.end())
-			{
-				_Out[eventFD]->output(eventFD);
-				continue;
+			else if (events[i].events & EPOLLOUT && _fds.find(eventFD) != _fds.end()) {
+				_fds[eventFD]->output(eventFD);
 			}
-			else if (events[i].events & EPOLLHUP && this->isCGIFd(eventFD)) {
-				if (_Out.find(eventFD) != _Out.end()) {
-					_Out[eventFD]->handleCGIHangup();
-				}
-				else {
-					_In[eventFD]->handleCGIHangup();
-				}
+			else if (events[i].events & EPOLLHUP && this->isFdType(eventFD, FdHandler::CGITYPE)) {
+				_fds[eventFD]->handleHangup();
 			}
 			else {
 				Log::getInstance().printErr("Removing unknown event...\n");
@@ -99,25 +85,29 @@ void Restaurant::run()
 
 void Restaurant::addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType)
 {
-	if (eventType & EPOLLIN)
-	{
-		if (_In.find(fd) != _In.end())
-			throw WebservException("FD " + std::to_string(fd) + " already exists");
-		_In[fd] = fdhandler;
+	if (_fds.find(fd) != _fds.end()) {
+		throw WebservException("FD " + std::to_string(fd) + " already exists");
 	}
-	if (eventType & EPOLLOUT)
-	{
-		if (_Out.find(fd) != _Out.end())
-			throw WebservException("FD " + std::to_string(fd) + " already exists");
-		_Out[fd] = fdhandler;
-	}
+	_fds[fd] = fdhandler;
+//	if (eventType & EPOLLIN)
+//	{
+//		if (_In.find(fd) != _In.end())
+//			throw WebservException("FD " + std::to_string(fd) + " already exists");
+//		_In[fd] = fdhandler;
+//	}
+//	if (eventType & EPOLLOUT)
+//	{
+//		if (_Out.find(fd) != _Out.end())
+//			throw WebservException("FD " + std::to_string(fd) + " already exists");
+//		_Out[fd] = fdhandler;
+//	}
 	_concierge.addFd(fd, eventType);
 }
 
 void Restaurant::removeFdHandler(int fd)
 {
-	_Out.erase(fd);
-	_In.erase(fd);
+//	_Out.erase(fd);
+	_fds.erase(fd);
 	_concierge.removeFd(fd);
 }
 
