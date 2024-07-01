@@ -22,12 +22,6 @@ Cook::Cook() : _table(htons(PORT)), _address(htonl(INADDR_ANY)), _name("localhos
 	Log::getInstance().print("default Cook hired with name: " + _name);
 }
 
-// Cook::Cook(uint16_t table, uint32_t address, std::string& name, Cookbook& cookbook)
-// 	: _table(table), _address(address), _name(name), _cookbook(cookbook)
-// {
-// 	Log::getInstance().print("custom Cook hired with name: " + _name);
-// }
-
 Cook::Cook(const Cook& other)
 {
 	if (this == &other)

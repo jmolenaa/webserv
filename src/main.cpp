@@ -17,10 +17,6 @@
 #include "restaurant.hpp"
 #include <signal.h>
 
-// todo
-// make headers understandable, where we actually need them
-// change localhost to default
-
 volatile sig_atomic_t interrupted = 0;
 
 void	sigIntHandler(int signal) {

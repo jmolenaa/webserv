@@ -36,8 +36,6 @@ Waiter::Waiter(Kitchen kitch, Restaurant& rest) : FdHandler(rest, WAITERTYPE), k
 	waiterAddr.sin_family = AF_INET;
 	waiterAddr.sin_port = this->kitchen.begin()->getTable();
 	waiterAddr.sin_addr.s_addr = this->kitchen.begin()->getAddress();
-	// Set server socket to non-blocking
-	fcntl(this->_inFD, F_SETFL, O_NONBLOCK);
 	if (bind(this->_inFD, reinterpret_cast<sockaddr *>(&waiterAddr), sizeof(waiterAddr)) == -1)
 		throw WebservException("Failed to bind to socket because: " + std::string(std::strerror(errno)) + "\n");
 	//listen on socket

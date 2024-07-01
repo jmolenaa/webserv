@@ -100,22 +100,9 @@ void Customer::_getDish()
 
 void Customer::eat()
 {
-//	// Checking if CGI was running and if the child process actually happened
-//	// also checking if an error already occured
-//	if (this->_dish->getCGI() != nullptr && this->_dish->getCGI()->getPid() > 0
-//		&& this->_status.getState() == OK) {
-////		std::cout <<";;;;;;;\n";
-//		this->_dish->getCGI()->inspectChildExitCode();
-//		if (this->_status.getState() != OK) {
-//			this->_dish->doError();
-//			return ;
-//		}
-//	}
-
 	_food = _dish->getDish();
 	_bitesLeft = _food.size();
 
-	std::cout << "\n\n\n\n\n" << _food << "\n\n\n\n";
 	//prepare to send to client
 	this->_outFD = this->_customerFd;
 	Log::getInstance().print("Serving to customer " + std::to_string(_outFD));
@@ -158,9 +145,13 @@ bool Customer::handleTimeout() {
 	this->_status.updateState(LOOPDETECTED);
 	this->resetTime();
 	this->resetStartTime();
+
+	// timeout happened before the header has been sent, so we kick out the customer
 	if (this->_dish == nullptr) {
 		return false;
 	}
+	// timeout happened whilst reading from a file, so we try to send back an error to the customer
+	// this usually is a loop in the CGI
 	this->_dish->doError();
 	return true;
 }

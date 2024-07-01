@@ -36,13 +36,6 @@ Restaurant::~Restaurant()
 	for (auto waiter : _waiters) {
 		delete waiter;
 	}
-//	for (auto in : _In)	{
-//		delete in.second;
-//	}
-//	for (auto out : _Out) {
-//		delete out.second;
-//	}
-//	_In.clear();
 	_fds.clear();
 }
 
@@ -64,7 +57,6 @@ void Restaurant::run()
 		for (int i = 0; i < _concierge.getNumEvents(); i++)
 		{
 			eventFD = events[i].data.fd;
-			fcntl(eventFD, F_GETFL, 0);
 			if (events[i].events & EPOLLIN && _fds.find(eventFD) != _fds.end()) {
 				_fds[eventFD]->input(eventFD);
 			}
@@ -89,24 +81,11 @@ void Restaurant::addFdHandler(int fd, FdHandler* fdhandler, uint32_t eventType)
 		throw WebservException("FD " + std::to_string(fd) + " already exists");
 	}
 	_fds[fd] = fdhandler;
-//	if (eventType & EPOLLIN)
-//	{
-//		if (_In.find(fd) != _In.end())
-//			throw WebservException("FD " + std::to_string(fd) + " already exists");
-//		_In[fd] = fdhandler;
-//	}
-//	if (eventType & EPOLLOUT)
-//	{
-//		if (_Out.find(fd) != _Out.end())
-//			throw WebservException("FD " + std::to_string(fd) + " already exists");
-//		_Out[fd] = fdhandler;
-//	}
 	_concierge.addFd(fd, eventType);
 }
 
 void Restaurant::removeFdHandler(int fd)
 {
-//	_Out.erase(fd);
 	_fds.erase(fd);
 	_concierge.removeFd(fd);
 }

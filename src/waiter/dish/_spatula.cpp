@@ -56,6 +56,7 @@ void	Dish::_trashDish()
 //Make this happen on each send.
 void	Dish::_generateHeader()
 {
+	// inserting header at start, making sure it's always at the beginning
 	header.insert(0, "HTTP/1.1 " + std::to_string(status.getStatNum()) + " " + status.getStatMessage() + "\r\n");
 	header.append("Content-Type: text/html \r\n");
 	header.append("Content-Length: " + std::to_string(body.size()) + "\r\n");

@@ -24,6 +24,8 @@ Dish::Dish(Status& stat, Order const& ord, Recipe rec, Customer& cust)
 	if (order.getPath().find_last_of('/') == std::string::npos) {
 		status.updateState(BAD);
 	}
+	// this is for the subject thing where we remove the kapouet from the front,
+	// kapouet in this case is the page, so we make a substring starting from kapouet
 	if (recipe.overwrittenRoot) {
 		finalPage = recipe.root + order.getPath().substr(recipe.page.size());
 	}

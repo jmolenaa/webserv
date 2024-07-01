@@ -251,11 +251,6 @@ void	CGI::input(int eventFD)
 	{
 		Log::getInstance().print("CGI is cooking " + std::to_string(count) + " ingredients");
 		_dish.body.append(_buffer, count);
-//		if (_pos == _message.size()) {
-//			Log::getInstance().print("Finished cooking CGI " + std::to_string(_inFD) + "!");
-//			this->_removeHandler(this->_inFD);
-//			this->_dish.customer.eat();
-//		}
 	}
 }
 

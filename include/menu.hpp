@@ -88,7 +88,6 @@ public:
 	void			closeLocation();
 	void			closeServer();
 	void			addToKitchen(Cook const& newCook);
-	void			printStuff();
 	static void		setAndValidateBoolValue(std::string const& stringValue, bool& valueToSet, std::string const& directive);
 	void			initErrorCodes();
 

@@ -186,8 +186,6 @@ void Order::_printData()
 			+ "\n=====END OF ORDER=====\n";
 		
 		Log::getInstance().print(data);
-//		Log::getInstance().print("Full header:\n" + this->);
-//		Log::getInstance().print("Full body:\n" + this->_order);
 	}
 }
 
