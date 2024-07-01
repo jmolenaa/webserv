@@ -44,8 +44,6 @@ static void	safeClose(int& fd) {
 Dish::~Dish()
 {
 	_trashDish();
-	safeClose(_pipeFDs[0]);
-	safeClose(_pipeFDs[1]);
 	safeClose(_savePipeFDs[0]);
 	safeClose(_savePipeFDs[1]);
 	delete _CGI;
