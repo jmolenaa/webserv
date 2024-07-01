@@ -78,7 +78,12 @@ void Dish::_get()
 
 void Dish::_post()
 {
-	_CGI = new CGI(*this);
+	if (this->order.getType().find("multipart/form-data;") != std::string::npos) {
+		_CGI = new CGI(*this, "root/upload.cgi");
+	}
+	else {
+		_CGI = new CGI(*this);
+	}
 	_CGI->execute();
 }
 

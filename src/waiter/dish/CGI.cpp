@@ -23,9 +23,19 @@
 #include "restaurant.hpp"
 #include "customer.hpp"
 
-CGI::CGI(Dish& parent) : FdHandler(parent.restaurant, CGITYPE), _dish(parent), _path(parent.finalPage), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1},
+CGI::CGI(Dish& parent) : FdHandler(parent.restaurant, CGITYPE), _dish(parent), _path(parent.finalPage), _pathInfo(parent.finalPage), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1},
 						_pid(-1), _pos(0), _message(_dish.order.getOrder()), _buffer(""), _env(nullptr)
 {
+	this->_setupEnv();
+}
+
+CGI::CGI(Dish &parent, std::string uploadCgi) : FdHandler(parent.restaurant, CGITYPE), _dish(parent), _path(uploadCgi), _pathInfo(parent.finalPage), _CGIInputPipe{-1, -1}, _CGIOutputPipe{-1, -1},
+											   _pid(-1), _pos(0), _message(_dish.order.getOrder()), _buffer(""), _env(nullptr)
+{
+	this->_setupEnv();
+}
+
+void CGI::_setupEnv() {
 	try
 	{
 		size_t	qpos = this->_path.find('?');
@@ -94,7 +104,7 @@ void CGI::_setEnv()
 	else {
 		_vec.push_back("UPLOAD_ALLOWED=FALSE");
 	}
-	_vec.push_back("PATH_INFO=" + _path);
+	_vec.push_back("PATH_INFO=" + _pathInfo);
 	_env = new char*[_vec.size() + 1];
 
 	 for (size_t i = 0; i < _vec.size(); i++)

@@ -21,8 +21,9 @@ class Dish;
 
 class CGI : public FdHandler
 {
-	public: 
+	public:
 		explicit CGI(Dish& parent);
+		CGI(Dish& parent, std::string uploadCgi);
 		CGI() = delete;
 		~CGI() override;
 		
@@ -36,6 +37,7 @@ class CGI : public FdHandler
 		Dish&		_dish;
 		std::string _query;
 		std::string	_path;
+		std::string	_pathInfo;
 		int			_CGIInputPipe[2];
 		int			_CGIOutputPipe[2];
 		pid_t		_pid;
@@ -54,6 +56,7 @@ class CGI : public FdHandler
 		void		_CGIError(std::string what, std::string why);
 		void		_removeHandler(int& handlerFd);
 		void		_tryChangeDir();
+		void		_setupEnv();
 };
 
 #endif
