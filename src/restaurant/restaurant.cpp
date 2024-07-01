@@ -26,6 +26,9 @@ Restaurant::Restaurant(std::string const& filename)
 
 	Menu	menu(filename);
 	menu.parse();
+	if (menu.getKitchens().empty()) {
+		throw WebservException("Webserv: configuration file: No servers added\n");
+	}
 	for (Kitchen const& kitchen : menu.getKitchens()) {
 		this->_waiters.push_back(new Waiter(kitchen, *this));
 	}

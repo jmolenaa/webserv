@@ -171,7 +171,6 @@ void CGI::_CGIError(std::string what, std::string why) {
 	this->_closePipes();
 	Log::getInstance().printErr(what + why);
 	_dish.status.updateState(INTERNALERR);
-	_dish.doError();
 }
 
 static void	safeClose(int& fd) {
