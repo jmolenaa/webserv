@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/28 16:10:18 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/28 16:10:18 by jmolenaa      ########   odam.nl         */
+/*   Updated: 2024/07/01 13:08:09 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,8 +218,9 @@ void CGI::_execChild()
 	this->_tryChangeDir();
 
 	std::string	path = this->_path.substr(this->_path.find_last_of('/') + 1);
+	char	python[] = "/usr/bin/python3";
 	char*		pathCStr = const_cast<char*>(path.c_str());
-	char*	argv[] = {pathCStr, nullptr};
+	char*	argv[] = {python, pathCStr, nullptr};
 	Log::getInstance().printErr(std::string(RESET) + "Executing CGI for path " + _path);
     if (execve(argv[0], argv, _env) < 0) {
 		this->_closePipes();
@@ -287,7 +288,12 @@ void CGI::handleHangup() {
 		return ;
 	}
 	if (WIFEXITED(exitStatus) && WEXITSTATUS(exitStatus) < COUNT) {
-		this->_dish.status.updateState((status)WEXITSTATUS(exitStatus));
+		if (WEXITSTATUS(exitStatus) == 1) {
+			this->_dish.status.updateState(TEAPOT);
+		}
+		else {
+			this->_dish.status.updateState((status)WEXITSTATUS(exitStatus));
+		}
 	}
 	else {
 		this->_dish.status.updateState(INTERNALERR);

@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 14:27:16 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/24 13:18:50 by dliu          ########   odam.nl         */
+/*   Updated: 2024/07/01 13:09:43 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ Status::Status() : _state(OK)
 
 	_status[UNSUPPORTED].first = "Unsupported Media Type";
 	_status[UNSUPPORTED].second = 415;
+
+	_status[TEAPOT].first = "I`m a teapot";
+	_status[TEAPOT].second = 418;
 
 	_status[INTERNALERR].first = "Internal Server Error";
 	_status[INTERNALERR].second = 500;

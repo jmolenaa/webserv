@@ -6,7 +6,7 @@
 /*   By: jmolenaa <jmolenaa@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 17:17:30 by jmolenaa      #+#    #+#                 */
-/*   Updated: 2024/06/24 13:21:03 by dliu          ########   odam.nl         */
+/*   Updated: 2024/07/01 13:06:45 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef enum
 	LENGTHREQUIRED, //411
 	TOOLARGE, //413
 	UNSUPPORTED, //415
+	TEAPOT, //418
 	INTERNALERR, //500
 	LOOPDETECTED, // 508
 	COUNT

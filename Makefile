@@ -6,7 +6,7 @@
 #    By: yizhang <yizhang@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2024/04/16 10:28:05 by yizhang       #+#    #+#                  #
-#    Updated: 2024/06/18 16:56:24 by dliu          ########   odam.nl          #
+#    Updated: 2024/07/01 13:12:48 by jmolenaa      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,8 +34,45 @@ else
 endif
 
 
-HEADERS  = $(shell find include -type f -name "*.hpp")
-SRC_FILES = $(shell find src -type f -name "*.cpp")
+HEADERS  = include/concierge.hpp \
+			include/restaurant.hpp \
+			include/cook.hpp \
+			include/lexer.hpp \
+			include/menu.hpp \
+			include/orderedMap.hpp \
+			include/status.hpp \
+			include/webservException.hpp \
+			include/CGI.hpp \
+			include/defines.hpp \
+			include/dish.hpp \
+			include/log.hpp \
+			include/order.hpp \
+			include/recipe.hpp \
+			include/customer.hpp \
+			include/fdHandler.hpp \
+			include/waiter.hpp 
+			
+SRC_FILES = src/exceptions/webservException.cpp \
+			src/restaurant/restaurant.cpp \
+			src/concierge/concierge.cpp \
+			src/main.cpp \
+			src/config/_directiveUtils.cpp \
+			src/config/_errorCheckingFunctions.cpp \
+			src/config/lexer.cpp \
+			src/config/menu.cpp \
+			src/config/_directiveFunctions.cpp \
+			src/status/status.cpp \
+			src/cook/cook.cpp \
+			src/waiter/dish/CGI.cpp \
+			src/waiter/dish/_directorylisting.cpp \
+			src/waiter/dish/_errorUtils.cpp \
+			src/waiter/dish/_spatula.cpp \
+			src/waiter/dish/_methods.cpp \
+			src/waiter/dish/dish.cpp \
+			src/waiter/order/_parseOrder.cpp \
+			src/waiter/order/order.cpp \
+			src/waiter/customer.cpp \
+			src/waiter/waiter.cpp
 
 
 OBJ_DIR = obj

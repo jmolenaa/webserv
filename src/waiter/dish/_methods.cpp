@@ -6,7 +6,7 @@
 /*   By: dliu <dliu@student.codam.nl>                 +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/05/03 13:10:36 by dliu          #+#    #+#                 */
-/*   Updated: 2024/06/19 14:00:36 by dliu          ########   odam.nl         */
+/*   Updated: 2024/07/01 12:57:01 by jmolenaa      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static bool	isDirectory(std::string const& path) {
 }
 
 bool Dish::isRightCGIExtenion(const std::string &executable) const {
-	if (executable.size() > 4 && executable.substr(executable.size() - 4) == "." + this->recipe.cgiExtension) {
+	if (executable.size() > (recipe.cgiExtension.size() + 1) && executable.substr(executable.size() - (recipe.cgiExtension.size() + 1)) == "." + this->recipe.cgiExtension) {
 		return true;
 	}
 	return false;
