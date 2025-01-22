@@ -44,9 +44,7 @@ Our classes are based on a restaurant analogy, since we theorized that it might 
   - The `Dish` class is the HTTP response, it does the operations needed for creating the response, be it reading the file requested, redirecting or running the CGI.
   - The `CGI` class (we ran out of ideas or got tired of the Restaurant analogy), holds all the information about the CGI process, and executes it.
 
-2. **Class relationships**:
-In this project a concept that keeps returning is reading and writing to file descriptors. Also, following the rules of the projects, eveyr read and write needs to go through `epoll` first and we also read in chunks of a couple kB at a time (so we're not stuck reading a 5GB file). <br>
-Since multiple classes hold file descriptors and the operations they do are very different, instead of identifying each time which file descriptor we have from a vector of Servers, Clients, CGIs or normal files, instead we have one generic class called `FdHandler` from which all classes handling a file descriptor inherit. 
+2. **Class relationships**:<br>
+In this project a concept that keeps returning is reading and writing to file descriptors. Also, following the rules of the projects, every read and write needs to go through `epoll` first and we also read in chunks of a couple kB at a time (so we're not stuck reading a 5GB file). <br>
+Since multiple classes hold file descriptors and the operations they do are very different, instead of identifying each time which file descriptor we have from a vector of Servers, Clients, CGIs or normal files, instead we have one generic class called `FdHandler` from which all classes handling a file descriptor inherit. This class has an `input()` and `output()` function that all inheriting classes will overwrite. Thanks to this our `Restaurant` class just has a map of all the `FdHandler` classes with the fd's they handle as their keys. This allows us to call the input/output function directly form the map without having to identify if the file descriptor on which an event happened belongs to the `Waiter`, `Customer`, `Dish` or `CGI` class.
 
-## Key Takeaway
-This project is an opportunity to dive deep into HTTP and server mechanics. Even if you're not working directly on web development in the future, understanding HTTP's principles and practical applications will prove invaluable.
